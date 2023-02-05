@@ -1,0 +1,14 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <RootNamespace>Yuppie.WebApi.CeasaDigital</RootNamespace>
+    <AssemblyName>Yuppie.WebApi.CeasaDigital</AssemblyName>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Yuppie.WebApi.CeasaDigital.Domain\Yuppie.WebApi.CeasaDigital.Domain.csproj" />
+  </ItemGroup>
+
+
+</Project>
