@@ -13,7 +13,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Yuppie.WebApi.HFDigital.Domain\Yuppie.WebApi.CeasaDigital.Domain.csproj" />
+    <ProjectReference Include="..\Yuppie.WebApi.CeasaDigital.Domain\Yuppie.WebApi.CeasaDigital.Domain.csproj" />
   </ItemGroup>
 
 
