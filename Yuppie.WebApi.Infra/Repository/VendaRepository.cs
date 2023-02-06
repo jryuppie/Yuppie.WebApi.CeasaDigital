@@ -10,8 +10,8 @@ namespace Yuppie.WebApi.Infra.Repository
     {
         VendaModel GetVendaById(int id);
         IEnumerable<VendaModel> GetAllVendas();
-        void AddVenda(VendaModel produto);
-        void UpdateVenda(VendaModel produto);
+        void AddVenda(VendaModel venda);
+        void UpdateVenda(VendaModel venda);
         void DeleteVenda(int id);
     }
 
@@ -30,22 +30,22 @@ namespace Yuppie.WebApi.Infra.Repository
             return _dbContext.Vendas.ToList();
         }
 
-        public void AddVenda(VendaModel produto)
+        public void AddVenda(VendaModel venda)
         {
-            _dbContext.Vendas.Add(produto);
+            _dbContext.Vendas.Add(venda);
             _dbContext.SaveChanges();
         }
 
-        public void UpdateVenda(VendaModel produto)
+        public void UpdateVenda(VendaModel venda)
         {
-            _dbContext.Vendas.Update(produto);
+            _dbContext.Vendas.Update(venda);
             _dbContext.SaveChanges();
         }
 
         public void DeleteVenda(int id)
         {
-            var produto = _dbContext.Vendas.Find(id);
-            _dbContext.Vendas.Remove(produto);
+            var venda = _dbContext.Vendas.Find(id);
+            _dbContext.Vendas.Remove(venda);
             _dbContext.SaveChanges();
         }
     }

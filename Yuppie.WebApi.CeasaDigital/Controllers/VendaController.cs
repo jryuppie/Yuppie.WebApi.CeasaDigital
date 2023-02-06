@@ -22,10 +22,11 @@ namespace Yuppie.WebApi.CeasaDigital.Controllers
         }
 
         [Route("ExecutarVenda")]
-        [HttpGet]
-        public List<VendaModel> ExecutarVenda()
+        [HttpPost]
+        public bool ExecutarVenda(int idOferta, int quantidade, int idComprador)
         {
-            return _vendaService.BuscarTodasVendas();
+            _vendaService.ExecutarVenda(idOferta, quantidade, idComprador);
+            return true;
         }
     }
 }

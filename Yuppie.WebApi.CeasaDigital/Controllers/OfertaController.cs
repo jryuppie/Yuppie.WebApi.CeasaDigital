@@ -9,16 +9,22 @@ namespace Yuppie.WebApi.CeasaDigital.Controllers
     [ApiController]
     public class OfertaController : ControllerBase
     {
-        private IOfertaService _pgOfertaService;
-        public OfertaController(IOfertaService pgOfertaService)
+        private IOfertaService _OfertaService;
+        public OfertaController(IOfertaService OfertaService)
         {
-            _pgOfertaService = pgOfertaService;
+            _OfertaService = OfertaService;
         }
-        [Route("GetOffers")]
+        [Route("BuscarOfertas")]
         [HttpGet]
-        public List<OfertaModel> GetProducts()
+        public List<OfertaModel> BuscarOfertas()
         {            
-            return _pgOfertaService.BuscarTodasOfertas();
+            return _OfertaService.BuscarTodasOfertas();
+        }
+        [Route("BuscarOfertasPorVendedor")]
+        [HttpGet]
+        public List<OfertaModel> BuscarOfertasPorVendedor(int dias, int idVendedor)
+        {
+            return _OfertaService.BuscarOfertasComVencimentoEm(dias, idVendedor);
         }
     }
 }

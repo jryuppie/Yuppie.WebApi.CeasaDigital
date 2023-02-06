@@ -8,5 +8,6 @@ namespace Yuppie.WebApi.CeasaDigital.Domain.Interfaces
     public interface IOfertaService
     {
         public List<OfertaModel> BuscarTodasOfertas();
+        public List<OfertaModel> BuscarOfertasComVencimentoEm(int dias, int idVendedor);
     }
 }

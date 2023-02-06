@@ -36,7 +36,7 @@ namespace Yuppie.WebApi.CeasaDigital
             services.AddTransient<IBaseService, BaseService>();
             services.AddTransient<IProdutoService, ProdutoService>();
             services.AddTransient<IOfertaService, OfertaService>();
-            services.AddTransient<IOfertaService, OfertaService>();
+            services.AddTransient<IVendaService, VendaService>();
             #endregion
 
             #region Repositories
@@ -45,6 +45,7 @@ namespace Yuppie.WebApi.CeasaDigital
             services.AddTransient<IProdutoRepository, ProdutoRepository>();
             services.AddTransient<IVendaRepository, VendaRepository>();
             services.AddTransient<IProcessoNegociacaoRepository, ProcessoNegociacaoRepository>();
+            services.AddTransient<IUnidadeMedidaRepository, UnidadeMedidaRepository>();
             #endregion
 
             #region Context

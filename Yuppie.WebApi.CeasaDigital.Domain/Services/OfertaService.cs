@@ -27,5 +27,17 @@ namespace Yuppie.WebApi.CeasaDigital.Domain.Services
             }
             return null;
         }
+
+        public List<OfertaModel> BuscarOfertasComVencimentoEm(int dias, int idVendedor)
+        {
+            try
+            {               
+                return JsonConvert.DeserializeObject<List<OfertaModel>>(JsonConvert.SerializeObject(_OfertaRepository.BuscarOfertasComVencimentoEm(dias, idVendedor))); ;
+            }
+            catch (System.Exception ex)
+            {
+            }
+            return null;
+        }
     }
 }

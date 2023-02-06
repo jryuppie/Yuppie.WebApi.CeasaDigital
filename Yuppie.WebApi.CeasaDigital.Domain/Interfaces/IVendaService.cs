@@ -6,7 +6,7 @@ namespace Yuppie.WebApi.CeasaDigital.Domain.Interfaces
     public interface IVendaService
     {
         public List<VendaModel> BuscarTodasVendas();
-        public void ExecutarVenda(int idOferta, int idComprador, int quantidade);
+        public void ExecutarVenda(int idOferta, int quantidade, int idComprador);
 
     }
 }

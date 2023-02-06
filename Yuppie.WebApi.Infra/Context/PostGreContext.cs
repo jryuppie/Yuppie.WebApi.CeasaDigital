@@ -170,6 +170,45 @@ namespace Yuppie.WebApi.Infra.Context
                 entity.Property(e => e.update_date)
                     .HasColumnName("update_date");
             });
+
+            modelBuilder.Entity<VendaModel>(entity =>
+            {
+                entity.ToTable("venda");
+
+                entity.Property(e => e.id)
+                    .HasColumnName("id")
+                    .ValueGeneratedOnAdd();
+
+                entity.Property(e => e.avaliacao_comprador)
+                    .HasColumnName("avaliacao_comprador");
+
+                entity.Property(e => e.avaliacao_vendedor)
+                    .HasColumnName("avaliacao_vendedor");
+
+                entity.Property(e => e.create_date)
+                    .HasColumnName("create_date");
+
+                entity.Property(e => e.id_comprador)
+                    .HasColumnName("id_comprador");
+
+                entity.Property(e => e.id_oferta)
+                    .HasColumnName("id_oferta");
+
+                entity.Property(e => e.id_vendedor)
+                    .HasColumnName("id_vendedor");
+
+                entity.Property(e => e.qtd_comprada)
+                    .HasColumnName("qtd_comprada");
+
+                entity.Property(e => e.update_date)
+                    .HasColumnName("update_date");
+
+                entity.Property(e => e.valor_transacao)
+                    .HasColumnName("valor_transacao");
+
+                entity.Property(e => e.venda_status)
+                    .HasColumnName("venda_status");
+            });
         }
     }
 }
