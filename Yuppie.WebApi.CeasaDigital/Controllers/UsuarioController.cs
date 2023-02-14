@@ -7,16 +7,16 @@ namespace Yuppie.WebApi.CeasaDigital.Controllers
     public class UsuarioController : Controller
     {
         
-        private IBaseService _pgBaseService;
-        public UsuarioController( IBaseService pgBaseService)
+        private IUsuarioService _pgBaseService;
+        public UsuarioController( IUsuarioService pgBaseService)
         {            
             _pgBaseService = pgBaseService;
         }
-        [Route("GetUsers")]
+        [Route("BuscarUsuario")]
         [HttpGet]
-        public UsuarioModel GetUsers()
+        public UsuarioModel BuscarUsuario()
         {
-            var userDB = _pgBaseService.GetUser("17996128054", "Valornoob98");
+            var userDB = _pgBaseService.BuscarUsuario("17996128054", "Valornoob98");
             return userDB;
         }
     }

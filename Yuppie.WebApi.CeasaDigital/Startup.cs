@@ -33,7 +33,7 @@ namespace Yuppie.WebApi.CeasaDigital
         public void ConfigureServices(IServiceCollection services)
         {
             #region Services           
-            services.AddTransient<IBaseService, BaseService>();
+            services.AddTransient<IUsuarioService, UsuarioService>();
             services.AddTransient<IProdutoService, ProdutoService>();
             services.AddTransient<IOfertaService, OfertaService>();
             services.AddTransient<IVendaService, VendaService>();
@@ -54,7 +54,6 @@ namespace Yuppie.WebApi.CeasaDigital
            options.UseNpgsql(GetConnectionString()));
             services.AddControllers();
             #endregion
-
 
             services.AddCors(options =>
             {
@@ -98,6 +97,7 @@ namespace Yuppie.WebApi.CeasaDigital
 
         string GetConnectionString()
         {
+            return "Server=192.168.2.222;Port=5432;User Id=postgres;Password=Yuppie.2023;Database=ceasaDigital;";
             var retorno = "";
             string connectionUrl = Configuration.GetConnectionString("DefaultConnection");
             var databaseUri = new Uri(connectionUrl);

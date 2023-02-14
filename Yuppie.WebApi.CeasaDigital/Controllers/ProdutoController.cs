@@ -16,7 +16,7 @@ namespace Yuppie.WebApi.CeasaDigital.Controllers
         {
             _pgProdutoService = pgProdutoService;
         }
-        [Route("GetProducts")]
+        [Route("BuscarProdutos")]
         [HttpGet]
         public List<ProdutoModel> GetProducts()
         {
@@ -24,21 +24,21 @@ namespace Yuppie.WebApi.CeasaDigital.Controllers
             return produtos;
         }
 
-        [Route("GetProductsById")]
+        [Route("BuscarProdutosPorId")]
         [HttpGet]
         public List<ProdutoModel> GetProductsById(int Id)
         {
             return null;
         }
 
-        [Route("GetProductsByType")]
+        [Route("BuscarProdutosPorTupo")]
         [HttpGet]
         public List<ProdutoModel> GetProductsByType(string Type)
         {
             return null;
         }
 
-        [Route("GetProductsByRating")]
+        [Route("BuscarProdutosPorRating")]
         [HttpGet]
         public List<ProdutoModel> GetProductsByRating(int Rating)
         {

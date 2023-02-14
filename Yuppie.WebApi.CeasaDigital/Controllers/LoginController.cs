@@ -6,16 +6,16 @@ namespace Yuppie.WebApi.CeasaDigital.Controllers
 {
     public class LoginController : Controller
     {
-        private IBaseService _pgBaseService;
-        public LoginController(IBaseService pgBaseService)
+        private IUsuarioService _usuarioService;
+        public LoginController(IUsuarioService usuarioService)
         {
-            _pgBaseService = pgBaseService;
+            _usuarioService = usuarioService;
         }
         [Route("Login")]
         [HttpGet]
         public UsuarioModel Login(string usuario = "17996128054", string senha= "Valornoob98")
         {
-            var loginDb = _pgBaseService.GetUser(usuario, senha);
+            var loginDb = _usuarioService.BuscarUsuario(usuario, senha);
             return loginDb;
         }
     }

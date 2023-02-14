@@ -2,8 +2,8 @@
 
 namespace Yuppie.WebApi.CeasaDigital.Domain.Interfaces
 {
-    public interface IBaseService
+    public interface IUsuarioService
     {
-        public UsuarioModel GetUser(string user, string password);
+        public UsuarioModel BuscarUsuario(string user, string password);
     }
 }
