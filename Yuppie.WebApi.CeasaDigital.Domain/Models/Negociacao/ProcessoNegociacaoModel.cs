@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Yuppie.WebApi.CeasaDigital.Domain.Models.Deal
+namespace Yuppie.WebApi.CeasaDigital.Domain.Models.Negociacao
 {
     public class ProcessoNegociacaoModel
     {

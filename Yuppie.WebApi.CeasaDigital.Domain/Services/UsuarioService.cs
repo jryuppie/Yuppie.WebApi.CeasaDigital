@@ -1,7 +1,5 @@
 ﻿using Newtonsoft.Json;
 using System;
-using System.Collections.Generic;
-using System.Text;
 using Yuppie.WebApi.CeasaDigital.Domain.Interfaces;
 using Yuppie.WebApi.CeasaDigital.Domain.Models.UsuarioModel;
 

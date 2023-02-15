@@ -37,6 +37,7 @@ namespace Yuppie.WebApi.CeasaDigital
             services.AddTransient<IProdutoService, ProdutoService>();
             services.AddTransient<IOfertaService, OfertaService>();
             services.AddTransient<IVendaService, VendaService>();
+            services.AddTransient<INegociacaoService, NegociacaoService>();
             #endregion
 
             #region Repositories
