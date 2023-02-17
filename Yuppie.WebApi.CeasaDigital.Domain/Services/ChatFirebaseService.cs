@@ -11,26 +11,16 @@ using Yuppie.WebApi.Infra.Context;
 
 namespace Yuppie.WebApi.CeasaDigital.Domain.Services
 {
-    public class ChatFirebaseService
+    public class ChatFirebaseService : IChatFirebaseService
     {
-        //    private readonly HFDigitalContext _context;
-        //    public ChatFirebaseService(HFDigitalContext context)
-        //    {
-        //        _context = context;
-        //    }
-        //    public ChatFirebaseUserModel GetUser(int id)
-        //    {
-        //        try
-        //        {
-        //            //var userDB = _context.TbUser.Where(x => x.id).FirstOrDefault();
-        //            return null;
-        //        }
-        //        catch (System.Exception ex)
-        //        {
-        //        }
+        public void Login()
+        {
 
-        //        return null;
-        //    }
+        }
+        public void BuscarUsuarioPorId(int id)
+        { }
+        public void BuscarContratosPorId(int id) { }
+        public void AtualizarDadosChatUsuario() { }
 
     }
 }

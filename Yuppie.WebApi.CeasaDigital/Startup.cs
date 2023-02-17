@@ -1,22 +1,19 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Yuppie.WebApi.CeasaDigital.Domain.Interfaces;
 using Yuppie.WebApi.CeasaDigital.Domain.Services;
-using Yuppie.WebApi.Infra.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using Yuppie.WebApi.Infra.Context;
 using Microsoft.OpenApi.Models;
 using Yuppie.WebApi.Infra.Repository;
+using AutoMapper;
+using Yuppie.WebApi.CeasaDigital.Domain.Models.Negociacao;
+using Yuppie.WebApi.CeasaDigital.Domain.Models.Chat;
+using Yuppie.WebApi.CeasaDigital.Domain.Models.Produto;
+using Yuppie.WebApi.CeasaDigital.Domain.Models.UsuarioModel;
 
 namespace Yuppie.WebApi.CeasaDigital
 {
@@ -38,6 +35,8 @@ namespace Yuppie.WebApi.CeasaDigital
             services.AddTransient<IOfertaService, OfertaService>();
             services.AddTransient<IVendaService, VendaService>();
             services.AddTransient<INegociacaoService, NegociacaoService>();
+            services.AddTransient<IChatFirebaseService, ChatFirebaseService>();
+            services.AddTransient<IUnMedidaService, UnMedidaService>();
             #endregion
 
             #region Repositories
@@ -55,6 +54,20 @@ namespace Yuppie.WebApi.CeasaDigital
            options.UseNpgsql(GetConnectionString()));
             services.AddControllers();
             #endregion
+
+            var mappingConfig = new MapperConfiguration(mc =>
+            {
+                mc.CreateMap<ChatFirebaseUserModel, Yuppie.WebApi.Infra.Models.Chat.ChatFirebaseUserModel>();
+                mc.CreateMap<OfertaModel, Yuppie.WebApi.Infra.Models.Negociacao.OfertaModel>();
+                mc.CreateMap<ProcessoNegociacaoModel, Yuppie.WebApi.Infra.Models.Negociacao.ProcessoNegociacaoModel>();
+                mc.CreateMap<ProdutoModel , Yuppie.WebApi.Infra.Models.Produto.ProdutoModel>();
+                mc.CreateMap<ProdutoModel, Yuppie.WebApi.Infra.Models.Produto.ProdutoModel>();
+                mc.CreateMap<UnidadeMedidaModel, Yuppie.WebApi.Infra.Models.Produto.UnidadeMedidaModel>();
+                mc.CreateMap<UsuarioModel, Yuppie.WebApi.Infra.Models.UsuarioModel.UsuarioModel>();
+            });
+
+            IMapper mapper = mappingConfig.CreateMapper();
+            services.AddSingleton(mapper);
 
             services.AddCors(options =>
             {
@@ -98,21 +111,22 @@ namespace Yuppie.WebApi.CeasaDigital
 
         string GetConnectionString()
         {
-            return "Server=192.168.2.222;Port=5432;User Id=postgres;Password=Yuppie.2023;Database=ceasaDigital;";
+             string connectionUrl = Configuration.GetConnectionString("DefaultConnection");
+            return connectionUrl;
             var retorno = "";
-            string connectionUrl = Configuration.GetConnectionString("DefaultConnection");
-            var databaseUri = new Uri(connectionUrl);
+            //string connectionUrl = Configuration.GetConnectionString("DefaultConnection");
+            //var databaseUri = new Uri(connectionUrl);
 
-            string db = databaseUri.LocalPath.TrimStart('/');
+            //string db = databaseUri.LocalPath.TrimStart('/');
 
-            string[] userInfo = databaseUri.UserInfo
-                                .Split(':', StringSplitOptions.RemoveEmptyEntries);
+            //string[] userInfo = databaseUri.UserInfo
+            //                    .Split(':', StringSplitOptions.RemoveEmptyEntries);
 
-            retorno = $"User ID={userInfo[0]};Password={userInfo[1]};Host={databaseUri.Host};" +
-                   $"Port={databaseUri.Port};Database={db};Pooling=true;" +
-                   $"SSL Mode=Require;Trust Server Certificate=True;";
+            //retorno = $"User ID={userInfo[0]};Password={userInfo[1]};Host={databaseUri.Host};" +
+            //       $"Port={databaseUri.Port};Database={db};Pooling=true;" +
+            //       $"SSL Mode=Require;Trust Server Certificate=True;";
 
-            return retorno;
+            //return retorno;
         }
     }
 }

@@ -11,10 +11,10 @@ namespace Yuppie.WebApi.CeasaDigital.Domain.Models.Negociacao
         public int id_vendedor { get; set; }
         public int id_comprador { get; set; }
         public int qtd_comprada { get; set; }
-        public decimal valor_transacao { get; set; }
+        public float valor_transacao { get; set; }
         public int avaliacao_vendedor { get; set; }
         public int avaliacao_comprador { get; set; }
-        public bool venda_status { get; set; }
+        public string venda_status { get; set; }
         public DateTime create_date { get; set; }
         public DateTime update_date { get; set; }      
     }

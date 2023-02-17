@@ -14,11 +14,32 @@ namespace Yuppie.WebApi.CeasaDigital.Controllers
         {
             _vendaService = vendaService;
         }
-        [Route("TodasVendas")]
+        [Route("vendas")]
         [HttpGet]
         public List<VendaModel> TodasVendas()
         {
             return _vendaService.BuscarTodasVendas();
+        }
+
+        [Route("{id}")]
+        [HttpGet]
+        public VendaModel BuscarVendaPorId(int id)
+        {
+            return _vendaService.BuscarVendaPorId(id);
+        }
+
+        [Route("vendedor/{id}")]
+        [HttpGet]
+        public List<VendaModel> BuscarVendaPorIdVendedor(int id)
+        {
+            return _vendaService.BuscarVendaPorIdVendedor(id);
+        }
+
+        [Route("comprador/{id}")]
+        [HttpGet]
+        public List<VendaModel> BuscarVendaPorIdComprador(int id)
+        {
+            return _vendaService.BuscarVendaPorIdComprador(id);
         }
 
         [Route("ExecutarVenda")]

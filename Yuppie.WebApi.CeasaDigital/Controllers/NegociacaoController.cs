@@ -8,18 +8,18 @@ namespace Yuppie.WebApi.CeasaDigital.Controllers
     [Route("api/[controller]")]
     [ApiController]
     public class NegociacaoController : Controller
-    {      
-            private INegociacaoService _pgNegociacaoService;
-            public NegociacaoController(INegociacaoService pgNegociacaoService)
-            {
+    {
+        private INegociacaoService _pgNegociacaoService;
+        public NegociacaoController(INegociacaoService pgNegociacaoService)
+        {
             _pgNegociacaoService = pgNegociacaoService;
-            }
+        }
 
-            [Route("/{idVenda}")]
-            [HttpGet]
-            public ProcessoNegociacaoModel BuscarNegociacao(int idVenda)
-            {
-               return _pgNegociacaoService.BuscarNegociacao(idVenda);                
-            }
+        [Route("{idVenda}")]
+        [HttpGet]
+        public ProcessoNegociacaoModel BuscarNegociacao(int idVenda)
+        {
+            return _pgNegociacaoService.BuscarNegociacao(idVenda);
+        }
     }
 }

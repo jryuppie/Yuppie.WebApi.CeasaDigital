@@ -4,6 +4,8 @@ using Yuppie.WebApi.CeasaDigital.Domain.Models.UsuarioModel;
 
 namespace Yuppie.WebApi.CeasaDigital.Controllers
 {
+    [Route("api")]
+    [ApiController]
     public class LoginController : Controller
     {
         private IUsuarioService _usuarioService;
@@ -11,11 +13,11 @@ namespace Yuppie.WebApi.CeasaDigital.Controllers
         {
             _usuarioService = usuarioService;
         }
-        [Route("Login")]
+        [Route("login")]
         [HttpGet]
         public UsuarioModel Login(string usuario = "17996128054", string senha= "Valornoob98")
         {
-            var loginDb = _usuarioService.BuscarUsuario(usuario, senha);
+            var loginDb = _usuarioService.BuscarUsuarioLogin(usuario, senha);
             return loginDb;
         }
     }

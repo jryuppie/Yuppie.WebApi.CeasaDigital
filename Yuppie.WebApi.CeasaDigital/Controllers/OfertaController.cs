@@ -15,20 +15,20 @@ namespace Yuppie.WebApi.CeasaDigital.Controllers
         {
             _OfertaService = OfertaService;
         }
-        [Route("BuscarOfertas")]
+        [Route("buscarofertas")]
         [HttpGet]
         public List<OfertaModel> BuscarOfertas()
-        {            
+        {
             return _OfertaService.BuscarTodasOfertas();
         }
-        [Route("BuscarOfertasPorVendedor")]
+        [Route("vendedor/{idVendedor}")]
         [HttpGet]
         public List<OfertaModel> BuscarOfertasPorVendedor(int dias, int idVendedor)
         {
             return _OfertaService.BuscarOfertasComVencimentoEm(dias, idVendedor);
         }
 
-        [Route("CadastrarOferta")]
+        [Route("cadastraoferta")]
         [HttpPost]
         public async Task<ActionResult<OfertaModel>> CadastrarOfertas([FromForm] object formModel)
         {
@@ -37,15 +37,15 @@ namespace Yuppie.WebApi.CeasaDigital.Controllers
             return retorno;
         }
 
-        [Route("FinalizarOferta")]
+        [Route("encerraoferta")]
         [HttpPost]
         public async Task<ActionResult<OfertaModel>> FinalizarOfertas([FromForm] object formModel)
         {
             //verificar como esta sendo recebido o formulário
-            var retorno = new OfertaModel();    
+            var retorno = new OfertaModel();
             return retorno;
         }
-        [Route("AtivarOferta")]
+        [Route("ativaroferta")]
         [HttpPost]
         public async Task<ActionResult<OfertaModel>> AtivarOferta([FromForm] object formModel)
         {
@@ -54,7 +54,7 @@ namespace Yuppie.WebApi.CeasaDigital.Controllers
             return retorno;
         }
 
-        [Route("AtualizarOferta")]
+        [Route("atualizaferta")]
         [HttpPost]
         public async Task<ActionResult<OfertaModel>> AtualizarOferta([FromForm] object formModel)
         {

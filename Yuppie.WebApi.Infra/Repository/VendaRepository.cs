@@ -8,8 +8,10 @@ namespace Yuppie.WebApi.Infra.Repository
 {
     public interface IVendaRepository
     {
-        VendaModel GetVendaById(int id);
-        IEnumerable<VendaModel> GetAllVendas();
+        VendaModel BuscarVendaPorId(int id);
+        List<VendaModel> BuscarVendaPorIdVendedor(int id);
+        List<VendaModel> BuscarVendaPorIdComprador(int id);
+        List<VendaModel> BuscarTodasVendas();
         void AddVenda(VendaModel venda);
         void UpdateVenda(VendaModel venda);
         void DeleteVenda(int id);
@@ -20,16 +22,25 @@ namespace Yuppie.WebApi.Infra.Repository
         private readonly PostGreContext _dbContext;
         public VendaRepository(PostGreContext context) => _dbContext = context;
 
-        public VendaModel GetVendaById(int id)
+        public VendaModel BuscarVendaPorId(int id)
         {
             return _dbContext.Vendas.Find(id);
         }
 
-        public IEnumerable<VendaModel> GetAllVendas()
+        public List<VendaModel> BuscarTodasVendas()
         {
             return _dbContext.Vendas.ToList();
         }
 
+        public List<VendaModel> BuscarVendaPorIdVendedor(int id)
+        {
+            return _dbContext.Vendas.Where(x => x.id_vendedor == id).ToList();
+        }
+
+        public List<VendaModel> BuscarVendaPorIdComprador(int id)
+        {
+            return _dbContext.Vendas.Where(x => x.id_comprador == id).ToList();
+        }
         public void AddVenda(VendaModel venda)
         {
             _dbContext.Vendas.Add(venda);

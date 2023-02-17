@@ -3,8 +3,9 @@ using Yuppie.WebApi.CeasaDigital.Domain.Interfaces;
 using Yuppie.WebApi.CeasaDigital.Domain.Models.Produto;
 
 namespace Yuppie.WebApi.CeasaDigital.Controllers
-{  
-
+{
+    [Route("api/medidas")]
+    [ApiController]
     public class UnMedidaController : Controller
     {
 
@@ -19,7 +20,7 @@ namespace Yuppie.WebApi.CeasaDigital.Controllers
         [HttpGet]
         public void CadastrarUnMedida()
         {
-           _pgUnMedidaService.CadastrarUnMedida(new UnidadeMedidaModel());            
+            _pgUnMedidaService.CadastrarUnMedida(new UnidadeMedidaModel());
         }
 
         [Route("DeletarUnMedida")]

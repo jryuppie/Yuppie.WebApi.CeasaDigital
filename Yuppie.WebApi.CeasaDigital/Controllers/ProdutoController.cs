@@ -73,13 +73,5 @@ namespace Yuppie.WebApi.CeasaDigital.Controllers
         {
             return null;
         }
-
-        [Route("BuscarProdutosPorRating")]
-        [HttpGet]
-        public List<ProdutoModel> GetProductsByRating(int Rating)
-        {
-            return null;
-        }
-
     }
 }
