@@ -17,17 +17,24 @@ namespace Yuppie.WebApi.CeasaDigital.Controllers
         {
             _OfertaService = OfertaService;
         }
-        [Route("buscarofertas")]
+        [Route("buscarOfertas")]
         [HttpGet]
-        public Task<List<OfertaModel>> BuscarOfertas()
+        public async Task<ObjectResult> BuscarOfertas()
         {
-            return _OfertaService.BuscarTodasOfertas();
+            return await _OfertaService.BuscarTodasOfertas();
         }
+        [Route("vendedor/vencendo/{idVendedor}/{dias}")]
+        [HttpGet]
+        public async Task<ObjectResult> BuscarOfertasComVencimentoEm(int dias, int idVendedor)
+        {
+            return await _OfertaService.BuscarOfertasComVencimentoEm(dias, idVendedor);
+        }
+
         [Route("vendedor/{idVendedor}")]
         [HttpGet]
-        public List<OfertaModel> BuscarOfertasPorVendedor(int dias, int idVendedor)
+        public async Task<ObjectResult> BuscarOfertaPorVendedor(int idVendedor)
         {
-            return _OfertaService.BuscarOfertasComVencimentoEm(dias, idVendedor);
+            return await _OfertaService.BuscarOfertasPorVendedor(idVendedor);
         }
 
         [Route("cadastrarOferta")]
@@ -37,30 +44,24 @@ namespace Yuppie.WebApi.CeasaDigital.Controllers
             return await _OfertaService.CadastrarOferta(oModel.IdProduto, oModel.IdUnMedida, oModel.IdVendedor, oModel.QtdDisponivel, oModel.PesoUnMedida, oModel.VlUnMedida);
         }
 
-        [Route("encerraoferta")]
-        [HttpPost]
-        public async Task<ActionResult<OfertaModel>> FinalizarOfertas([FromForm] object formModel)
+        [Route("encerraOferta")]
+        [HttpPatch]
+        public async Task<ActionResult<OfertaModel>> FinalizarOfertas([FromBody]  EncerrarOfertaFormulario oModel)
         {
-            //verificar como esta sendo recebido o formulário
-            var retorno = new OfertaModel();
-            return retorno;
+            return await _OfertaService.FinalizarOferta(oModel.Id);
         }
         [Route("ativaroferta")]
-        [HttpPost]
-        public async Task<ActionResult<OfertaModel>> AtivarOferta([FromForm] object formModel)
+        [HttpPatch]
+        public async Task<ActionResult<OfertaModel>> AtivarOferta([FromBody]  AtivarOfertaFormulario oModel)
         {
-            //verificar como esta sendo recebido o formulário
-            var retorno = new OfertaModel();
-            return retorno;
+            return await _OfertaService.AtivarOferta(oModel.Id);
         }
 
         [Route("atualizaferta")]
-        [HttpPost]
-        public async Task<ActionResult<OfertaModel>> AtualizarOferta([FromForm] object formModel)
+        [HttpPut]
+        public async Task<ActionResult<OfertaModel>> AtualizarOferta([FromForm] AtualizarOfertaFormulario oModel)
         {
-            //verificar como esta sendo recebido o formulário
-            var retorno = new OfertaModel();
-            return retorno;
+            return await _OfertaService.AtualizarOferta(oModel);
         }
     }
 }

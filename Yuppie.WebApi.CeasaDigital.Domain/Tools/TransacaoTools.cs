@@ -1,15 +1,17 @@
-﻿using System;
+﻿using AutoMapper;
+using System;
 using System.Threading.Tasks;
+using Yuppie.WebApi.CeasaDigital.Domain.Models.Negociacao;
 using Yuppie.WebApi.Infra.Repository;
 
 namespace Yuppie.WebApi.CeasaDigital.Domain.Tools
 {
     public class TransacaoTools
-    {   
+    {       
         private readonly IOfertaRepository _ofertaRepository;
-        public TransacaoTools(IOfertaRepository ofertaRepository)
+        public TransacaoTools( IOfertaRepository ofertaRepository)
         {          
-            _ofertaRepository = ofertaRepository;
+            _ofertaRepository = ofertaRepository;        
         }
 
         public async Task<decimal> AtribuirValorTransacao(int quantidade, int idOferta)

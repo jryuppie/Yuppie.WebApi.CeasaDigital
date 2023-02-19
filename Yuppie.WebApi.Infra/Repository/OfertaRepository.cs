@@ -13,10 +13,10 @@ namespace Yuppie.WebApi.Infra.Repository
 {
     public interface IOfertaRepository
     {
-        Task<OfertaModel> BuscarOfertaPorId(int idOferta);
-        Task<List<OfertaModel>> BuscarOfertaPorVendedor(int idVendedor);
-        Task<List<OfertaModel>> BuscarTodasOfertas();
-        Task<List<OfertaModel>> BuscarOfertasComVencimentoEm(int dias, int idVendedor);                 
+        public Task<OfertaModel> BuscarOfertaPorId(int idOferta);
+        public Task<List<OfertaModel>> BuscarOfertaPorVendedor(int idVendedor);
+        public Task<List<OfertaModel>> BuscarTodasOfertas();
+        public Task<List<OfertaModel>> BuscarOfertasComVencimentoEm(int dias, int idVendedor);                 
         public Task<ObjectResult> AdicionarOfertaAsync(OfertaModel oferta);
         public Task<ObjectResult> AtualizarOfertaAsync(OfertaModel oferta);
         public Task<ObjectResult> DeleteOfertaAsync(int idOferta);
@@ -29,23 +29,52 @@ namespace Yuppie.WebApi.Infra.Repository
 
         public async Task<List<OfertaModel>> BuscarOfertaPorVendedor(int idVendedor)
         {
-            return _dbContext.Ofertas.Where(x => x.id_vendedor == idVendedor).ToList();
+            try
+            {
+                return _dbContext.Ofertas.Where(x => x.id_vendedor == idVendedor).ToList();              
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }           
         }
 
         public async Task<List<OfertaModel>> BuscarTodasOfertas()
         {
-            return _dbContext.Ofertas.ToList();
+            try
+            {
+                return _dbContext.Ofertas.ToList();              
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }           
         }
 
         public async Task<List<OfertaModel>> BuscarOfertasComVencimentoEm(int diasAtras, int idVendedor)
         {
-            var umaSemanaAtras = DateTime.Now.AddDays(-diasAtras);
-            return _dbContext.Ofertas.Where(x => x.id_vendedor == idVendedor && x.update_date <= umaSemanaAtras).ToList();
+            try
+            {
+                var umaSemanaAtras = DateTime.Now.AddDays(-diasAtras);
+             return _dbContext.Ofertas.Where(x => x.id_vendedor == idVendedor && x.update_date <= umaSemanaAtras).ToList();
+             
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }           
         }
 
         public async Task<OfertaModel> BuscarOfertaPorId(int idOferta)
         {
-            return _dbContext.Ofertas.Where(x => x.id == idOferta).FirstOrDefault();
+            try
+            {
+                return _dbContext.Ofertas.Where(x => x.id == idOferta).FirstOrDefault();              
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
         }
        
         public async Task<ObjectResult> AdicionarOfertaAsync(OfertaModel oferta)
