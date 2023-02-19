@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading.Tasks;
 using Yuppie.WebApi.Infra.Repository;
 
 namespace Yuppie.WebApi.CeasaDigital.Domain.Tools
@@ -11,17 +12,18 @@ namespace Yuppie.WebApi.CeasaDigital.Domain.Tools
             _ofertaRepository = ofertaRepository;
         }
 
-        public decimal AtribuirValorTransacao(int quantidade, int idOferta)
+        public async Task<decimal> AtribuirValorTransacao(int quantidade, int idOferta)
         {
-            return Convert.ToDecimal(_ofertaRepository.BuscarOfertaPorId(idOferta).vl_un_medida * quantidade);
+            var oferta = await _ofertaRepository.BuscarOfertaPorId(idOferta);
+            return Convert.ToDecimal(oferta.vl_un_medida * quantidade);
         }
-        public void AtualizarQuantidadeOferta(int quantidade, int IdOferta)
+        public async void AtualizarQuantidadeOferta(int quantidade, int IdOferta)
         {
-            var oferta = _ofertaRepository.BuscarOfertaPorId(IdOferta);
+            var oferta = await _ofertaRepository.BuscarOfertaPorId(IdOferta);
             if (oferta != null && oferta.qtd_disponivel >= quantidade)
             {
                 oferta.qtd_disponivel -= quantidade;
-                _ofertaRepository.UpdateOferta(oferta);
+               await _ofertaRepository.AtualizarOfertaAsync(oferta);
             }
             else
             {

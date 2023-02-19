@@ -19,7 +19,7 @@ namespace Yuppie.WebApi.CeasaDigital.Controllers
         }
         [Route("buscarofertas")]
         [HttpGet]
-        public List<OfertaModel> BuscarOfertas()
+        public Task<List<OfertaModel>> BuscarOfertas()
         {
             return _OfertaService.BuscarTodasOfertas();
         }

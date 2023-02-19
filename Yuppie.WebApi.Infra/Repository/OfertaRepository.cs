@@ -13,14 +13,13 @@ namespace Yuppie.WebApi.Infra.Repository
 {
     public interface IOfertaRepository
     {
-        OfertaModel BuscarOfertaPorId(int idOferta);
-        List<OfertaModel> BuscarOfertaPorVendedor(int idVendedor);
-        List<OfertaModel> BuscarTodasOfertas();
-        List<OfertaModel> BuscarOfertasComVencimentoEm(int dias, int idVendedor);
-        void UpdateOferta(OfertaModel usuario);
-        void DeleteOferta(int id);
-        public void AdicionarOferta(OfertaModel oferta);
-        public  Task<ObjectResult> AdicionarOfertaAsync(OfertaModel oferta);
+        Task<OfertaModel> BuscarOfertaPorId(int idOferta);
+        Task<List<OfertaModel>> BuscarOfertaPorVendedor(int idVendedor);
+        Task<List<OfertaModel>> BuscarTodasOfertas();
+        Task<List<OfertaModel>> BuscarOfertasComVencimentoEm(int dias, int idVendedor);                 
+        public Task<ObjectResult> AdicionarOfertaAsync(OfertaModel oferta);
+        public Task<ObjectResult> AtualizarOfertaAsync(OfertaModel oferta);
+        public Task<ObjectResult> DeleteOfertaAsync(int idOferta);
     }
 
     public class OfertaRepository : IOfertaRepository
@@ -28,32 +27,27 @@ namespace Yuppie.WebApi.Infra.Repository
         private readonly PostGreContext _dbContext;
         public OfertaRepository(PostGreContext context) => _dbContext = context;
 
-        public List<OfertaModel> BuscarOfertaPorVendedor(int idVendedor)
+        public async Task<List<OfertaModel>> BuscarOfertaPorVendedor(int idVendedor)
         {
             return _dbContext.Ofertas.Where(x => x.id_vendedor == idVendedor).ToList();
         }
 
-        public List<OfertaModel> BuscarTodasOfertas()
+        public async Task<List<OfertaModel>> BuscarTodasOfertas()
         {
             return _dbContext.Ofertas.ToList();
         }
 
-        public List<OfertaModel> BuscarOfertasComVencimentoEm(int diasAtras, int idVendedor)
+        public async Task<List<OfertaModel>> BuscarOfertasComVencimentoEm(int diasAtras, int idVendedor)
         {
             var umaSemanaAtras = DateTime.Now.AddDays(-diasAtras);
             return _dbContext.Ofertas.Where(x => x.id_vendedor == idVendedor && x.update_date <= umaSemanaAtras).ToList();
         }
 
-        public OfertaModel BuscarOfertaPorId(int idOferta)
+        public async Task<OfertaModel> BuscarOfertaPorId(int idOferta)
         {
             return _dbContext.Ofertas.Where(x => x.id == idOferta).FirstOrDefault();
         }
-
-        public void AdicionarOferta(OfertaModel oferta)
-        {
-            _dbContext.Ofertas.Add(oferta);
-            _dbContext.SaveChanges();
-        }
+       
         public async Task<ObjectResult> AdicionarOfertaAsync(OfertaModel oferta)
         {
             try
@@ -75,17 +69,47 @@ namespace Yuppie.WebApi.Infra.Repository
 
         }
 
-        public void UpdateOferta(OfertaModel oferta)
+        public async Task<ObjectResult> AtualizarOfertaAsync(OfertaModel oferta)
         {
-            _dbContext.Ofertas.Update(oferta);
-            _dbContext.SaveChanges();
+            try
+            {
+                _dbContext.Ofertas.Update(oferta);
+                _dbContext.SaveChanges();
+                return new ObjectResult(oferta)
+                {
+                    StatusCode = StatusCodes.Status200OK
+                };
+            }
+            catch (Exception ex)
+            {
+                return new ObjectResult(new { message = ex.Message })
+                {
+                    StatusCode = 400
+                };
+            }
+
         }
 
-        public void DeleteOferta(int id)
+        public async Task<ObjectResult> DeleteOfertaAsync(int idOferta)
         {
-            var oferta = _dbContext.Ofertas.Find(id);
-            _dbContext.Ofertas.Remove(oferta);
-            _dbContext.SaveChanges();
-        }
+            try
+            {
+                var oferta = _dbContext.Ofertas.Find(idOferta);
+                _dbContext.Ofertas.Remove(oferta);
+                _dbContext.SaveChanges();
+                return new ObjectResult(oferta)
+                {
+                    StatusCode = StatusCodes.Status200OK
+                };
+            }
+            catch (Exception ex)
+            {
+                return new ObjectResult(new { message = ex.Message })
+                {
+                    StatusCode = 400
+                };
+            }
+
+        } 
     }
 }

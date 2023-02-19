@@ -11,6 +11,7 @@ using Yuppie.WebApi.CeasaDigital.Domain.Interfaces;
 using Yuppie.WebApi.CeasaDigital.Domain.Models.Enums;
 using Yuppie.WebApi.CeasaDigital.Domain.Models.Negociacao;
 using Yuppie.WebApi.Infra.Repository;
+using static System.Net.Mime.MediaTypeNames;
 
 
 namespace Yuppie.WebApi.CeasaDigital.Domain.Services
@@ -24,11 +25,12 @@ namespace Yuppie.WebApi.CeasaDigital.Domain.Services
         }
 
 
-        public List<OfertaModel> BuscarTodasOfertas()
+        public async Task<List<OfertaModel>> BuscarTodasOfertas()
         {
             try
             {
-                return JsonConvert.DeserializeObject<List<OfertaModel>>(JsonConvert.SerializeObject(_OfertaRepository.BuscarTodasOfertas())); ;
+                var teste = await _OfertaRepository.BuscarTodasOfertas();
+                return JsonConvert.DeserializeObject<List<OfertaModel>>(JsonConvert.SerializeObject(teste)); ;
             }
             catch (System.Exception ex)
             {
@@ -70,7 +72,7 @@ namespace Yuppie.WebApi.CeasaDigital.Domain.Services
             };
 
 
-            var ofertas = _OfertaRepository.BuscarOfertaPorVendedor(idVendedor);
+            var ofertas = await _OfertaRepository.BuscarOfertaPorVendedor(idVendedor);
             if (ofertas != null && !ofertas.Any(x => x.id_produto == idProduto))
             {
                 return await _OfertaRepository.AdicionarOfertaAsync(ofertaCriacao);

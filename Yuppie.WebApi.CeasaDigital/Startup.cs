@@ -9,11 +9,11 @@ using Microsoft.EntityFrameworkCore;
 using Yuppie.WebApi.Infra.Context;
 using Microsoft.OpenApi.Models;
 using Yuppie.WebApi.Infra.Repository;
-using AutoMapper;
 using Yuppie.WebApi.CeasaDigital.Domain.Models.Negociacao;
 using Yuppie.WebApi.CeasaDigital.Domain.Models.Chat;
 using Yuppie.WebApi.CeasaDigital.Domain.Models.Produto;
 using Yuppie.WebApi.CeasaDigital.Domain.Models.UsuarioModel;
+using AutoMapper;
 
 namespace Yuppie.WebApi.CeasaDigital
 {
@@ -55,12 +55,13 @@ namespace Yuppie.WebApi.CeasaDigital
             services.AddControllers();
             #endregion
 
+
             var mappingConfig = new MapperConfiguration(mc =>
             {
                 mc.CreateMap<ChatFirebaseUserModel, Yuppie.WebApi.Infra.Models.Chat.ChatFirebaseUserModel>();
                 mc.CreateMap<OfertaModel, Yuppie.WebApi.Infra.Models.Negociacao.OfertaModel>();
                 mc.CreateMap<ProcessoNegociacaoModel, Yuppie.WebApi.Infra.Models.Negociacao.ProcessoNegociacaoModel>();
-                mc.CreateMap<ProdutoModel , Yuppie.WebApi.Infra.Models.Produto.ProdutoModel>();
+                mc.CreateMap<ProdutoModel, Yuppie.WebApi.Infra.Models.Produto.ProdutoModel>();
                 mc.CreateMap<ProdutoModel, Yuppie.WebApi.Infra.Models.Produto.ProdutoModel>();
                 mc.CreateMap<UnidadeMedidaModel, Yuppie.WebApi.Infra.Models.Produto.UnidadeMedidaModel>();
                 mc.CreateMap<UsuarioModel, Yuppie.WebApi.Infra.Models.UsuarioModel.UsuarioModel>();
@@ -106,6 +107,8 @@ namespace Yuppie.WebApi.CeasaDigital
             {
                 c.SwaggerEndpoint("/swagger/v1/swagger.json", "Ceasa Digital API");
             });
+
+            
         }
 
 
