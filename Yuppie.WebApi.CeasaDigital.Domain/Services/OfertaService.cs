@@ -1,6 +1,6 @@
 ﻿
 
-using Microsoft.AspNetCore.Http;
+using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using System;
@@ -8,29 +8,29 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Yuppie.WebApi.CeasaDigital.Domain.Interfaces;
-using Yuppie.WebApi.CeasaDigital.Domain.Models.Enums;
 using Yuppie.WebApi.CeasaDigital.Domain.Models.Negociacao;
 using Yuppie.WebApi.Infra.Repository;
-using static System.Net.Mime.MediaTypeNames;
+
 
 
 namespace Yuppie.WebApi.CeasaDigital.Domain.Services
 {
     public class OfertaService : IOfertaService
     {
+        private readonly IMapper _mapper;
         private readonly IOfertaRepository _OfertaRepository;
-        public OfertaService(IOfertaRepository OfertaRepository)
+        public OfertaService(IMapper mapper, IOfertaRepository OfertaRepository)
         {
             _OfertaRepository = OfertaRepository;
+            _mapper = mapper;
         }
 
 
         public async Task<List<OfertaModel>> BuscarTodasOfertas()
         {
             try
-            {
-                var teste = await _OfertaRepository.BuscarTodasOfertas();
-                return JsonConvert.DeserializeObject<List<OfertaModel>>(JsonConvert.SerializeObject(teste)); ;
+            {                
+                return _mapper.Map<List<OfertaModel>>(await _OfertaRepository.BuscarTodasOfertas());               
             }
             catch (System.Exception ex)
             {
@@ -38,11 +38,12 @@ namespace Yuppie.WebApi.CeasaDigital.Domain.Services
             return null;
         }
 
-        public List<OfertaModel> BuscarOfertasComVencimentoEm(int dias, int idVendedor)
+        public async Task<List<OfertaModel>> BuscarOfertasComVencimentoEm(int dias, int idVendedor)
         {
             try
             {
-                return JsonConvert.DeserializeObject<List<OfertaModel>>(JsonConvert.SerializeObject(_OfertaRepository.BuscarOfertasComVencimentoEm(dias, idVendedor))); ;
+                return _mapper.Map<List<OfertaModel>>(await _OfertaRepository.BuscarOfertasComVencimentoEm(dias, idVendedor));
+                
             }
             catch (System.Exception ex)
             {
