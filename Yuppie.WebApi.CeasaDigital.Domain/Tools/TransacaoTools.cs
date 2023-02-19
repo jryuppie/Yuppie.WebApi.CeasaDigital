@@ -13,11 +13,11 @@ namespace Yuppie.WebApi.CeasaDigital.Domain.Tools
 
         public decimal AtribuirValorTransacao(int quantidade, int idOferta)
         {
-            return Convert.ToDecimal(_ofertaRepository.GetOfertaById(idOferta).vl_un_medida * quantidade);
+            return Convert.ToDecimal(_ofertaRepository.BuscarOfertaPorId(idOferta).vl_un_medida * quantidade);
         }
         public void AtualizarQuantidadeOferta(int quantidade, int IdOferta)
         {
-            var oferta = _ofertaRepository.GetOfertaById(IdOferta);
+            var oferta = _ofertaRepository.BuscarOfertaPorId(IdOferta);
             if (oferta != null && oferta.qtd_disponivel >= quantidade)
             {
                 oferta.qtd_disponivel -= quantidade;

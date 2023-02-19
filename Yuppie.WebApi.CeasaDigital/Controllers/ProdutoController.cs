@@ -19,7 +19,7 @@ namespace Yuppie.WebApi.CeasaDigital.Controllers
         }
 
         [Route("CadastrarProduto")]
-        [HttpGet]
+        [HttpPost]
         public async Task<ActionResult<ProdutoModel>> CadastrarProduto([FromForm] object formModel)
         {
             //verificar como esta sendo recebido o formulário

@@ -1,7 +1,9 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Yuppie.WebApi.CeasaDigital.Domain.Interfaces;
+using Yuppie.WebApi.CeasaDigital.Domain.Models.Formulario;
 using Yuppie.WebApi.CeasaDigital.Domain.Models.Negociacao;
 
 namespace Yuppie.WebApi.CeasaDigital.Controllers
@@ -28,13 +30,11 @@ namespace Yuppie.WebApi.CeasaDigital.Controllers
             return _OfertaService.BuscarOfertasComVencimentoEm(dias, idVendedor);
         }
 
-        [Route("cadastraoferta")]
+        [Route("cadastrarOferta")]
         [HttpPost]
-        public async Task<ActionResult<OfertaModel>> CadastrarOfertas([FromForm] object formModel)
-        {
-            //verificar como esta sendo recebido o formulário
-            var retorno = new OfertaModel();
-            return retorno;
+        public async Task<ObjectResult> CadastrarOfertas([FromBody] CadastroOfertaFormulario oModel)
+        {            
+            return await _OfertaService.CadastrarOferta(oModel.IdProduto, oModel.IdUnMedida, oModel.IdVendedor, oModel.QtdDisponivel, oModel.PesoUnMedida, oModel.VlUnMedida);
         }
 
         [Route("encerraoferta")]

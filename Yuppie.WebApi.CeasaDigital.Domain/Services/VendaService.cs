@@ -84,7 +84,7 @@ namespace Yuppie.WebApi.CeasaDigital.Domain.Services
             try
             {
                 var transacao = new TransacaoTools(_OfertaRepository);
-                var Oferta = _OfertaRepository.GetOfertaById(idOferta);
+                var Oferta = _OfertaRepository.BuscarOfertaPorId(idOferta);
                 if (Oferta != null && Oferta.qtd_disponivel > 0 && Oferta.qtd_disponivel > quantidade && Oferta.id_vendedor != idComprador)
                 {
                     var Negociacao = _NegociacaoRepository.GetNegociacaoByInformations(idComprador, idOferta, NegociacaoStatusString.Andamento);
@@ -103,6 +103,7 @@ namespace Yuppie.WebApi.CeasaDigital.Domain.Services
                                 id_vendedor = Oferta.id_vendedor,
                                 create_date = DateTime.Now,
                                 update_date = DateTime.Now,
+                                venda_status = NegociacaoStatusString.Andamento
                             };
                             _VendaRepository.AddVenda(novaVenda);
                         }
