@@ -13,23 +13,23 @@ namespace Yuppie.WebApi.Infra.Repository
 {
     public interface IProdutoRepository
     {
-        public Task<ProdutoModel> BuscarProdutoPorId(int idProduto);
-        public Task<List<ProdutoModel>> BuscarTodosProdutos();        
-        public Task<ObjectResult> AdicionarProduto (ProdutoModel produto);
-        public Task<ObjectResult> AtualizarProduto(ProdutoModel produto);
-        public Task<ObjectResult> ExcluirProduto(int idProduto);
+        public Task<ProdutoModel> BuscarProdutoPorNome(string nomeProduto);
+        public Task<List<ProdutoModel>> BuscarTodosProdutos();
+        public Task<ObjectResult> AdicionarProduto(string categoria, string nome);
+        public Task<ObjectResult> AtualizarProduto(string categoria, string nome);
+        public Task<ObjectResult> ExcluirProduto(string categoria, string nome);
     }
 
     public class ProdutoRepository : IProdutoRepository
     {
         private readonly PostGreContext _dbContext;
-        public ProdutoRepository(PostGreContext context) => _dbContext = context;     
+        public ProdutoRepository(PostGreContext context) => _dbContext = context;
 
-        public async Task<ProdutoModel> BuscarProdutoPorId(int id)
+        public async Task<ProdutoModel> BuscarProdutoPorNome(string nomeProduto)
         {
             try
             {
-                return _dbContext.Produtos.Find(id);
+                return _dbContext.Produtos.Where(x => x.nome == nomeProduto).FirstOrDefault();
             }
             catch (Exception ex)
             {
@@ -46,13 +46,20 @@ namespace Yuppie.WebApi.Infra.Repository
             catch (Exception ex)
             {
                 throw;
-            }            
+            }
         }
 
-        public async Task<ObjectResult> AdicionarProduto(ProdutoModel produto)
+        public async Task<ObjectResult> AdicionarProduto(string categoria, string nome)
         {
             try
             {
+                ProdutoModel produto = new ProdutoModel{
+                    categoria = categoria,
+                    nome = nome,
+                    create_date = DateTime.Now,
+                    update_date = DateTime.Now
+                };
+
                 _dbContext.Produtos.Add(produto);
                 _dbContext.SaveChanges();
                 return new ObjectResult(produto)
@@ -69,10 +76,13 @@ namespace Yuppie.WebApi.Infra.Repository
             }
         }
 
-        public async Task<ObjectResult> AtualizarProduto(ProdutoModel produto)
+        public async Task<ObjectResult> AtualizarProduto(string categoria, string nome)
         {
             try
             {
+                var produto = _dbContext.Produtos.Where(x => x.nome == nome).FirstOrDefault();
+                produto.update_date = DateTime.Now;
+                produto.categoria = categoria;
                 _dbContext.Produtos.Update(produto);
                 _dbContext.SaveChanges();
                 return new ObjectResult(produto)
@@ -90,12 +100,11 @@ namespace Yuppie.WebApi.Infra.Repository
         }
 
 
-        public async Task<ObjectResult> ExcluirProduto(int idProduto)
+        public async Task<ObjectResult> ExcluirProduto(string categoria, string nome)
         {
             try
             {
-
-                var produto = _dbContext.Produtos.Find(idProduto);
+                var produto = _dbContext.Produtos.Where(x => x.categoria == categoria && x.nome == nome).FirstOrDefault();
                 _dbContext.Produtos.Remove(produto);
                 _dbContext.SaveChanges();
                 return new ObjectResult(produto)
@@ -110,6 +119,6 @@ namespace Yuppie.WebApi.Infra.Repository
                     StatusCode = 400
                 };
             }
-        }      
+        }
     }
 }

@@ -32,8 +32,89 @@ namespace Yuppie.WebApi.CeasaDigital.Domain.Services
             }
             catch (System.Exception ex)
             {
+                return new ObjectResult(new { message = "Falha ao buscar os produtos!" })
+                {
+                    StatusCode = 500
+                };
+            }            
+        }
+
+        public async Task<ObjectResult> AtualizarProduto(string categoria, string nome)
+        {
+            try
+            {
+                var produtos = _mapper.Map<List<ProdutoModel>>(await _ProdutoRepository.AtualizarProduto( categoria, nome));
+                return new ObjectResult(produtos)
+                {
+                    StatusCode = StatusCodes.Status200OK
+                };
             }
-            return null;
+            catch (System.Exception ex)
+            {
+                return new ObjectResult(new { message = $"Falha ao atualizar o produto: {nome}!" })
+                {
+                    StatusCode = 500
+                };
+            }           
+        }
+
+        public async Task<ObjectResult> DeletarProduto(string categoria, string nome)
+        {
+            try
+            {
+                var produtos = _mapper.Map<ProdutoModel>(await _ProdutoRepository.ExcluirProduto(categoria,nome));
+                return new ObjectResult(produtos)
+                {
+                    StatusCode = StatusCodes.Status200OK
+                };
+            }
+            catch (System.Exception ex)
+            {
+                return new ObjectResult(new { message = $"Falha ao atualizar o produto: {nome}!" })
+                {
+                    StatusCode = 500
+                };
+            }
+        }
+
+        public async Task<ObjectResult> BuscarProdutoPorNome(string nome)
+        {
+            try
+            {
+                var produtos = _mapper.Map<ProdutoModel>(await _ProdutoRepository.BuscarProdutoPorNome(nome));
+                return new ObjectResult(produtos)
+                {
+                    StatusCode = StatusCodes.Status200OK
+                };
+            }
+            catch (System.Exception ex)
+            {
+                return new ObjectResult(new { message = $"Falha ao atualizar o produto: {nome}!" })
+                {
+                    StatusCode = 500
+                };
+            }
+        }
+
+
+
+        public async Task<ObjectResult> CadastrarProduto(string categoria, string nome)
+        {
+            try
+            {
+                var produtos = _mapper.Map<List<ProdutoModel>>(await _ProdutoRepository.AdicionarProduto(categoria,nome));
+                return new ObjectResult(produtos)
+                {
+                    StatusCode = StatusCodes.Status200OK
+                };
+            }
+            catch (System.Exception ex)
+            {
+                return new ObjectResult(new { message = $"Falha ao atualizar o produto: {nome}!" })
+                {
+                    StatusCode = 500
+                };
+            }
         }
     }
 }
