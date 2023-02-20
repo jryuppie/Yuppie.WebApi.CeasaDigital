@@ -47,9 +47,9 @@ namespace Yuppie.WebApi.CeasaDigital.Controllers
 
         [Route("BuscarProdutos")]
         [HttpGet]
-        public List<ProdutoModel> GetProducts()
+        public async Task<ObjectResult> BuscarProdutos()
         {
-            var produtos = _pgProdutoService.BuscarTodosProdutos();
+            var produtos = await _pgProdutoService.BuscarTodosProdutos();
             return produtos;
         }
 

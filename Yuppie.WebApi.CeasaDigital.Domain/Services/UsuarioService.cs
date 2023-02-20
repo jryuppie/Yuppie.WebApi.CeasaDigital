@@ -1,7 +1,10 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using Yuppie.WebApi.CeasaDigital.Domain.Interfaces;
 using Yuppie.WebApi.Infra.Repository;
 
@@ -17,11 +20,110 @@ namespace Yuppie.WebApi.CeasaDigital.Domain.Services
             _mapper = mapper;
         }
 
-        public Domain.Models.UsuarioModel.UsuarioModel BuscarUsuarioLogin(string user, string password)
+        public async Task<ObjectResult> BuscarUsuarioLogin(string user, string password)
         {
             try
             {
-                return _mapper.Map<Domain.Models.UsuarioModel.UsuarioModel>(_usuarioRepository.BuscarUsuarioLogin(user, password));
+                var usuario =  _mapper.Map<Domain.Models.UsuarioModel.UsuarioModel>(await _usuarioRepository.BuscarUsuarioLogin(user, password));
+                return new ObjectResult(usuario)
+                {
+                    StatusCode = StatusCodes.Status200OK
+                };
+            }
+            catch (System.Exception ex)
+            {
+                return new ObjectResult(new { message = $"Falha ao buscar usuário: {user}!" })
+                {
+                    StatusCode = 500
+                };
+            }
+        }
+
+        public async Task<ObjectResult> BuscarUsuarios()
+        {
+            try
+            {
+                var usuarios = _mapper.Map<List<Domain.Models.UsuarioModel.UsuarioModel>>(await _usuarioRepository.BuscarTodosUsuarios());
+                return new ObjectResult(usuarios)
+                {
+                    StatusCode = StatusCodes.Status200OK
+                };
+            }
+            catch (System.Exception ex)
+            {
+                return new ObjectResult(new { message = "Falha ao buscar os usuários!" })
+                {
+                    StatusCode = 500
+                };
+            }
+        }
+
+        public async Task<ObjectResult> BuscarUsuarioPorDocumento(string documento)
+        {
+            try
+            {
+                var usuarios = _mapper.Map<Domain.Models.UsuarioModel.UsuarioModel>(_usuarioRepository.BuscarUsuarioPorDocumento(documento));
+                return new ObjectResult(usuarios)
+                {
+                    StatusCode = StatusCodes.Status200OK
+                };
+            }
+            catch (System.Exception ex)
+            {
+                return new ObjectResult(new { message = "Falha ao buscar os usuários!" })
+                {
+                    StatusCode = 500
+                };
+            }          
+        }
+
+        public async Task<ObjectResult> BuscarUsuarioPorId(int id)
+        {
+            try
+            {
+                var usuarios = _mapper.Map<Domain.Models.UsuarioModel.UsuarioModel>(_usuarioRepository.BuscarUsuarioPorId(id));
+                return new ObjectResult(usuarios)
+                {
+                    StatusCode = StatusCodes.Status200OK
+                };
+            }
+            catch (System.Exception ex)
+            {
+                return new ObjectResult(new { message = "Falha ao buscar os usuários!" })
+                {
+                    StatusCode = 500
+                };
+            }       
+        }
+
+        public async Task<ObjectResult> CadastrarUsuario(Domain.Models.UsuarioModel.UsuarioModel usuario)
+        {
+            try
+            {
+              //TODO
+                return new ObjectResult(true)
+                {
+                    StatusCode = StatusCodes.Status200OK
+                };
+            }
+            catch (System.Exception ex)
+            {
+                return new ObjectResult(new { message = $"Falha ao cadastrar o usuário: {usuario.nome}!" })
+                {
+                    StatusCode = 500
+                };
+            }
+        }
+
+        public async Task<ObjectResult> MudarStatusUsuario(Domain.Models.UsuarioModel.UsuarioModel usuario)
+        {
+            try
+            {
+                //TODO
+                return new ObjectResult(true)
+                {
+                    StatusCode = StatusCodes.Status200OK
+                };
             }
             catch (Exception ex)
             {
@@ -29,12 +131,15 @@ namespace Yuppie.WebApi.CeasaDigital.Domain.Services
             return null;
         }
 
-        public List<Domain.Models.UsuarioModel.UsuarioModel> BuscarUsuarios()
+        public async Task<ObjectResult> RecuperarSenhaUsuario(Domain.Models.UsuarioModel.UsuarioModel usuario)
         {
             try
             {
-                return _mapper.Map<List<Domain.Models.UsuarioModel.UsuarioModel>>(_usuarioRepository.BuscarUsuarios());
-
+                //TODO
+                return new ObjectResult(true)
+                {
+                    StatusCode = StatusCodes.Status200OK
+                };
             }
             catch (Exception ex)
             {
@@ -42,75 +147,14 @@ namespace Yuppie.WebApi.CeasaDigital.Domain.Services
             return null;
         }
 
-        public Domain.Models.UsuarioModel.UsuarioModel BuscarUsuarioPorDocumento(string documento)
+        public async Task<ObjectResult> AtualizarUsuario(Domain.Models.UsuarioModel.UsuarioModel usuario)
         {
             try
-            {
-                return _mapper.Map<Domain.Models.UsuarioModel.UsuarioModel>(_usuarioRepository.BuscarUsuarioPorDocumento(documento));
-            }
-            catch (Exception ex)
-            {
-            }
-            return null;
-        }
-
-        public Domain.Models.UsuarioModel.UsuarioModel BuscarUsuarioPorId(int id)
-        {
-            try
-            {
-                return _mapper.Map<Domain.Models.UsuarioModel.UsuarioModel>(_usuarioRepository.BuscarUsuarioPorId(id));
-            }
-            catch (Exception ex)
-            {
-            }
-            return null;
-        }
-
-        public Domain.Models.UsuarioModel.UsuarioModel CadastrarUsuario(Domain.Models.UsuarioModel.UsuarioModel usuario)
-        {
-            try
-            {
-                //return JsonConvert.DeserializeObject<UsuarioModel>(JsonConvert.SerializeObject(_usuarioRepository.CadastrarUsuario(usuario)));
-                return null;
-            }
-            catch (Exception ex)
-            {
-            }
-            return null;
-        }
-
-        public Domain.Models.UsuarioModel.UsuarioModel MudarStatusUsuario(Domain.Models.UsuarioModel.UsuarioModel usuario)
-        {
-            try
-            {
-                //return JsonConvert.DeserializeObject<UsuarioModel>(JsonConvert.SerializeObject(_usuarioRepository.MudarStatusUsuario(usuario)));
-                return null;
-            }
-            catch (Exception ex)
-            {
-            }
-            return null;
-        }
-
-        public Domain.Models.UsuarioModel.UsuarioModel RecuperarSenhaUsuario(Domain.Models.UsuarioModel.UsuarioModel usuario)
-        {
-            try
-            {
-                //return JsonConvert.DeserializeObject<UsuarioModel>(JsonConvert.SerializeObject(_usuarioRepository.RecuperarSenhaUsuario(usuario)));
-                return null;
-            }
-            catch (Exception ex)
-            {
-            }
-            return null;
-        }
-
-        public Domain.Models.UsuarioModel.UsuarioModel AtualizarUsuario(Domain.Models.UsuarioModel.UsuarioModel usuario)
-        {
-            try
-            {
-                //return JsonConvert.DeserializeObject<UsuarioModel>(JsonConvert.SerializeObject(_usuarioRepository.RecuperarSenhaUsuario(usuario)));
-                return null;
+            {   //TODO
+                return new ObjectResult(true)
+                {
+                    StatusCode = StatusCodes.Status200OK
+                };
             }
             catch (Exception ex)
             {

@@ -1,7 +1,10 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 using Yuppie.WebApi.Infra.Context;
 using Yuppie.WebApi.Infra.Models.Produto;
 
@@ -9,11 +12,11 @@ namespace Yuppie.WebApi.Infra.Repository
 {
     public interface IUnidadeMedidaRepository
     {
-        UnidadeMedidaModel GetUnMedidaById(int id);
-        IEnumerable<UnidadeMedidaModel> GetAllUnMedidas();
-        void AddUnMedida(UnidadeMedidaModel usuario);
-        void UpdateUnMedida(UnidadeMedidaModel usuario);
-        void DeleteUnMedida(int id);
+        public Task<UnidadeMedidaModel> BuscarUnMedidaPorId(int id);
+        public Task<List<UnidadeMedidaModel>> BuscarTodasUnMedidas();
+        public Task<ObjectResult> AdicionarUnMedida(UnidadeMedidaModel unMedida);
+        public Task<ObjectResult> AtualizarUnMedida(UnidadeMedidaModel unMedida);
+        public Task<ObjectResult> ExcluirUnMedida(int id);
     }
 
     public class UnidadeMedidaRepository : IUnidadeMedidaRepository
@@ -21,33 +24,90 @@ namespace Yuppie.WebApi.Infra.Repository
         private readonly PostGreContext _dbContext;
         public UnidadeMedidaRepository(PostGreContext context) => _dbContext = context;
 
-        public UnidadeMedidaModel GetUnMedidaById(int id)
+        public async Task<UnidadeMedidaModel> BuscarUnMedidaPorId(int id)
         {
-            return _dbContext.UnMedidas.Find(id);
+            try
+            {
+                return _dbContext.UnMedidas.Find(id);
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
         }
 
-        public IEnumerable<UnidadeMedidaModel> GetAllUnMedidas()
+        public async Task<List<UnidadeMedidaModel>> BuscarTodasUnMedidas()
         {
-            return _dbContext.UnMedidas.ToList();
+            try
+            {
+                return _dbContext.UnMedidas.ToList();
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
         }
 
-        public void AddUnMedida(UnidadeMedidaModel usuario)
+        public async Task<ObjectResult> AdicionarUnMedida(UnidadeMedidaModel unMedida)
         {
-            _dbContext.UnMedidas.Add(usuario);
-            _dbContext.SaveChanges();
+            try
+            {
+                _dbContext.UnMedidas.Add(unMedida);
+                _dbContext.SaveChanges();
+                return new ObjectResult(unMedida)
+                {
+                    StatusCode = StatusCodes.Status201Created
+                };
+            }
+            catch (Exception ex)
+            {
+                return new ObjectResult(new { message = ex.Message })
+                {
+                    StatusCode = 400
+                };
+            }
         }
 
-        public void UpdateUnMedida(UnidadeMedidaModel usuario)
+        public async Task<ObjectResult> AtualizarUnMedida(UnidadeMedidaModel unMedida)
         {
-            _dbContext.UnMedidas.Update(usuario);
-            _dbContext.SaveChanges();
+            try
+            {
+                _dbContext.UnMedidas.Update(unMedida);
+                _dbContext.SaveChanges();
+                return new ObjectResult(unMedida)
+                {
+                    StatusCode = StatusCodes.Status200OK
+                };
+            }
+            catch (Exception ex)
+            {
+                return new ObjectResult(new { message = ex.Message })
+                {
+                    StatusCode = 400
+                };
+            }
         }
 
-        public void DeleteUnMedida(int id)
+
+        public async Task<ObjectResult> ExcluirUnMedida(int  IdUnMedida)
         {
-            var usuario = _dbContext.UnMedidas.Find(id);
-            _dbContext.UnMedidas.Remove(usuario);
-            _dbContext.SaveChanges();
+            try
+            {
+                var unMedida = _dbContext.UnMedidas.Find(IdUnMedida);
+                _dbContext.UnMedidas.Remove(unMedida);
+                _dbContext.SaveChanges();
+                return new ObjectResult(unMedida)
+                {
+                    StatusCode = StatusCodes.Status200OK
+                };
+            }
+            catch (Exception ex)
+            {
+                return new ObjectResult(new { message = ex.Message })
+                {
+                    StatusCode = 400
+                };
+            }
         }
     }
 }

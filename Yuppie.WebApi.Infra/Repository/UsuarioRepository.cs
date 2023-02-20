@@ -1,22 +1,25 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 using Yuppie.WebApi.Infra.Context;
+using Yuppie.WebApi.Infra.Models.Produto;
 using Yuppie.WebApi.Infra.Models.UsuarioModel;
 
 namespace Yuppie.WebApi.Infra.Repository
 {
     public interface IUsuarioRepository
     {
-        public List<UsuarioModel> BuscarUsuarios();
-        public UsuarioModel BuscarUsuarioLogin(string documento, string senha);
-        public UsuarioModel BuscarUsuarioPorDocumento(string documento);
-        public UsuarioModel BuscarUsuarioPorId(int id);
-        public UsuarioModel CadastrarUsuario(UsuarioModel usuario);
-        public UsuarioModel AtualizarUsuario(UsuarioModel usuario);
-        public UsuarioModel MudarStatusUsuario(UsuarioModel usuario);
-        public UsuarioModel RecuperarSenhaUsuario(UsuarioModel usuario);        
+        public Task<List<UsuarioModel>> BuscarTodosUsuarios();
+        public Task<UsuarioModel> BuscarUsuarioPorDocumento(string documento);
+        public Task<UsuarioModel> BuscarUsuarioPorId(int id);
+        public Task<UsuarioModel> BuscarUsuarioLogin(string documento, string senha);
+        public Task<ObjectResult> CadastrarUsuario(UsuarioModel usuario);
+        public Task<ObjectResult> AtualizarUsuario(UsuarioModel usuario);        
+        public Task<ObjectResult> RecuperarSenhaUsuario(UsuarioModel usuario);
     }
 
     public class UsuarioRepository : IUsuarioRepository
@@ -24,57 +27,134 @@ namespace Yuppie.WebApi.Infra.Repository
         private readonly PostGreContext _dbContext;
         public UsuarioRepository(PostGreContext context) => _dbContext = context;
 
-        public UsuarioModel BuscarUsuarioPorId(int id)
+
+        public async Task<UsuarioModel> BuscarUsuarioPorId(int id)
         {
-            return _dbContext.Usuarios.Find(id);
+            try
+            {
+                return _dbContext.Usuarios.Find(id);
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
         }
 
-        public UsuarioModel BuscarUsuarioLogin(string documento, string senha)
+        public async Task<UsuarioModel> BuscarUsuarioPorDocumento(string documento)
         {
-            return _dbContext.Usuarios.Where(x=> x.documento == documento && x.senha == senha).FirstOrDefault();
+            try
+            {
+                return _dbContext.Usuarios.Where(x => x.documento == documento).FirstOrDefault();
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
         }
 
-        public List<UsuarioModel> BuscarUsuarios()
+        public async Task<UsuarioModel> BuscarUsuarioLogin(string documento, string senha)
         {
-            return _dbContext.Usuarios.ToList();
+            try
+            {
+                return _dbContext.Usuarios.Where(x => x.documento == documento && x.senha == senha).FirstOrDefault();
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
         }
 
-        public UsuarioModel CadastrarUsuario(UsuarioModel usuario)
+
+        public async Task<List<UsuarioModel>> BuscarTodosUsuarios()
         {
-            _dbContext.Usuarios.Add(usuario);
-            _dbContext.SaveChanges();
-            return usuario;
+            try
+            {
+                return _dbContext.Usuarios.ToList();
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
         }
 
-        public UsuarioModel AtualizarUsuario(UsuarioModel usuario)
+        public async Task<ObjectResult> CadastrarUsuario(UsuarioModel usuario)
         {
-            _dbContext.Usuarios.Update(usuario);
-            _dbContext.SaveChanges();
-            return usuario;
+            try
+            {
+                _dbContext.Usuarios.Add(usuario);
+                _dbContext.SaveChanges();
+                return new ObjectResult(usuario)
+                {
+                    StatusCode = StatusCodes.Status201Created
+                };
+            }
+            catch (Exception ex)
+            {
+                return new ObjectResult(new { message = ex.Message })
+                {
+                    StatusCode = 400
+                };
+            }
         }
 
-        public void DeletarUsuario(int id)
+        public async Task<ObjectResult> AtualizarUsuario(UsuarioModel usuario)
         {
-            var usuario = _dbContext.Usuarios.Find(id);
-            _dbContext.Usuarios.Remove(usuario);
-            _dbContext.SaveChanges();
+            try
+            {
+                _dbContext.Usuarios.Add(usuario);
+                _dbContext.SaveChanges();
+                return new ObjectResult(usuario)
+                {
+                    StatusCode = StatusCodes.Status200OK
+                };
+            }
+            catch (Exception ex)
+            {
+                return new ObjectResult(new { message = ex.Message })
+                {
+                    StatusCode = 400
+                };
+            }
         }
 
-        public UsuarioModel MudarStatusUsuario(UsuarioModel usuario)
+        public async Task<ObjectResult> ExcluirUsuario(int idUsuario)
         {
-            _dbContext.Usuarios.Update(usuario);
-            _dbContext.SaveChanges();
-            return usuario;
+            try
+            {
+                var usuario = _dbContext.Usuarios.Find(idUsuario);
+                _dbContext.Usuarios.Remove(usuario);
+                _dbContext.SaveChanges();
+                return new ObjectResult(usuario)
+                {
+                    StatusCode = StatusCodes.Status200OK
+                };
+            }
+            catch (Exception ex)
+            {
+                return new ObjectResult(new { message = ex.Message })
+                {
+                    StatusCode = 400
+                };
+            }
         }
-
-        public UsuarioModel RecuperarSenhaUsuario(UsuarioModel usuario)
+        public async Task<ObjectResult> RecuperarSenhaUsuario(UsuarioModel usuario)
         {
-            return _dbContext.Usuarios.Find(usuario);
-        }
-
-        public UsuarioModel BuscarUsuarioPorDocumento(string documento)
-        {
-            return _dbContext.Usuarios.Where(x => x.documento == documento).FirstOrDefault();
+            try
+            {
+               // var usuario = _dbContext.Usuarios.Find(usuario.id);
+                //TODO - ENTENDNER COMO É FEITO ESSE PROCESSO
+                return new ObjectResult(usuario)
+                {
+                    StatusCode = StatusCodes.Status200OK
+                };
+            }
+            catch (Exception ex)
+            {
+                return new ObjectResult(new { message = ex.Message })
+                {
+                    StatusCode = 400
+                };
+            }
         }
     }
 }

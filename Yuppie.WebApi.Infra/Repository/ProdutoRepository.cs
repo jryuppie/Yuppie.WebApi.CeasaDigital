@@ -1,53 +1,115 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 using Yuppie.WebApi.Infra.Context;
+using Yuppie.WebApi.Infra.Models.Negociacao;
 using Yuppie.WebApi.Infra.Models.Produto;
 
 namespace Yuppie.WebApi.Infra.Repository
 {
     public interface IProdutoRepository
     {
-        ProdutoModel GetProdutoById(int id);
-        IEnumerable<ProdutoModel> GetAllProdutos();
-        void AddProduto(ProdutoModel produto);
-        void UpdateProduto(ProdutoModel produto);
-        void DeleteProduto(int id);
+        public Task<ProdutoModel> BuscarProdutoPorId(int idProduto);
+        public Task<List<ProdutoModel>> BuscarTodosProdutos();        
+        public Task<ObjectResult> AdicionarProduto (ProdutoModel produto);
+        public Task<ObjectResult> AtualizarProduto(ProdutoModel produto);
+        public Task<ObjectResult> ExcluirProduto(int idProduto);
     }
 
     public class ProdutoRepository : IProdutoRepository
     {
         private readonly PostGreContext _dbContext;
-        public ProdutoRepository(PostGreContext context) => _dbContext = context;
+        public ProdutoRepository(PostGreContext context) => _dbContext = context;     
 
-        public ProdutoModel GetProdutoById(int id)
+        public async Task<ProdutoModel> BuscarProdutoPorId(int id)
         {
-            return _dbContext.Produtos.Find(id);
+            try
+            {
+                return _dbContext.Produtos.Find(id);
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
         }
 
-        public IEnumerable<ProdutoModel> GetAllProdutos()
+        public async Task<List<ProdutoModel>> BuscarTodosProdutos()
         {
-            return _dbContext.Produtos.ToList();
+            try
+            {
+                return _dbContext.Produtos.ToList();
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }            
         }
 
-        public void AddProduto(ProdutoModel produto)
+        public async Task<ObjectResult> AdicionarProduto(ProdutoModel produto)
         {
-            _dbContext.Produtos.Add(produto);
-            _dbContext.SaveChanges();
+            try
+            {
+                _dbContext.Produtos.Add(produto);
+                _dbContext.SaveChanges();
+                return new ObjectResult(produto)
+                {
+                    StatusCode = StatusCodes.Status201Created
+                };
+            }
+            catch (Exception ex)
+            {
+                return new ObjectResult(new { message = ex.Message })
+                {
+                    StatusCode = 400
+                };
+            }
         }
 
-        public void UpdateProduto(ProdutoModel produto)
+        public async Task<ObjectResult> AtualizarProduto(ProdutoModel produto)
         {
-            _dbContext.Produtos.Update(produto);
-            _dbContext.SaveChanges();
+            try
+            {
+                _dbContext.Produtos.Update(produto);
+                _dbContext.SaveChanges();
+                return new ObjectResult(produto)
+                {
+                    StatusCode = StatusCodes.Status200OK
+                };
+            }
+            catch (Exception ex)
+            {
+                return new ObjectResult(new { message = ex.Message })
+                {
+                    StatusCode = 400
+                };
+            }
         }
 
-        public void DeleteProduto(int id)
+
+        public async Task<ObjectResult> ExcluirProduto(int idProduto)
         {
-            var produto = _dbContext.Produtos.Find(id);
-            _dbContext.Produtos.Remove(produto);
-            _dbContext.SaveChanges();
-        }
+            try
+            {
+
+                var produto = _dbContext.Produtos.Find(idProduto);
+                _dbContext.Produtos.Remove(produto);
+                _dbContext.SaveChanges();
+                return new ObjectResult(produto)
+                {
+                    StatusCode = StatusCodes.Status200OK
+                };
+            }
+            catch (Exception ex)
+            {
+                return new ObjectResult(new { message = ex.Message })
+                {
+                    StatusCode = 400
+                };
+            }
+        }      
     }
 }

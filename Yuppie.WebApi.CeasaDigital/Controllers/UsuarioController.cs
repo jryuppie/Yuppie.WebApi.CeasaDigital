@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using Yuppie.WebApi.CeasaDigital.Domain.Interfaces;
 using Yuppie.WebApi.CeasaDigital.Domain.Models.UsuarioModel;
 
@@ -18,39 +19,39 @@ namespace Yuppie.WebApi.CeasaDigital.Controllers
 
         [Route("BuscarUsuarios")]
         [HttpGet]
-        public List<UsuarioModel> BuscarUsuarios()
+        public async Task<ObjectResult> BuscarUsuarios()
         {
-            return _pgBaseService.BuscarUsuarios();
+            return await _pgBaseService.BuscarUsuarios();
         }
 
         [Route("{documento}")]
         [HttpGet]
-        public UsuarioModel BuscarUsuarioPorDocumento(string documento)
+        public async Task<ObjectResult> BuscarUsuarioPorDocumento(string documento)
         {
-            return _pgBaseService.BuscarUsuarioPorDocumento(documento);
+            return await _pgBaseService.BuscarUsuarioPorDocumento(documento);
         }
 
         [Route("id/{id}")]
         [HttpGet]
-        public UsuarioModel BuscarUsuarioPorId(int id)
+        public async Task<ObjectResult> BuscarUsuarioPorId(int id)
         {
-            return _pgBaseService.BuscarUsuarioPorId(id);
+            return await _pgBaseService.BuscarUsuarioPorId(id);
         }
 
         [Route("cadastro")]
         [HttpPost]
-        public UsuarioModel CadastrarUsuario([FromForm] object formModel)
+        public async Task<ObjectResult> CadastrarUsuario([FromForm] object formModel)
         {
             UsuarioModel usuario = new UsuarioModel();
-            return _pgBaseService.CadastrarUsuario(usuario);
+            return await _pgBaseService.CadastrarUsuario(usuario);
         }
 
         [Route("atualizar")]
         [HttpPut]
-        public UsuarioModel AtualizarUsuario([FromForm] object formModel)
+        public async Task<ObjectResult> AtualizarUsuario([FromForm] object formModel)
         {
             UsuarioModel usuario = new UsuarioModel();
-            return _pgBaseService.AtualizarUsuario(usuario);
+            return await _pgBaseService.AtualizarUsuario(usuario);
         }
     }
 }

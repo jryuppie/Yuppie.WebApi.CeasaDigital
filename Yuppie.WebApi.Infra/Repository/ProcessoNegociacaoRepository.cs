@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -64,11 +65,17 @@ namespace Yuppie.WebApi.Infra.Repository
             {
                 _dbContext.ProcessoNegociacoes.Add(negociacao);
                 _dbContext.SaveChanges();
-                return new ObjectResult(negociacao);
+                return new ObjectResult(negociacao)
+                {
+                    StatusCode = StatusCodes.Status201Created
+                };
             }
             catch (Exception ex)
             {
-                throw;
+                return new ObjectResult(new { message = ex.Message })
+                {
+                    StatusCode = 400
+                };
             }
         }
 
@@ -78,11 +85,17 @@ namespace Yuppie.WebApi.Infra.Repository
             {
                 _dbContext.ProcessoNegociacoes.Update(negociacao);
                 _dbContext.SaveChanges();
-                return new ObjectResult(negociacao);
+                return new ObjectResult(negociacao)
+                {
+                    StatusCode = StatusCodes.Status200OK
+                };
             }
             catch (Exception ex)
             {
-                throw;
+                return new ObjectResult(new { message = ex.Message })
+                {
+                    StatusCode = 400
+                };
             }
         }
 
@@ -93,11 +106,17 @@ namespace Yuppie.WebApi.Infra.Repository
                 var produto = _dbContext.ProcessoNegociacoes.Find(id);
                 _dbContext.ProcessoNegociacoes.Remove(produto);
                 _dbContext.SaveChanges();
-                return new ObjectResult(true);
+                return new ObjectResult(produto)
+                {
+                    StatusCode = StatusCodes.Status200OK
+                };
             }
             catch (Exception ex)
             {
-                throw;
+                return new ObjectResult(new { message = ex.Message })
+                {
+                    StatusCode = 400
+                };
             }
         }
 

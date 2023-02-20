@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using System.Threading.Tasks;
 using Yuppie.WebApi.CeasaDigital.Domain.Interfaces;
 using Yuppie.WebApi.CeasaDigital.Domain.Models.UsuarioModel;
 
@@ -15,10 +16,9 @@ namespace Yuppie.WebApi.CeasaDigital.Controllers
         }
         [Route("login")]
         [HttpGet]
-        public UsuarioModel Login(string usuario, string senha)
+        public async Task<ObjectResult> Login(string usuario, string senha)
         {
-            var loginDb = _usuarioService.BuscarUsuarioLogin(usuario, senha);
-            return loginDb;
+           return await _usuarioService.BuscarUsuarioLogin(usuario, senha);          
         }
     }
 }
