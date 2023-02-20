@@ -1,7 +1,11 @@
-﻿using Newtonsoft.Json;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading.Tasks;
 using Yuppie.WebApi.CeasaDigital.Domain.Interfaces;
 using Yuppie.WebApi.CeasaDigital.Domain.Models.Produto;
 using Yuppie.WebApi.Infra.Repository;
@@ -10,59 +14,71 @@ namespace Yuppie.WebApi.CeasaDigital.Domain.Services
 {
     public class UnMedidaService : IUnMedidaService
     {
-        private readonly IUnidadeMedidaRepository _unMedidaService;
-        public UnMedidaService(IUnidadeMedidaRepository unMedidaService)
+        private readonly IMapper _mapper;
+       private readonly IUnidadeMedidaRepository _unMedidaService;
+        public UnMedidaService(IUnidadeMedidaRepository unMedidaService, IMapper mapper)
         {
             _unMedidaService = unMedidaService;
+            _mapper = mapper;
         }
 
-        public bool CadastrarUnMedida(UnidadeMedidaModel unMedida)
+        public async Task<ObjectResult> CadastrarUnMedida(string nomeUnMedida)
         {
             try
             {
-                //var criacao = new Infra.Models.UnidadeMedidaModel();
-
-
-                //var unMedSerialized = Yuppie.WebApi.Infra.Models.UnidadeMedidaModel(unMedida);
-                //_unMedidaService.AddUnMedida(unMedSerialized);
+                var unMedida = _mapper.Map<UnidadeMedidaModel>(await _unMedidaService.AdicionarUnMedida(nomeUnMedida));
+                return new ObjectResult(unMedida)
+                {
+                    StatusCode = StatusCodes.Status201Created
+                };
             }
-            catch (Exception ex)
+            catch (System.Exception ex)
             {
-            }
-            return false;
+                return new ObjectResult(new { message = $"Falha ao criar a unidade de medida: {nomeUnMedida}!" })
+                {
+                    StatusCode = 500
+                };
+            }     
         }
 
 
-        public bool DeletarUnMedida(UnidadeMedidaModel unMedida)
+        public async Task<ObjectResult> DeletarUnMedida(int idUnMedida)
         {
             try
             {
-                //var criacao = new Infra.Models.UnidadeMedidaModel();
-
-
-                //var unMedSerialized = Yuppie.WebApi.Infra.Models.UnidadeMedidaModel(unMedida);
-                //_unMedidaService.AddUnMedida(unMedSerialized);
+                var unMedida = _mapper.Map<UnidadeMedidaModel>(await _unMedidaService.ExcluirUnMedida(idUnMedida));
+                return new ObjectResult(unMedida)
+                {
+                    StatusCode = StatusCodes.Status200OK
+                };
             }
-            catch (Exception ex)
+            catch (System.Exception ex)
             {
+                return new ObjectResult(new { message = $"Falha ao deletar unidade de medida!" })
+                {
+                    StatusCode = 500
+                };
             }
-            return false;
         }
 
-        public bool AtualizaUnMedida(UnidadeMedidaModel unMedida)
+
+        public async Task<ObjectResult> BuscarTodasUnMedidas()
         {
             try
             {
-                //var criacao = new Infra.Models.UnidadeMedidaModel();
-
-
-                //var unMedSerialized = Yuppie.WebApi.Infra.Models.UnidadeMedidaModel(unMedida);
-                //_unMedidaService.AddUnMedida(unMedSerialized);
+                var unMedidas = _mapper.Map<List<UnidadeMedidaModel>>(await _unMedidaService.BuscarTodasUnMedidas());
+                return new ObjectResult(unMedidas)
+                {
+                    StatusCode = StatusCodes.Status200OK
+                };
             }
-            catch (Exception ex)
+            catch (System.Exception ex)
             {
+                return new ObjectResult(new { message = $"Falha ao buscar as unidade de medida!" })
+                {
+                    StatusCode = 500
+                };
             }
-            return false;
         }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using System.Threading.Tasks;
 using Yuppie.WebApi.CeasaDigital.Domain.Interfaces;
 using Yuppie.WebApi.CeasaDigital.Domain.Models.Negociacao;
 
@@ -16,9 +17,9 @@ namespace Yuppie.WebApi.CeasaDigital.Controllers
 
         [Route("{idVenda}")]
         [HttpGet]
-        public ProcessoNegociacaoModel BuscarNegociacao(int idVenda)
+        public async Task<ObjectResult> BuscarNegociacao(int idVenda)
         {
-            return _pgNegociacaoService.BuscarNegociacao(idVenda);
+            return await _pgNegociacaoService.BuscarNegociacao(idVenda);
         }
     }
 }

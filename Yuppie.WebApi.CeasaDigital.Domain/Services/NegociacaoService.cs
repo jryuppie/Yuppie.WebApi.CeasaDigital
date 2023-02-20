@@ -7,27 +7,40 @@ using Yuppie.WebApi.CeasaDigital.Domain.Models.Negociacao;
 using Yuppie.WebApi.Infra.Repository;
 using Yuppie.WebApi.CeasaDigital.Domain.Tools;
 using System.Linq;
+using Microsoft.AspNetCore.Mvc;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
+using AutoMapper;
 
 namespace Yuppie.WebApi.CeasaDigital.Domain.Services
 {
     public class NegociacaoService : INegociacaoService
     {
+        private readonly IMapper _mapper;
         private readonly IProcessoNegociacaoRepository _negociacaoRepository;
-        public NegociacaoService(IProcessoNegociacaoRepository negociacaoRepository)
+        public NegociacaoService(IProcessoNegociacaoRepository negociacaoRepository, IMapper mapper)
         {
             _negociacaoRepository = negociacaoRepository;
+            _mapper = mapper;
         }
 
-        public ProcessoNegociacaoModel BuscarNegociacao(int idVenda)
+        public async Task<ObjectResult> BuscarNegociacao(int idVenda)
         {
             try
             {
-                return JsonConvert.DeserializeObject<ProcessoNegociacaoModel>(JsonConvert.SerializeObject(_negociacaoRepository.BuscarNegociacaoPorId(idVenda)));
+                var oferta = _mapper.Map<ProcessoNegociacaoModel>(await _negociacaoRepository.BuscarNegociacaoPorId(idVenda));
+                return new ObjectResult(oferta)
+                {
+                    StatusCode = StatusCodes.Status200OK
+                };
             }
             catch (System.Exception ex)
             {
+                return new ObjectResult(new { message = "Falha ao buscar aa negociação!" })
+                {
+                    StatusCode = 500
+                };
             }
-            return null;
         }
     }
 }

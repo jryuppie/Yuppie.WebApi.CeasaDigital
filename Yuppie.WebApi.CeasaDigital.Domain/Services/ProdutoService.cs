@@ -105,7 +105,7 @@ namespace Yuppie.WebApi.CeasaDigital.Domain.Services
                 var produtos = _mapper.Map<List<ProdutoModel>>(await _ProdutoRepository.AdicionarProduto(categoria,nome));
                 return new ObjectResult(produtos)
                 {
-                    StatusCode = StatusCodes.Status200OK
+                    StatusCode = StatusCodes.Status201Created
                 };
             }
             catch (System.Exception ex)

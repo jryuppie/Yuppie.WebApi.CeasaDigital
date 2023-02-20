@@ -9,4 +9,9 @@ namespace Yuppie.WebApi.CeasaDigital.Domain.Models.Formulario
         public string Nome { get; set; }
         public string Categoria { get; set; }
     }
+
+    public class UnMedidaFormulario
+    {
+        public string Nome { get; set;}
+    }
 }

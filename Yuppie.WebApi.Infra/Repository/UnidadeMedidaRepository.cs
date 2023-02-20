@@ -14,7 +14,7 @@ namespace Yuppie.WebApi.Infra.Repository
     {
         public Task<UnidadeMedidaModel> BuscarUnMedidaPorId(int id);
         public Task<List<UnidadeMedidaModel>> BuscarTodasUnMedidas();
-        public Task<ObjectResult> AdicionarUnMedida(UnidadeMedidaModel unMedida);
+        public Task<ObjectResult> AdicionarUnMedida(string unMedida);
         public Task<ObjectResult> AtualizarUnMedida(UnidadeMedidaModel unMedida);
         public Task<ObjectResult> ExcluirUnMedida(int id);
     }
@@ -48,13 +48,19 @@ namespace Yuppie.WebApi.Infra.Repository
             }
         }
 
-        public async Task<ObjectResult> AdicionarUnMedida(UnidadeMedidaModel unMedida)
+        public async Task<ObjectResult> AdicionarUnMedida(string unMedida)
         {
             try
             {
-                _dbContext.UnMedidas.Add(unMedida);
+                UnidadeMedidaModel medida = new UnidadeMedidaModel
+                {
+                    nome = unMedida,
+                    create_date = DateTime.Now,
+                    update_date = DateTime.Now
+                };
+                _dbContext.UnMedidas.Add(medida);
                 _dbContext.SaveChanges();
-                return new ObjectResult(unMedida)
+                return new ObjectResult(medida)
                 {
                     StatusCode = StatusCodes.Status201Created
                 };

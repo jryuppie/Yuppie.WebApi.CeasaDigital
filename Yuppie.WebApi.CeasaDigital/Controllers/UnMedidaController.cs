@@ -1,5 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using System.Threading.Tasks;
 using Yuppie.WebApi.CeasaDigital.Domain.Interfaces;
+using Yuppie.WebApi.CeasaDigital.Domain.Models.Formulario;
 using Yuppie.WebApi.CeasaDigital.Domain.Models.Produto;
 
 namespace Yuppie.WebApi.CeasaDigital.Controllers
@@ -17,24 +19,24 @@ namespace Yuppie.WebApi.CeasaDigital.Controllers
 
 
         [Route("CadastrarUnMedida")]
-        [HttpGet]
-        public void CadastrarUnMedida()
+        [HttpPost]
+        public async Task<ObjectResult> CadastrarUnMedida([FromForm] UnMedidaFormulario formModel)
         {
-            _pgUnMedidaService.CadastrarUnMedida(new UnidadeMedidaModel());
+           return await _pgUnMedidaService.CadastrarUnMedida(formModel.Nome);
         }
 
-        [Route("DeletarUnMedida")]
-        [HttpGet]
-        public void DeletarUnMedida()
+        [Route("DeletarUnMedida/{id}")]
+        [HttpPost]
+        public async Task<ObjectResult> DeletarUnMedida(int id)
         {
-            _pgUnMedidaService.DeletarUnMedida(new UnidadeMedidaModel());
+            return await _pgUnMedidaService.DeletarUnMedida(id);
         }
 
-        [Route("AtualizaUnMedida")]
+        [Route("BuscarTodasUnMedidas")]
         [HttpGet]
-        public void AtualizaUnMedida()
+        public async Task<ObjectResult> BuscarTodasUnMedidas()
         {
-            _pgUnMedidaService.AtualizaUnMedida(new UnidadeMedidaModel());
+            return await _pgUnMedidaService.BuscarTodasUnMedidas();
         }
     }
 }

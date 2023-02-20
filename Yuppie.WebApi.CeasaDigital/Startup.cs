@@ -60,11 +60,14 @@ namespace Yuppie.WebApi.CeasaDigital
             {
                 mc.CreateMap<Yuppie.WebApi.Infra.Models.Negociacao.OfertaModel, OfertaModel>();
                 mc.CreateMap<Yuppie.WebApi.Infra.Models.Produto.ProdutoModel, ProdutoModel>();
+                mc.CreateMap<Yuppie.WebApi.Infra.Models.Negociacao.ProcessoNegociacaoModel, ProcessoNegociacaoModel>();
+                mc.CreateMap<Yuppie.WebApi.Infra.Models.Produto.UnidadeMedidaModel, UnidadeMedidaModel>();
+
+
                 //mc.CreateMap<ChatFirebaseUserModel, Yuppie.WebApi.Infra.Models.Chat.ChatFirebaseUserModel>();
 
-                //mc.CreateMap<ProcessoNegociacaoModel, Yuppie.WebApi.Infra.Models.Negociacao.ProcessoNegociacaoModel>();
-                //mc.CreateMap<ProdutoModel, Yuppie.WebApi.Infra.Models.Produto.ProdutoModel>();
-                //mc.CreateMap<ProdutoModel, Yuppie.WebApi.Infra.Models.Produto.ProdutoModel>();
+
+
                 //mc.CreateMap<UnidadeMedidaModel, Yuppie.WebApi.Infra.Models.Produto.UnidadeMedidaModel>();
                 //mc.CreateMap<UsuarioModel, Yuppie.WebApi.Infra.Models.UsuarioModel.UsuarioModel>();
             });
