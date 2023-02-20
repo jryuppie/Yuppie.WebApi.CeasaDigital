@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using Yuppie.WebApi.CeasaDigital.Domain.Interfaces;
+using Yuppie.WebApi.CeasaDigital.Domain.Models.Formulario;
 using Yuppie.WebApi.CeasaDigital.Domain.Models.Negociacao;
 
 namespace Yuppie.WebApi.CeasaDigital.Controllers
@@ -48,6 +50,13 @@ namespace Yuppie.WebApi.CeasaDigital.Controllers
         {
             _vendaService.ExecutarVenda(idOferta, quantidade, idComprador);
             return true;
+        }
+
+        [Route("cancelamento")]
+        [HttpPost]
+        public async Task<ObjectResult> CancelarVenda([FromBody] VendaFormulario oModel)
+        {
+            return await _vendaService.ProcessoCancelamento(oModel.idVenda, oModel.idUsuario );            
         }
     }
 }

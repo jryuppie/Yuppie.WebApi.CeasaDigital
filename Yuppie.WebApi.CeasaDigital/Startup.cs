@@ -58,8 +58,10 @@ namespace Yuppie.WebApi.CeasaDigital
 
             var mappingConfig = new MapperConfiguration(mc =>
             {
+                mc.CreateMap<Yuppie.WebApi.Infra.Models.Negociacao.OfertaModel, OfertaModel>();
+                mc.CreateMap<Yuppie.WebApi.Infra.Models.Produto.ProdutoModel, ProdutoModel>();
                 //mc.CreateMap<ChatFirebaseUserModel, Yuppie.WebApi.Infra.Models.Chat.ChatFirebaseUserModel>();
-                mc.CreateMap<Yuppie.WebApi.Infra.Models.Negociacao.OfertaModel,OfertaModel>();
+
                 //mc.CreateMap<ProcessoNegociacaoModel, Yuppie.WebApi.Infra.Models.Negociacao.ProcessoNegociacaoModel>();
                 //mc.CreateMap<ProdutoModel, Yuppie.WebApi.Infra.Models.Produto.ProdutoModel>();
                 //mc.CreateMap<ProdutoModel, Yuppie.WebApi.Infra.Models.Produto.ProdutoModel>();

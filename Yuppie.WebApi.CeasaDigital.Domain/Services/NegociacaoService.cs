@@ -22,7 +22,7 @@ namespace Yuppie.WebApi.CeasaDigital.Domain.Services
         {
             try
             {
-                return JsonConvert.DeserializeObject<ProcessoNegociacaoModel>(JsonConvert.SerializeObject(_negociacaoRepository.GetNegociacaoById(idVenda)));
+                return JsonConvert.DeserializeObject<ProcessoNegociacaoModel>(JsonConvert.SerializeObject(_negociacaoRepository.BuscarNegociacaoPorId(idVenda)));
             }
             catch (System.Exception ex)
             {

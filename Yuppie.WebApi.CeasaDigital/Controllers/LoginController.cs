@@ -15,7 +15,7 @@ namespace Yuppie.WebApi.CeasaDigital.Controllers
         }
         [Route("login")]
         [HttpGet]
-        public UsuarioModel Login(string usuario = "17996128054", string senha= "Valornoob98")
+        public UsuarioModel Login(string usuario, string senha)
         {
             var loginDb = _usuarioService.BuscarUsuarioLogin(usuario, senha);
             return loginDb;

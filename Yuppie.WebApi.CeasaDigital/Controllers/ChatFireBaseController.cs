@@ -14,7 +14,7 @@ namespace Yuppie.WebApi.CeasaDigital.Controllers
             _pgChatFirebaseService = pgChatFirebaseService;
         }
 
-        [Route("/initLogin")]
+        [Route("initLogin")]
         [HttpPost]
         public ChatFirebaseUserModel Login()
         {
@@ -23,7 +23,7 @@ namespace Yuppie.WebApi.CeasaDigital.Controllers
             return chat;
         }
 
-        [Route("/user/{id}")]
+        [Route("user/{id}")]
         [HttpGet]
         public ChatFirebaseUserModel BuscarUsuarioPorId(int id)
         {
@@ -32,7 +32,7 @@ namespace Yuppie.WebApi.CeasaDigital.Controllers
             return chat;
         }
 
-        [Route("/user/contacts/{id}")]
+        [Route("user/contacts/{id}")]
         [HttpGet]
         public bool BuscarContratosPorId(int id)
         {
@@ -40,7 +40,7 @@ namespace Yuppie.WebApi.CeasaDigital.Controllers
             return true;
         }
 
-        [Route("/user")]
+        [Route("user")]
         [HttpGet]
         public bool AtualizarDadosChatUsuario(int id)
         {

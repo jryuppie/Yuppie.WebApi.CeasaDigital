@@ -95,7 +95,6 @@ namespace Yuppie.WebApi.Infra.Repository
                     StatusCode = 400
                 };
             }
-
         }
 
         public async Task<ObjectResult> AtualizarOfertaAsync(OfertaModel oferta)
@@ -116,7 +115,6 @@ namespace Yuppie.WebApi.Infra.Repository
                     StatusCode = 400
                 };
             }
-
         }
 
         public async Task<ObjectResult> DeleteOfertaAsync(int idOferta)

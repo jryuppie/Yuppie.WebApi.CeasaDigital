@@ -8,14 +8,24 @@ namespace Yuppie.WebApi.CeasaDigital.Domain.Models.Enums
     {
         Andamento,
         Concluido,
-        Cancelado 
+        Cancelado      
     }
 
-    public static class NegociacaoStatusString
+    public static class NegociacaoStatusExtensions
     {
-        public static string Andamento = "PROCESSO";
-        public static string Concluido = "CONCLUIDO";
-        public static string Cancelado = "CANCELADO";
+        public static string PegarDescricao(this NegociacaoStatus status)
+        {
+            switch (status)
+            {
+                case NegociacaoStatus.Andamento:
+                    return "PROCESSO";                    
+                case NegociacaoStatus.Concluido:
+                    return "CONCLUIDO";
+                case NegociacaoStatus.Cancelado:
+                    return "CANCELADO";
+                default:
+                    return "";
+            }
+        }
     }
-
 }

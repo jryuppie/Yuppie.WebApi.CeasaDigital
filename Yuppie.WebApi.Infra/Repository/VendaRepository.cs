@@ -1,5 +1,9 @@
-﻿using System.Collections.Generic;
+﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using System;
+using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Yuppie.WebApi.Infra.Context;
 using Yuppie.WebApi.Infra.Models.Negociacao;
 
@@ -8,13 +12,13 @@ namespace Yuppie.WebApi.Infra.Repository
 {
     public interface IVendaRepository
     {
-        VendaModel BuscarVendaPorId(int id);
-        List<VendaModel> BuscarVendaPorIdVendedor(int id);
-        List<VendaModel> BuscarVendaPorIdComprador(int id);
-        List<VendaModel> BuscarTodasVendas();
-        void AddVenda(VendaModel venda);
-        void UpdateVenda(VendaModel venda);
-        void DeleteVenda(int id);
+        public Task<VendaModel> BuscarVendaPorId(int id);
+        public Task<List<VendaModel>> BuscarVendaPorIdVendedor(int id);
+        public Task<List<VendaModel>> BuscarVendaPorIdComprador(int id);
+        public Task<List<VendaModel>> BuscarTodasVendas();
+        public Task<ObjectResult> AdicionarVenda(VendaModel venda);
+        public Task<ObjectResult> AtualizarVenda(VendaModel venda);
+        public Task<ObjectResult> ExcluirVenda(int id);
     }
 
     public class VendaRepository : IVendaRepository
@@ -22,42 +26,113 @@ namespace Yuppie.WebApi.Infra.Repository
         private readonly PostGreContext _dbContext;
         public VendaRepository(PostGreContext context) => _dbContext = context;
 
-        public VendaModel BuscarVendaPorId(int id)
+        public async Task<VendaModel> BuscarVendaPorId(int id)
         {
-            return _dbContext.Vendas.Find(id);
+            try
+            {
+                return _dbContext.Vendas.Find(id);
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }           
         }
 
-        public List<VendaModel> BuscarTodasVendas()
+
+        public async Task<List<VendaModel>> BuscarTodasVendas()
         {
-            return _dbContext.Vendas.ToList();
+            try
+            {
+                return _dbContext.Vendas.ToList();
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
         }
 
-        public List<VendaModel> BuscarVendaPorIdVendedor(int id)
+        public async Task<List<VendaModel>> BuscarVendaPorIdVendedor(int id)
         {
-            return _dbContext.Vendas.Where(x => x.id_vendedor == id).ToList();
+            try
+            {
+                return _dbContext.Vendas.Where(x => x.id_vendedor == id).ToList();
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
         }
 
-        public List<VendaModel> BuscarVendaPorIdComprador(int id)
+        public async Task<List<VendaModel>> BuscarVendaPorIdComprador(int id)
         {
-            return _dbContext.Vendas.Where(x => x.id_comprador == id).ToList();
+            try
+            {
+                return _dbContext.Vendas.Where(x => x.id_comprador == id).ToList();
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
         }
-        public void AddVenda(VendaModel venda)
+        public async Task<ObjectResult> AdicionarVenda(VendaModel venda)
         {
-            _dbContext.Vendas.Add(venda);
-            _dbContext.SaveChanges();
+            try
+            {
+                _dbContext.Vendas.Add(venda);
+                _dbContext.SaveChanges();
+                return new ObjectResult(venda)
+                {
+                    StatusCode = StatusCodes.Status201Created
+                };
+            }
+            catch (Exception ex)
+            {
+                return new ObjectResult(new { message = ex.Message })
+                {
+                    StatusCode = 400
+                };
+            }
         }
 
-        public void UpdateVenda(VendaModel venda)
+        public async Task<ObjectResult> AtualizarVenda(VendaModel venda)
         {
-            _dbContext.Vendas.Update(venda);
-            _dbContext.SaveChanges();
+            try
+            {
+                _dbContext.Vendas.Update(venda);
+                _dbContext.SaveChanges();
+                return new ObjectResult(venda)
+                {
+                    StatusCode = StatusCodes.Status200OK
+                };
+            }
+            catch (Exception ex)
+            {
+                return new ObjectResult(new { message = ex.Message })
+                {
+                    StatusCode = 400
+                };
+            }
         }
 
-        public void DeleteVenda(int id)
+        public async Task<ObjectResult> ExcluirVenda(int IdVenda)
         {
-            var venda = _dbContext.Vendas.Find(id);
-            _dbContext.Vendas.Remove(venda);
-            _dbContext.SaveChanges();
-        }
+            try
+            {
+                var venda = _dbContext.Vendas.Find(IdVenda);
+                _dbContext.Vendas.Remove(venda);
+                _dbContext.SaveChanges();
+                return new ObjectResult(venda)
+                {
+                    StatusCode = StatusCodes.Status200OK
+                };
+            }
+            catch (Exception ex)
+            {
+                return new ObjectResult(new { message = ex.Message })
+                {
+                    StatusCode = 400
+                };
+            }
+        }       
     }
 }
