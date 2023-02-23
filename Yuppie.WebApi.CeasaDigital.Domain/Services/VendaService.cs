@@ -10,73 +10,99 @@ using System.Linq;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
+using AutoMapper;
 
 namespace Yuppie.WebApi.CeasaDigital.Domain.Services
-{
+{   
     public class VendaService : IVendaService
     {
+        private readonly IMapper _mapper;
         private readonly IVendaRepository _VendaRepository;
         private readonly IOfertaRepository _OfertaRepository;
         private readonly IProcessoNegociacaoRepository _NegociacaoRepository;
-        public VendaService(IVendaRepository VendaRepository, IOfertaRepository ofertaRepository, IProcessoNegociacaoRepository negociacaoRepository)
+        public VendaService(IVendaRepository VendaRepository, IOfertaRepository ofertaRepository, IProcessoNegociacaoRepository negociacaoRepository,IMapper mapper)
         {
             _VendaRepository = VendaRepository;
             _OfertaRepository = ofertaRepository;
             _NegociacaoRepository = negociacaoRepository;
+            _mapper = mapper;
         }
 
-        public List<VendaModel> BuscarTodasVendas()
+        public async Task<ObjectResult> BuscarTodasVendas()
         {
             try
             {
-                var vendasDb = _VendaRepository.BuscarTodasVendas();
-                return JsonConvert.DeserializeObject<List<VendaModel>>(JsonConvert.SerializeObject(vendasDb));
+                var vendas = _mapper.Map<VendaModel>(await _VendaRepository.BuscarTodasVendas());
+                return new ObjectResult(vendas)
+                {
+                    StatusCode = StatusCodes.Status200OK
+                };
             }
-            catch (Exception ex)
+            catch (System.Exception ex)
             {
-            }
-            return null;
+                return new ObjectResult(new { message = $"Falha ao buscar vendas!" })
+                {
+                    StatusCode = 500
+                };
+            }          
         }
 
-        public VendaModel BuscarVendaPorId(int id)
+        public async Task<ObjectResult> BuscarVendaPorId(int id)
         {
             try
             {
-                var vendaDb = _VendaRepository.BuscarVendaPorId(id);
-                return JsonConvert.DeserializeObject<VendaModel>(JsonConvert.SerializeObject(vendaDb));
+                var venda = _mapper.Map<VendaModel>(await _VendaRepository.BuscarVendaPorId(id));
+                return new ObjectResult(venda)
+                {
+                    StatusCode = StatusCodes.Status200OK
+                };
             }
-            catch (Exception ex)
+            catch (System.Exception ex)
             {
-            }
-            return null;
-
+                return new ObjectResult(new { message = $"Falha ao buscar venda - id: {id}!" })
+                {
+                    StatusCode = 500
+                };
+            } 
         }
 
 
-        public List<VendaModel> BuscarVendaPorIdVendedor(int id)
+        public async Task<ObjectResult> BuscarVendaPorIdVendedor(int id)
         {
             try
-            {
-                var vendasDb = _VendaRepository.BuscarVendaPorIdVendedor(id);
-                return JsonConvert.DeserializeObject<List<VendaModel>>(JsonConvert.SerializeObject(vendasDb));
+            {                               
+                var venda = _mapper.Map<VendaModel>(await _VendaRepository.BuscarVendaPorIdVendedor(id));
+                return new ObjectResult(venda)
+                {
+                    StatusCode = StatusCodes.Status200OK
+                };
             }
             catch (Exception ex)
             {
-            }
-            return null;
+                return new ObjectResult(new { message = $"Falha ao buscar venda por vendedor - id: {id}!" })
+                {
+                    StatusCode = 500
+                };
+            }            
         }
 
-        public List<VendaModel> BuscarVendaPorIdComprador(int id)
+        public async Task<ObjectResult> BuscarVendaPorIdComprador(int id)
         {
             try
             {
-                var vendasDb = _VendaRepository.BuscarVendaPorIdComprador(id);
-                return JsonConvert.DeserializeObject<List<VendaModel>>(JsonConvert.SerializeObject(vendasDb));
+                var venda = _mapper.Map<VendaModel>(await _VendaRepository.BuscarVendaPorIdComprador(id));
+                return new ObjectResult(venda)
+                {
+                    StatusCode = StatusCodes.Status200OK
+                };
             }
             catch (Exception ex)
             {
-            }
-            return null;
+                return new ObjectResult(new { message = $"Falha ao buscar venda por comprador - id: {id}!" })
+                {
+                    StatusCode = 500
+                };
+            }            
         }
 
         public async Task<ObjectResult> ProcessoCancelamento(int IdVenda, int IdUsuario)

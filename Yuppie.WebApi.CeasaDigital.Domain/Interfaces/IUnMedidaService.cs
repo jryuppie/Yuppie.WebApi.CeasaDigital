@@ -9,8 +9,8 @@ namespace Yuppie.WebApi.CeasaDigital.Domain.Interfaces
 {
     public interface IUnMedidaService
     {
-       public Task<ObjectResult> CadastrarUnMedida(string nomeUnMedida);                   
-       public Task<ObjectResult> DeletarUnMedida(int idUnMedida);
+        public Task<ObjectResult> CadastrarUnMedida(string nomeUnMedida);
+        public Task<ObjectResult> DeletarUnMedida(int idUnMedida);
         public Task<ObjectResult> BuscarTodasUnMedidas();
     }
 }

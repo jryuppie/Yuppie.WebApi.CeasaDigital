@@ -18,28 +18,28 @@ namespace Yuppie.WebApi.CeasaDigital.Controllers
         }
         [Route("vendas")]
         [HttpGet]
-        public List<VendaModel> TodasVendas()
+        public async Task<ObjectResult> TodasVendas()
         {
             return _vendaService.BuscarTodasVendas();
         }
 
         [Route("{id}")]
         [HttpGet]
-        public VendaModel BuscarVendaPorId(int id)
+        public async Task<ObjectResult> BuscarVendaPorId(int id)
         {
             return _vendaService.BuscarVendaPorId(id);
         }
 
         [Route("vendedor/{id}")]
         [HttpGet]
-        public List<VendaModel> BuscarVendaPorIdVendedor(int id)
+        public async Task<ObjectResult> BuscarVendaPorIdVendedor(int id)
         {
             return _vendaService.BuscarVendaPorIdVendedor(id);
         }
 
         [Route("comprador/{id}")]
         [HttpGet]
-        public List<VendaModel> BuscarVendaPorIdComprador(int id)
+        public async Task<ObjectResult> BuscarVendaPorIdComprador(int id)
         {
             return _vendaService.BuscarVendaPorIdComprador(id);
         }
