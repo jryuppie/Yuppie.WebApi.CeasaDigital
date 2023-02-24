@@ -32,7 +32,7 @@ namespace Yuppie.WebApi.CeasaDigital.Domain.Services
         {
             try
             {
-                var vendas = _mapper.Map<VendaModel>(await _VendaRepository.BuscarTodasVendas());
+                var vendas = _mapper.Map<List<VendaModel>>(await _VendaRepository.BuscarTodasVendas());
                 return new ObjectResult(vendas)
                 {
                     StatusCode = StatusCodes.Status200OK
@@ -66,12 +66,11 @@ namespace Yuppie.WebApi.CeasaDigital.Domain.Services
             } 
         }
 
-
         public async Task<ObjectResult> BuscarVendaPorIdVendedor(int id)
         {
             try
             {                               
-                var venda = _mapper.Map<VendaModel>(await _VendaRepository.BuscarVendaPorIdVendedor(id));
+                var venda = _mapper.Map<List<VendaModel>>(await _VendaRepository.BuscarVendaPorIdVendedor(id));
                 return new ObjectResult(venda)
                 {
                     StatusCode = StatusCodes.Status200OK
@@ -90,7 +89,7 @@ namespace Yuppie.WebApi.CeasaDigital.Domain.Services
         {
             try
             {
-                var venda = _mapper.Map<VendaModel>(await _VendaRepository.BuscarVendaPorIdComprador(id));
+                var venda = _mapper.Map<List<VendaModel>>(await _VendaRepository.BuscarVendaPorIdComprador(id));
                 return new ObjectResult(venda)
                 {
                     StatusCode = StatusCodes.Status200OK
@@ -190,22 +189,23 @@ namespace Yuppie.WebApi.CeasaDigital.Domain.Services
             }
         }
 
-        public async void ExecutarVenda(int idOferta, int quantidade, int idComprador)
+        public async Task<ObjectResult> ExecutarVenda(int idOferta, int quantidade, int idComprador)
         {
             try
             {
+                var novaVenda = new Infra.Models.Negociacao.VendaModel();
                 var transacao = new TransacaoTools(_OfertaRepository);
                 var Oferta = await _OfertaRepository.BuscarOfertaPorId(idOferta);
                 if (Oferta != null && Oferta.qtd_disponivel > 0 && Oferta.qtd_disponivel > quantidade && Oferta.id_vendedor != idComprador)
                 {
-                    var Negociacao = _NegociacaoRepository.BuscarNegociacaoPorInformacoes(idComprador, idOferta, NegociacaoStatus.Andamento.PegarDescricao());
+                    var Negociacao = await _NegociacaoRepository.BuscarNegociacaoPorInformacoes(idComprador, idOferta, NegociacaoStatus.Andamento.PegarDescricao());
                     if (Negociacao == null)
                     {
                         var vlrTransacao = Oferta.vl_un_medida * quantidade;
                         if (vlrTransacao > 0)
                         {
                             //TODO -  VERIFICAR QUAL STATUS DEVE SER ATRIBUIDO 
-                            var novaVenda = new Infra.Models.Negociacao.VendaModel()
+                            novaVenda = new Infra.Models.Negociacao.VendaModel()
                             {
                                 id_comprador = idComprador,
                                 id_oferta = idOferta,
@@ -217,14 +217,19 @@ namespace Yuppie.WebApi.CeasaDigital.Domain.Services
                                 venda_status = NegociacaoStatus.Andamento.PegarDescricao()
                             };
                             await _VendaRepository.AdicionarVenda(novaVenda);
-                        }
-                        transacao.AtualizarQuantidadeOferta(quantidade, idOferta);
+                            transacao.AtualizarQuantidadeOferta(quantidade, idOferta);                          
+                        }                                            
+                      
                     }
                 }
+                return new ObjectResult(novaVenda) { StatusCode = StatusCodes.Status201Created };
             }
             catch (Exception ex)
             {
-
+                return new ObjectResult(new { message = "Falha ao executar venda!" })
+                {
+                    StatusCode = 500
+                };
             }
         }
     }

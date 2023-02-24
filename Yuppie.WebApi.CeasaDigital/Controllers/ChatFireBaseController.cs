@@ -19,7 +19,7 @@ namespace Yuppie.WebApi.CeasaDigital.Controllers
         public ChatFirebaseUserModel Login()
         {
             ChatFirebaseUserModel chat = new ChatFirebaseUserModel();
-            _pgChatFirebaseService.Login();
+            _pgChatFirebaseService.IniciaValidacaoLogin(5);
             return chat;
         }
 

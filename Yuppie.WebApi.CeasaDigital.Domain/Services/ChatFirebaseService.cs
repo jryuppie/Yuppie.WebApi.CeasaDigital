@@ -1,42 +1,45 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using Newtonsoft.Json;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using Yuppie.WebApi.CeasaDigital.Domain.Interfaces;
-using Yuppie.WebApi.CeasaDigital.Domain.Models.Chat;
-using Yuppie.WebApi.CeasaDigital.Domain.Models.UsuarioModel;
-using Yuppie.WebApi.Infra.Context;
+using FirebaseAdmin;
 
 namespace Yuppie.WebApi.CeasaDigital.Domain.Services
 {
+
     public class ChatFirebaseService : IChatFirebaseService
     {
+        private readonly FirebaseApp _firestoreDb;
+
+        public ChatFirebaseService(FirebaseApp firestoreDb)
+        {
+            _firestoreDb = firestoreDb;
+        }
+        
         public void Login()
         {
 
         }
         public async Task<ObjectResult> IniciaValidacaoLogin(int idChat)
-        {
-           var retorno = new ObjectResult(idChat)
-            {
-                StatusCode = StatusCodes.Status200OK
-            };
+        {         
             try
             {
 
+                var database = _firestoreDb.            
+
+                return  new ObjectResult(idChat)
+                {
+                    StatusCode = StatusCodes.Status200OK
+                };
             }
             catch (Exception ex)
             {
-
-                throw;
+               return new ObjectResult(idChat)
+                {
+                    StatusCode = 500
+                };
             }
-
-            return retorno;
         }
         public void BuscarUsuarioPorId(int id)
         { }

@@ -20,36 +20,35 @@ namespace Yuppie.WebApi.CeasaDigital.Controllers
         [HttpGet]
         public async Task<ObjectResult> TodasVendas()
         {
-            return _vendaService.BuscarTodasVendas();
+            return await _vendaService.BuscarTodasVendas();
         }
 
         [Route("{id}")]
         [HttpGet]
         public async Task<ObjectResult> BuscarVendaPorId(int id)
         {
-            return _vendaService.BuscarVendaPorId(id);
+            return await _vendaService.BuscarVendaPorId(id);
         }
 
         [Route("vendedor/{id}")]
         [HttpGet]
         public async Task<ObjectResult> BuscarVendaPorIdVendedor(int id)
         {
-            return _vendaService.BuscarVendaPorIdVendedor(id);
+            return await _vendaService.BuscarVendaPorIdVendedor(id);
         }
 
         [Route("comprador/{id}")]
         [HttpGet]
         public async Task<ObjectResult> BuscarVendaPorIdComprador(int id)
         {
-            return _vendaService.BuscarVendaPorIdComprador(id);
+            return await _vendaService.BuscarVendaPorIdComprador(id);
         }
 
         [Route("ExecutarVenda")]
         [HttpPost]
-        public bool ExecutarVenda(int idOferta, int quantidade, int idComprador)
+        public async Task<ObjectResult> ExecutarVenda([FromBody] CadastrarVendaFormulario oModel)
         {
-            _vendaService.ExecutarVenda(idOferta, quantidade, idComprador);
-            return true;
+            return await _vendaService.ExecutarVenda(oModel.idOferta, oModel.qtd, oModel.idComprador);            
         }
 
         [Route("cancelamento")]
