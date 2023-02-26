@@ -18,6 +18,7 @@ namespace Yuppie.WebApi.Infra.Repository
         public Task<ObjectResult> AdicionarProduto(string categoria, string nome);
         public Task<ObjectResult> AtualizarProduto(string categoria, string nome);
         public Task<ObjectResult> ExcluirProduto(string categoria, string nome);
+        public Task<ProdutoModel> BuscarProdutoPorId(int Id);
     }
 
     public class ProdutoRepository : IProdutoRepository
@@ -30,6 +31,17 @@ namespace Yuppie.WebApi.Infra.Repository
             try
             {
                 return _dbContext.Produtos.Where(x => x.nome == nomeProduto).FirstOrDefault();
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+        }
+        public async Task<ProdutoModel> BuscarProdutoPorId(int Id)
+        {
+            try
+            {
+                return _dbContext.Produtos.Where(x => x.id == Id).FirstOrDefault();
             }
             catch (Exception ex)
             {

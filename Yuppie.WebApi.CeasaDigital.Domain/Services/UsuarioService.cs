@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Yuppie.WebApi.CeasaDigital.Domain.Interfaces;
+using Yuppie.WebApi.CeasaDigital.Domain.Models.UsuarioModel;
 using Yuppie.WebApi.Infra.Repository;
 
 namespace Yuppie.WebApi.CeasaDigital.Domain.Services
@@ -24,7 +25,7 @@ namespace Yuppie.WebApi.CeasaDigital.Domain.Services
         {
             try
             {
-                var usuario =  _mapper.Map<Domain.Models.UsuarioModel.UsuarioModel>(await _usuarioRepository.BuscarUsuarioLogin(user, password));
+                var usuario =  _mapper.Map<UsuarioModel>(await _usuarioRepository.BuscarUsuarioLogin(user, password));
                 return new ObjectResult(usuario)
                 {
                     StatusCode = StatusCodes.Status200OK
@@ -34,7 +35,7 @@ namespace Yuppie.WebApi.CeasaDigital.Domain.Services
             {
                 return new ObjectResult(new { message = $"Falha ao buscar usuário: {user}!" })
                 {
-                    StatusCode = 500
+                    StatusCode = StatusCodes.Status500InternalServerError
                 };
             }
         }
@@ -43,7 +44,7 @@ namespace Yuppie.WebApi.CeasaDigital.Domain.Services
         {
             try
             {
-                var usuarios = _mapper.Map<List<Domain.Models.UsuarioModel.UsuarioModel>>(await _usuarioRepository.BuscarTodosUsuarios());
+                var usuarios = _mapper.Map<List<UsuarioModel>>(await _usuarioRepository.BuscarTodosUsuarios());
                 return new ObjectResult(usuarios)
                 {
                     StatusCode = StatusCodes.Status200OK
@@ -53,7 +54,7 @@ namespace Yuppie.WebApi.CeasaDigital.Domain.Services
             {
                 return new ObjectResult(new { message = "Falha ao buscar os usuários!" })
                 {
-                    StatusCode = 500
+                    StatusCode = StatusCodes.Status500InternalServerError
                 };
             }
         }
@@ -62,7 +63,7 @@ namespace Yuppie.WebApi.CeasaDigital.Domain.Services
         {
             try
             {
-                var usuarios = _mapper.Map<Domain.Models.UsuarioModel.UsuarioModel>(_usuarioRepository.BuscarUsuarioPorDocumento(documento));
+                var usuarios = _mapper.Map<UsuarioModel>(_usuarioRepository.BuscarUsuarioPorDocumento(documento));
                 return new ObjectResult(usuarios)
                 {
                     StatusCode = StatusCodes.Status200OK
@@ -72,7 +73,7 @@ namespace Yuppie.WebApi.CeasaDigital.Domain.Services
             {
                 return new ObjectResult(new { message = "Falha ao buscar os usuários!" })
                 {
-                    StatusCode = 500
+                    StatusCode = StatusCodes.Status500InternalServerError
                 };
             }          
         }
@@ -81,7 +82,7 @@ namespace Yuppie.WebApi.CeasaDigital.Domain.Services
         {
             try
             {
-                var usuarios = _mapper.Map<Domain.Models.UsuarioModel.UsuarioModel>(_usuarioRepository.BuscarUsuarioPorId(id));
+                var usuarios = _mapper.Map<UsuarioModel>(await _usuarioRepository.BuscarUsuarioPorId(id));
                 return new ObjectResult(usuarios)
                 {
                     StatusCode = StatusCodes.Status200OK
@@ -91,12 +92,12 @@ namespace Yuppie.WebApi.CeasaDigital.Domain.Services
             {
                 return new ObjectResult(new { message = "Falha ao buscar os usuários!" })
                 {
-                    StatusCode = 500
+                    StatusCode = StatusCodes.Status500InternalServerError
                 };
             }       
         }
 
-        public async Task<ObjectResult> CadastrarUsuario(Domain.Models.UsuarioModel.UsuarioModel usuario)
+        public async Task<ObjectResult> CadastrarUsuario(UsuarioModel usuario)
         {
             try
             {
@@ -110,7 +111,7 @@ namespace Yuppie.WebApi.CeasaDigital.Domain.Services
             {
                 return new ObjectResult(new { message = $"Falha ao cadastrar o usuário: {usuario.nome}!" })
                 {
-                    StatusCode = 500
+                    StatusCode = StatusCodes.Status500InternalServerError
                 };
             }
         }

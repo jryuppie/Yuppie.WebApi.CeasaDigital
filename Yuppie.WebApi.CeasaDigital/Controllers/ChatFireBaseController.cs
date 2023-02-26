@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using System.Threading.Tasks;
 using Yuppie.WebApi.CeasaDigital.Domain.Interfaces;
 using Yuppie.WebApi.CeasaDigital.Domain.Models.Chat;
+using Yuppie.WebApi.CeasaDigital.Domain.Services;
 
 namespace Yuppie.WebApi.CeasaDigital.Controllers
 {
@@ -16,28 +18,24 @@ namespace Yuppie.WebApi.CeasaDigital.Controllers
 
         [Route("initLogin")]
         [HttpPost]
-        public ChatFirebaseUserModel Login()
+
+        public async Task<ObjectResult> Login()
         {
-            ChatFirebaseUserModel chat = new ChatFirebaseUserModel();
-            _pgChatFirebaseService.IniciaValidacaoLogin(5);
-            return chat;
-        }
+            return await _pgChatFirebaseService.IniciaValidacaoLogin(8);
+        }      
 
         [Route("user/{id}")]
         [HttpGet]
-        public ChatFirebaseUserModel BuscarUsuarioPorId(int id)
-        {
-            ChatFirebaseUserModel chat = new ChatFirebaseUserModel();
-            _pgChatFirebaseService.BuscarUsuarioPorId(id);
-            return chat;
+        public async Task<ObjectResult> BuscarUsuarioPorId(int id)
+        {           
+            return await _pgChatFirebaseService.BuscarUsuarioPorId(id);            
         }
 
         [Route("user/contacts/{id}")]
         [HttpGet]
-        public bool BuscarContratosPorId(int id)
+        public async Task<ObjectResult> BuscarContratosPorId(int id)
         {
-            _pgChatFirebaseService.BuscarContratosPorId(id);
-            return true;
+            return await _pgChatFirebaseService.BuscarContratosPorId(id);             
         }
 
         [Route("user")]

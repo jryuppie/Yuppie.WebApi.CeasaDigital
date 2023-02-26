@@ -19,6 +19,7 @@ namespace Yuppie.WebApi.Infra.Repository
         public Task<ObjectResult> AdicionarVenda(VendaModel venda);
         public Task<ObjectResult> AtualizarVenda(VendaModel venda);
         public Task<ObjectResult> ExcluirVenda(int id);
+        public Task<VendaModel> BuscarVendaPorInformacoes(int idComprador, int idVenda, string status)
     }
 
     public class VendaRepository : IVendaRepository
@@ -133,6 +134,18 @@ namespace Yuppie.WebApi.Infra.Repository
                     StatusCode = 400
                 };
             }
-        }       
+        }
+
+        public async Task<VendaModel> BuscarVendaPorInformacoes(int idComprador, int idVenda, string status)
+        {
+            try
+            {
+                return _dbContext.Vendas.FirstOrDefault(x => x.id == idComprador && x.id == idVenda && x.venda_status == status);
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+        }
     }
 }

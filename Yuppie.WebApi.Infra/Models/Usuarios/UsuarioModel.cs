@@ -19,7 +19,5 @@ namespace Yuppie.WebApi.Infra.Models.UsuarioModel
         public string tipo_usuario { get; set; }
         public string tipo_pessoa { get; set; }
         public DateTime update_date { get; set; }
-    }
-
-    
+    }    
 }

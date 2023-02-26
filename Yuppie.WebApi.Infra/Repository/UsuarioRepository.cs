@@ -31,8 +31,8 @@ namespace Yuppie.WebApi.Infra.Repository
         public async Task<UsuarioModel> BuscarUsuarioPorId(int id)
         {
             try
-            {
-                return _dbContext.Usuarios.Find(id);
+            {                
+                return _dbContext.Usuarios.Where(x=> x.id == id).FirstOrDefault();                
             }
             catch (Exception ex)
             {

@@ -6,7 +6,7 @@ namespace Yuppie.WebApi.CeasaDigital.Domain.Models.Enums
 {
     public enum NegociacaoStatus
     {
-        Andamento,
+        Processo,
         Concluido,
         Cancelado      
     }
@@ -17,7 +17,7 @@ namespace Yuppie.WebApi.CeasaDigital.Domain.Models.Enums
         {
             switch (status)
             {
-                case NegociacaoStatus.Andamento:
+                case NegociacaoStatus.Processo:
                     return "PROCESSO";                    
                 case NegociacaoStatus.Concluido:
                     return "CONCLUIDO";

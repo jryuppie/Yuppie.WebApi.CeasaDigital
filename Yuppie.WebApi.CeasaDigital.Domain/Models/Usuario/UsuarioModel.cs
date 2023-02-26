@@ -20,24 +20,4 @@ namespace Yuppie.WebApi.CeasaDigital.Domain.Models.UsuarioModel
         public string tipo_pessoa { get; set; }
         public DateTime update_date { get; set; }
     }
-
-    public class ApplicationDbContext : DbContext
-    {
-        public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
-            : base(options)
-        { }
-
-        public DbSet<UsuarioModel> Usuarios { get; set; }
-
-        protected override void OnModelCreating(ModelBuilder modelBuilder)
-        {
-            modelBuilder.HasDefaultSchema("public");
-
-            modelBuilder.Entity<UsuarioModel>().ToTable("usuario")
-                .HasKey(u => u.id);
-
-            modelBuilder.Entity<UsuarioModel>().Property(u => u.id)
-                .HasDefaultValueSql("nextval('usuario_id_seq'::regclass)");
-        }
-    }
 }

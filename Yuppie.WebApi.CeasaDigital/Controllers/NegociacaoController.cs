@@ -19,7 +19,7 @@ namespace Yuppie.WebApi.CeasaDigital.Controllers
         [HttpGet]
         public async Task<ObjectResult> BuscarNegociacao(int idVenda)
         {
-            return await _pgNegociacaoService.BuscarNegociacao(idVenda);
+            return await _pgNegociacaoService.BuscarNegociacaoPorId(idVenda);
         }
     }
 }

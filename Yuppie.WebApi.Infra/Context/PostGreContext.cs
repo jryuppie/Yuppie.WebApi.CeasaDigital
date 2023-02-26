@@ -26,11 +26,74 @@ namespace Yuppie.WebApi.Infra.Context
         {
             modelBuilder.HasDefaultSchema("public");
 
-            modelBuilder.Entity<UsuarioModel>().ToTable("usuario")
-                .HasKey(u => u.id);
+            modelBuilder.Entity<UsuarioModel>(entity =>
+            {
+                entity.ToTable("usuario");
 
-            modelBuilder.Entity<UsuarioModel>().Property(u => u.id)
-                .HasDefaultValueSql("nextval('usuario_id_seq'::regclass)");
+                entity.Property(e => e.id)
+                    .HasColumnName("id")
+                    .HasDefaultValueSql("nextval('usuario_id_seq'::regclass)");
+
+                entity.Property(e => e.cep)
+                    .HasColumnName("cep")
+                    .HasMaxLength(8);
+
+                entity.Property(e => e.create_date)
+                    .HasColumnName("create_date")
+                    .HasColumnType("timestamp without time zone");
+
+                entity.Property(e => e.documento)
+                    .HasColumnName("documento")
+                    .HasMaxLength(16);
+
+                entity.Property(e => e.latitude)
+                    .HasColumnName("latitude")
+                    .HasMaxLength(50);
+
+                entity.Property(e => e.longitude)
+                    .HasColumnName("longitude")
+                    .HasMaxLength(50);
+
+                entity.Property(e => e.nome)
+                    .HasColumnName("nome")
+                    .HasMaxLength(255);
+
+                entity.Property(e => e.senha)
+                    .HasColumnName("senha")
+                    .HasMaxLength(255);
+
+                entity.Property(e => e.sobrenome)
+                    .HasColumnName("sobrenome")
+                    .HasMaxLength(100);
+
+                entity.Property(e => e.status)
+                    .HasColumnName("status");
+
+                entity.Property(e => e.telefone)
+                    .HasColumnName("telefone")
+                    .HasMaxLength(11);
+
+                entity.Property(e => e.tipo_pessoa)
+                    .HasColumnName("tipo_pessoa")
+                    .HasMaxLength(8);
+
+                entity.Property(e => e.tipo_usuario)
+                    .HasColumnName("tipo_usuario")
+                    .HasMaxLength(10);
+
+                entity.Property(e => e.update_date)
+                    .HasColumnName("update_date")
+                    .HasColumnType("timestamp without time zone");
+
+                entity.HasKey(e => e.id)
+                    .HasName("usuario_pkey");
+
+                entity.Property(e => e.id)
+                    .HasColumnName("id")
+                    .HasDefaultValueSql("nextval('usuario_id_seq'::regclass)");
+
+                entity.ToTable("usuario");
+            });
 
             modelBuilder.Entity<ProdutoModel>(entity =>
             {
@@ -150,6 +213,7 @@ namespace Yuppie.WebApi.Infra.Context
                 entity.Property(e => e.vl_un_medida)
                     .HasColumnName("vl_un_medida");
             });
+
             modelBuilder.Entity<UnidadeMedidaModel>(entity =>
             {
                 entity.ToTable("public.unidade_medidas");

@@ -10,14 +10,15 @@ using Yuppie.WebApi.Infra.Context;
 using Microsoft.OpenApi.Models;
 using Yuppie.WebApi.Infra.Repository;
 using Yuppie.WebApi.CeasaDigital.Domain.Models.Negociacao;
-using Yuppie.WebApi.CeasaDigital.Domain.Models.Chat;
 using Yuppie.WebApi.CeasaDigital.Domain.Models.Produto;
-using Yuppie.WebApi.CeasaDigital.Domain.Models.UsuarioModel;
 using AutoMapper;
-using FirebaseAdmin;
-
+using System;
 using System.IO;
 using Google.Apis.Auth.OAuth2;
+using Google.Cloud.Firestore;
+using Google.Cloud.Firestore.V1;
+using FirebaseAdmin;
+using Yuppie.WebApi.CeasaDigital.Domain.Models.UsuarioModel;
 
 namespace Yuppie.WebApi.CeasaDigital
 {
@@ -36,8 +37,8 @@ namespace Yuppie.WebApi.CeasaDigital
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            var webRoot = _env.ContentRootPath;
-            var credentialsPath = Path.Combine(webRoot, "ceasawebchat-adminsdk.json");
+            
+
 
             #region Services           
             services.AddTransient<IUsuarioService, UsuarioService>();
@@ -46,8 +47,7 @@ namespace Yuppie.WebApi.CeasaDigital
             services.AddTransient<IVendaService, VendaService>();
             services.AddTransient<INegociacaoService, NegociacaoService>();
             services.AddTransient<IChatFirebaseService, ChatFirebaseService>();
-            services.AddTransient<IUnMedidaService, UnMedidaService>();
-            services.AddTransient<IChatFirebaseService, ChatFirebaseService>();
+            services.AddTransient<IUnMedidaService, UnMedidaService>();            
             #endregion
 
             #region Repositories
@@ -74,6 +74,7 @@ namespace Yuppie.WebApi.CeasaDigital
                 mc.CreateMap<Yuppie.WebApi.Infra.Models.Negociacao.ProcessoNegociacaoModel, ProcessoNegociacaoModel>();
                 mc.CreateMap<Yuppie.WebApi.Infra.Models.Produto.UnidadeMedidaModel, UnidadeMedidaModel>();
                 mc.CreateMap<Yuppie.WebApi.Infra.Models.Negociacao.VendaModel, VendaModel>();
+                mc.CreateMap<Yuppie.WebApi.Infra.Models.UsuarioModel.UsuarioModel, UsuarioModel>();
             });
 
             IMapper mapper = mappingConfig.CreateMapper();
@@ -94,14 +95,19 @@ namespace Yuppie.WebApi.CeasaDigital
 
 
 
+            #region FireBase
+            var credentialsPath = Path.Combine(_env.ContentRootPath, "ceasawebchat-adminsdk.json");
+            services.AddSingleton<FirebaseApp>(provider =>
+            {
+                var app = FirebaseApp.Create(new AppOptions()
+                {
+                    Credential = GoogleCredential.FromFile(credentialsPath),
+                    ProjectId = "ceasawebchat"
+                });
+                return app;
+            });
+            #endregion
 
-            //Configuração do FirebaseAdmin
-
-           //FirebaseApp.Create(new AppOptions()
-           //{
-           //    Credential = GoogleCredential.FromFile(credentialsPath),
-           //});
-           // services.AddSingleton(FirebaseApp.DefaultInstance);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

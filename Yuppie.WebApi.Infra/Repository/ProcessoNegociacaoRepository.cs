@@ -16,7 +16,9 @@ namespace Yuppie.WebApi.Infra.Repository
         public Task<List<ProcessoNegociacaoModel>> BuscarTodasNegociacoes();
         public Task<ObjectResult> AtualizarNegociacao(ProcessoNegociacaoModel negociacao);
         public Task<ObjectResult> DeletarNegociacao(int id);
+        public Task<ObjectResult> AdicionarNegociacao(ProcessoNegociacaoModel negociacao);
         public Task<ProcessoNegociacaoModel> BuscarNegociacaoPorVenda(int IdVenda);
+
     }
 
     public class ProcessoNegociacaoRepository : IProcessoNegociacaoRepository
@@ -63,6 +65,7 @@ namespace Yuppie.WebApi.Infra.Repository
         {
             try
             {
+                negociacao.create_date= DateTime.Now;
                 _dbContext.ProcessoNegociacoes.Add(negociacao);
                 _dbContext.SaveChanges();
                 return new ObjectResult(negociacao)

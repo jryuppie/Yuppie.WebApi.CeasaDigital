@@ -20,12 +20,14 @@ namespace Yuppie.WebApi.CeasaDigital.Domain.Services
         private readonly IVendaRepository _VendaRepository;
         private readonly IOfertaRepository _OfertaRepository;
         private readonly IProcessoNegociacaoRepository _NegociacaoRepository;
-        public VendaService(IVendaRepository VendaRepository, IOfertaRepository ofertaRepository, IProcessoNegociacaoRepository negociacaoRepository,IMapper mapper)
-        {
+        private readonly IWhatsappService _WhatsappService;
+
+        public VendaService(IVendaRepository VendaRepository, IOfertaRepository ofertaRepository, IProcessoNegociacaoRepository negociacaoRepository,IMapper mapper, IWhatsappService whatsappService)        {
             _VendaRepository = VendaRepository;
             _OfertaRepository = ofertaRepository;
             _NegociacaoRepository = negociacaoRepository;
             _mapper = mapper;
+            _WhatsappService= whatsappService;           
         }
 
         public async Task<ObjectResult> BuscarTodasVendas()
@@ -42,7 +44,7 @@ namespace Yuppie.WebApi.CeasaDigital.Domain.Services
             {
                 return new ObjectResult(new { message = $"Falha ao buscar vendas!" })
                 {
-                    StatusCode = 500
+                    StatusCode = StatusCodes.Status500InternalServerError
                 };
             }          
         }
@@ -61,7 +63,7 @@ namespace Yuppie.WebApi.CeasaDigital.Domain.Services
             {
                 return new ObjectResult(new { message = $"Falha ao buscar venda - id: {id}!" })
                 {
-                    StatusCode = 500
+                    StatusCode = StatusCodes.Status500InternalServerError
                 };
             } 
         }
@@ -80,7 +82,7 @@ namespace Yuppie.WebApi.CeasaDigital.Domain.Services
             {
                 return new ObjectResult(new { message = $"Falha ao buscar venda por vendedor - id: {id}!" })
                 {
-                    StatusCode = 500
+                    StatusCode = StatusCodes.Status500InternalServerError
                 };
             }            
         }
@@ -99,7 +101,7 @@ namespace Yuppie.WebApi.CeasaDigital.Domain.Services
             {
                 return new ObjectResult(new { message = $"Falha ao buscar venda por comprador - id: {id}!" })
                 {
-                    StatusCode = 500
+                    StatusCode = StatusCodes.Status500InternalServerError
                 };
             }            
         }
@@ -198,8 +200,8 @@ namespace Yuppie.WebApi.CeasaDigital.Domain.Services
                 var Oferta = await _OfertaRepository.BuscarOfertaPorId(idOferta);
                 if (Oferta != null && Oferta.qtd_disponivel > 0 && Oferta.qtd_disponivel > quantidade && Oferta.id_vendedor != idComprador)
                 {
-                    var Negociacao = await _NegociacaoRepository.BuscarNegociacaoPorInformacoes(idComprador, idOferta, NegociacaoStatus.Andamento.PegarDescricao());
-                    if (Negociacao == null)
+                    var NegociacaoVenda = await _VendaRepository.BuscarVendaPorInformacoes(idComprador, idOferta, NegociacaoStatus.Processo.PegarDescricao());
+                    if (NegociacaoVenda == null)
                     {
                         var vlrTransacao = Oferta.vl_un_medida * quantidade;
                         if (vlrTransacao > 0)
@@ -214,10 +216,13 @@ namespace Yuppie.WebApi.CeasaDigital.Domain.Services
                                 id_vendedor = Oferta.id_vendedor,
                                 create_date = DateTime.Now,
                                 update_date = DateTime.Now,
-                                venda_status = NegociacaoStatus.Andamento.PegarDescricao()
+                                venda_status = NegociacaoStatus.Processo.PegarDescricao()
                             };
                             await _VendaRepository.AdicionarVenda(novaVenda);
-                            transacao.AtualizarQuantidadeOferta(quantidade, idOferta);                          
+                            transacao.AtualizarQuantidadeOferta(quantidade, idOferta);                            
+                            var negociacaoVendaAtualizada = await _VendaRepository.BuscarVendaPorInformacoes(idComprador, idOferta, NegociacaoStatus.Processo.PegarDescricao());
+                            await _NegociacaoRepository.AdicionarNegociacao(new Infra.Models.Negociacao.ProcessoNegociacaoModel() { id_venda = negociacaoVendaAtualizada.id, qtd_comprada = quantidade });
+                            _WhatsappService.EnviarMensagem(idComprador, Oferta.id_vendedor, Oferta.id_produto);
                         }                                            
                       
                     }
@@ -228,7 +233,7 @@ namespace Yuppie.WebApi.CeasaDigital.Domain.Services
             {
                 return new ObjectResult(new { message = "Falha ao executar venda!" })
                 {
-                    StatusCode = 500
+                    StatusCode = StatusCodes.Status500InternalServerError
                 };
             }
         }

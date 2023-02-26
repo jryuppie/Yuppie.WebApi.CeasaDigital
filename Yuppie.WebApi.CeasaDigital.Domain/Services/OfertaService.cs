@@ -42,7 +42,7 @@ namespace Yuppie.WebApi.CeasaDigital.Domain.Services
             {
                 return new ObjectResult(new { message = "Falha ao buscar as ofertas!" })
                 {
-                    StatusCode = 500
+                    StatusCode = StatusCodes.Status500InternalServerError
                 };
             }
         }
@@ -61,7 +61,7 @@ namespace Yuppie.WebApi.CeasaDigital.Domain.Services
             {
                 return new ObjectResult(new { message = "Falha ao buscar as ofertas!" })
                 {
-                    StatusCode = 500
+                    StatusCode = StatusCodes.Status500InternalServerError
                 };
             }
         }
@@ -81,7 +81,7 @@ namespace Yuppie.WebApi.CeasaDigital.Domain.Services
             {
                 return new ObjectResult(new { message = "Falha ao buscar as ofertas!" })
                 {
-                    StatusCode = 500
+                    StatusCode = StatusCodes.Status500InternalServerError
                 };
             }
         }

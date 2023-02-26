@@ -36,7 +36,7 @@ namespace Yuppie.WebApi.CeasaDigital.Domain.Services
             {
                 return new ObjectResult(new { message = $"Falha ao criar a unidade de medida: {nomeUnMedida}!" })
                 {
-                    StatusCode = 500
+                    StatusCode = StatusCodes.Status500InternalServerError
                 };
             }     
         }
@@ -56,7 +56,7 @@ namespace Yuppie.WebApi.CeasaDigital.Domain.Services
             {
                 return new ObjectResult(new { message = $"Falha ao deletar unidade de medida!" })
                 {
-                    StatusCode = 500
+                    StatusCode = StatusCodes.Status500InternalServerError
                 };
             }
         }
@@ -76,7 +76,7 @@ namespace Yuppie.WebApi.CeasaDigital.Domain.Services
             {
                 return new ObjectResult(new { message = $"Falha ao buscar as unidade de medida!" })
                 {
-                    StatusCode = 500
+                    StatusCode = StatusCodes.Status500InternalServerError
                 };
             }
         }
