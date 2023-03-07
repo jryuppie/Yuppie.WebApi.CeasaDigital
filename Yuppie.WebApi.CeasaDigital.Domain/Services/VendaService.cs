@@ -205,8 +205,7 @@ namespace Yuppie.WebApi.CeasaDigital.Domain.Services
                     {
                         var vlrTransacao = Oferta.vl_un_medida * quantidade;
                         if (vlrTransacao > 0)
-                        {
-                            //TODO -  VERIFICAR QUAL STATUS DEVE SER ATRIBUIDO 
+                        {                           
                             novaVenda = new Infra.Models.Negociacao.VendaModel()
                             {
                                 id_comprador = idComprador,
@@ -223,8 +222,7 @@ namespace Yuppie.WebApi.CeasaDigital.Domain.Services
                             var negociacaoVendaAtualizada = await _VendaRepository.BuscarVendaPorInformacoes(idComprador, idOferta, NegociacaoStatus.Processo.PegarDescricao());
                             await _NegociacaoRepository.AdicionarNegociacao(new Infra.Models.Negociacao.ProcessoNegociacaoModel() { id_venda = negociacaoVendaAtualizada.id, qtd_comprada = quantidade });
                             //_WhatsappService.EnviarMensagem(idComprador, Oferta.id_vendedor, Oferta.id_produto);
-                        }                                            
-                      
+                        }    
                     }
                 }
                 return new ObjectResult(novaVenda) { StatusCode = StatusCodes.Status201Created };

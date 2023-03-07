@@ -18,6 +18,7 @@ namespace Yuppie.WebApi.CeasaDigital.Controllers
         [HttpGet]
         public async Task<ObjectResult> Login(string usuario, string senha)
         {
+            //ADAPTAR PARA A REQUISIÇÃO OAUTH.
            return await _usuarioService.BuscarUsuarioLogin(usuario, senha);          
         }
     }

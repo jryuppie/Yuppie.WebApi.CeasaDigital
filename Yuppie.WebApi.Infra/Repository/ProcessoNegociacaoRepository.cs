@@ -65,7 +65,7 @@ namespace Yuppie.WebApi.Infra.Repository
         {
             try
             {
-                negociacao.create_date= DateTime.Now;
+                negociacao.create_date = DateTime.Now;
                 _dbContext.ProcessoNegociacoes.Add(negociacao);
                 _dbContext.SaveChanges();
                 return new ObjectResult(negociacao)
