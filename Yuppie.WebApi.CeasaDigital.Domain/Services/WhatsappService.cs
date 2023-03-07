@@ -141,7 +141,7 @@ namespace Yuppie.WebApi.CeasaDigital.Domain.Services
                     mensagem = RecuperarSenha ? await CriarConteudoMensagemRecupearUsuario(usuario.nome, usuario.senha)
                                               : await CriarConteudoMensagemCriarUsuario(usuario.nome);
                     if (mensagem != "")
-                        return await ExecutarPostAsync("+55", usuario.telefone, mensagem);
+                        return await ExecutarPostAsync("55", usuario.telefone, mensagem);
                 }
                 return new ObjectResult(new { message = "Erro ao enviar a mensagem!" })
                 {

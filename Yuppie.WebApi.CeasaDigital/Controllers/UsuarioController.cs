@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Yuppie.WebApi.CeasaDigital.Domain.Interfaces;
+using Yuppie.WebApi.CeasaDigital.Domain.Models.Formulario;
 using Yuppie.WebApi.CeasaDigital.Domain.Models.UsuarioModel;
 
 namespace Yuppie.WebApi.CeasaDigital.Controllers
@@ -40,9 +41,21 @@ namespace Yuppie.WebApi.CeasaDigital.Controllers
 
         [Route("cadastro")]
         [HttpPost]
-        public async Task<ObjectResult> CadastrarUsuario([FromForm] object formModel)
+        public async Task<ObjectResult> CadastrarUsuario([FromForm] UsuarioFormulario formModel)
         {
-            UsuarioModel usuario = new UsuarioModel();
+            UsuarioModel usuario = new UsuarioModel()
+            {
+                nome = formModel.Nome,
+                sobrenome = formModel.Sobrenome,
+                tipo_usuario = formModel.TipoUsuario,
+                tipo_pessoa= formModel.TipoPessoa,
+                telefone = formModel.Telefone,
+                cep = formModel.Cep,
+                documento = formModel.Documento,
+                senha= formModel.Senha,
+                latitude= formModel.Latitude,
+                longitude= formModel.Longitude,
+            };
             return await _pgUsuarioService.CadastrarUsuario(usuario);
         }
 
@@ -52,6 +65,13 @@ namespace Yuppie.WebApi.CeasaDigital.Controllers
         {
             UsuarioModel usuario = new UsuarioModel();
             return await _pgUsuarioService.AtualizarUsuario(usuario);
+        }
+
+        [Route("status")]
+        [HttpPatch]
+        public async Task<ObjectResult> AtualizarStatusUsuario([FromForm] UsuarioStatusFormulario formModel)
+        {
+            return await _pgUsuarioService.AtualizarStatusUsuario(formModel.Documento, formModel.Status);
         }
     }
 }

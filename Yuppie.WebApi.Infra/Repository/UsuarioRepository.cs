@@ -18,8 +18,9 @@ namespace Yuppie.WebApi.Infra.Repository
         public Task<UsuarioModel> BuscarUsuarioPorId(int id);
         public Task<UsuarioModel> BuscarUsuarioLogin(string documento, string senha);
         public Task<ObjectResult> CadastrarUsuario(UsuarioModel usuario);
-        public Task<ObjectResult> AtualizarUsuario(UsuarioModel usuario);        
+        public Task<ObjectResult> AtualizarUsuario(UsuarioModel usuario);
         public Task<ObjectResult> RecuperarSenhaUsuario(UsuarioModel usuario);
+        public Task<ObjectResult> AtualizarStatusUsuario(string documento, bool status);
     }
 
     public class UsuarioRepository : IUsuarioRepository
@@ -31,8 +32,8 @@ namespace Yuppie.WebApi.Infra.Repository
         public async Task<UsuarioModel> BuscarUsuarioPorId(int id)
         {
             try
-            {                
-                return _dbContext.Usuarios.Where(x=> x.id == id).FirstOrDefault();                
+            {
+                return _dbContext.Usuarios.Where(x => x.id == id).FirstOrDefault();
             }
             catch (Exception ex)
             {
@@ -81,6 +82,7 @@ namespace Yuppie.WebApi.Infra.Repository
         {
             try
             {
+                usuario.create_date = DateTime.Now;
                 _dbContext.Usuarios.Add(usuario);
                 _dbContext.SaveChanges();
                 return new ObjectResult(usuario)
@@ -117,6 +119,31 @@ namespace Yuppie.WebApi.Infra.Repository
             }
         }
 
+        public async Task<ObjectResult> AtualizarStatusUsuario(string documento, bool status)
+        {
+            try
+            {
+                var usuario = _dbContext.Usuarios.Where(x => x.documento == documento).FirstOrDefault();
+                if (usuario != null)
+                {
+                    usuario.status = status;
+                    usuario.update_date= DateTime.Now;  
+                }
+                _dbContext.Usuarios.Update(usuario);
+                _dbContext.SaveChanges();
+                return new ObjectResult(usuario)
+                {
+                    StatusCode = StatusCodes.Status200OK
+                };
+            }
+            catch (Exception ex)
+            {
+                return new ObjectResult(new { message = ex.Message })
+                {
+                    StatusCode = 400
+                };
+            }
+        }
         public async Task<ObjectResult> ExcluirUsuario(int idUsuario)
         {
             try
@@ -141,7 +168,7 @@ namespace Yuppie.WebApi.Infra.Repository
         {
             try
             {
-               // var usuario = _dbContext.Usuarios.Find(usuario.id);
+                // var usuario = _dbContext.Usuarios.Find(usuario.id);
                 //TODO - ENTENDNER COMO É FEITO ESSE PROCESSO
                 return new ObjectResult(usuario)
                 {

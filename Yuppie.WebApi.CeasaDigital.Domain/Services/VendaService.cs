@@ -272,7 +272,7 @@ namespace Yuppie.WebApi.CeasaDigital.Domain.Services
                                     IdComprador = venda.id_comprador,
                                     IdVendedor = venda.id_vendedor,
                                     IdOferta = oferta.id,
-                                    Prefixo = "+55"
+                                    Prefixo = "55"
                                 }, true);
                             }
                         }

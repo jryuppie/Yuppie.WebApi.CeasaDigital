@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Yuppie.WebApi.CeasaDigital.Domain.Interfaces;
+using Yuppie.WebApi.CeasaDigital.Domain.Models.Enums;
 using Yuppie.WebApi.CeasaDigital.Domain.Models.UsuarioModel;
 using Yuppie.WebApi.Infra.Repository;
 
@@ -123,20 +124,19 @@ namespace Yuppie.WebApi.CeasaDigital.Domain.Services
             }
         }
 
-        public async Task<ObjectResult> MudarStatusUsuario(UsuarioModel usuario)
+        public async Task<ObjectResult> AtualizarStatusUsuario(string documento, bool status)
         {
             try
             {
-                //TODO
-                return new ObjectResult(true)
-                {
-                    StatusCode = StatusCodes.Status200OK
-                };
+                return await _usuarioRepository.AtualizarStatusUsuario(documento, status);
             }
             catch (Exception ex)
             {
-            }
-            return null;
+                return new ObjectResult(new { message = $"Falha ao atualizar o status do usuário: {documento}!" })
+                {
+                    StatusCode = StatusCodes.Status500InternalServerError
+                };
+            }          
         }
 
         public async Task<ObjectResult> RecuperarSenhaUsuario(UsuarioModel usuario)

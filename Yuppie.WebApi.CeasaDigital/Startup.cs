@@ -36,10 +36,7 @@ namespace Yuppie.WebApi.CeasaDigital
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
-        {
-            
-
-
+        {      
             #region Services           
             services.AddTransient<IUsuarioService, UsuarioService>();
             services.AddTransient<IProdutoService, ProdutoService>();
@@ -47,7 +44,8 @@ namespace Yuppie.WebApi.CeasaDigital
             services.AddTransient<IVendaService, VendaService>();
             services.AddTransient<INegociacaoService, NegociacaoService>();
             services.AddTransient<IChatFirebaseService, ChatFirebaseService>();
-            services.AddTransient<IUnMedidaService, UnMedidaService>();            
+            services.AddTransient<IUnMedidaService, UnMedidaService>();
+            services.AddTransient<IWhatsappService, WhatsappService>();
             #endregion
 
             #region Repositories
@@ -75,7 +73,7 @@ namespace Yuppie.WebApi.CeasaDigital
                 mc.CreateMap<Yuppie.WebApi.Infra.Models.Produto.UnidadeMedidaModel, UnidadeMedidaModel>();
                 mc.CreateMap<Yuppie.WebApi.Infra.Models.Negociacao.VendaModel, VendaModel>();
                 mc.CreateMap<Yuppie.WebApi.Infra.Models.UsuarioModel.UsuarioModel, UsuarioModel>();
-                
+                mc.CreateMap<UsuarioModel,Yuppie.WebApi.Infra.Models.UsuarioModel.UsuarioModel>();
             });
 
             IMapper mapper = mappingConfig.CreateMapper();
