@@ -9,7 +9,9 @@ namespace Yuppie.WebApi.CeasaDigital.Domain.Interfaces
 {
     public interface IWhatsappService
     {
-        public Task<ObjectResult> EnviarMensagem(MensagemModel model);
+        public Task<ObjectResult> EnviarMensagemVenda(MensagemModel model, bool EdicaoVenda);
+        public Task<ObjectResult> EnviarMensagemNegociacao(MensagemModel model);
+        public Task<ObjectResult> EnviarMensagemOferta(MensagemModel model);
         public Task<ObjectResult> EnviarMensagemUsuario(int IdUsuario, bool RecuperarSenha);
     }
 }

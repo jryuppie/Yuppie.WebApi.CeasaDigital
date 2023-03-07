@@ -17,6 +17,7 @@ namespace Yuppie.WebApi.Infra.Repository
         public Task<ObjectResult> AtualizarNegociacao(ProcessoNegociacaoModel negociacao);
         public Task<ObjectResult> DeletarNegociacao(int id);
         public Task<ObjectResult> AdicionarNegociacao(ProcessoNegociacaoModel negociacao);
+        public Task<ObjectResult> AdicionarNegociacao(int IdNegociacao, int Quantidade);
         public Task<ProcessoNegociacaoModel> BuscarNegociacaoPorVenda(int IdVenda);
 
     }
@@ -66,6 +67,32 @@ namespace Yuppie.WebApi.Infra.Repository
             try
             {
                 negociacao.create_date = DateTime.Now;
+                _dbContext.ProcessoNegociacoes.Add(negociacao);
+                _dbContext.SaveChanges();
+                return new ObjectResult(negociacao)
+                {
+                    StatusCode = StatusCodes.Status201Created
+                };
+            }
+            catch (Exception ex)
+            {
+                return new ObjectResult(new { message = ex.Message })
+                {
+                    StatusCode = 400
+                };
+            }
+        }
+
+        public async Task<ObjectResult> AdicionarNegociacao(int IdNegociacao, int Quantidade)
+        {
+            try
+            {
+                var negociacao = new ProcessoNegociacaoModel()
+                {
+                    id_venda = IdNegociacao,
+                    qtd_comprada = Quantidade,
+                    create_date = DateTime.Now
+                };
                 _dbContext.ProcessoNegociacoes.Add(negociacao);
                 _dbContext.SaveChanges();
                 return new ObjectResult(negociacao)

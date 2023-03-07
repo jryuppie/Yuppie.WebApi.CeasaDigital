@@ -11,71 +11,39 @@ using Yuppie.WebApi.Infra.Repository;
 using Yuppie.WebApi.CeasaDigital.Domain.Models;
 using static Google.Protobuf.WellKnownTypes.Field.Types;
 using System.Security.Cryptography;
+using System.Collections.Generic;
 
 namespace Yuppie.WebApi.CeasaDigital.Domain.Services
 {
     public class WhatsappService : IWhatsappService
     {
         private readonly IMapper _mapper;
-        private readonly IProdutoRepository _ProdutoRepository;
+        private readonly IProdutoRepository _produtoRepository;
         private readonly IUsuarioRepository _usuarioRepository;
+        private readonly IOfertaRepository _ofertaRepository;
         private static string appLink = "https://www.yuppie.in/";
         private static string telefonePrefixo = "55";
-        public WhatsappService(IMapper mapper, IProdutoRepository produtoRepository, IUsuarioRepository usuarioRepository)
+        private static string urlEnvioMensagem = "http://192.168.2.222:3000/whatsapp/send-text";
+        public WhatsappService(IMapper mapper, IProdutoRepository produtoRepository, IUsuarioRepository usuarioRepository, IOfertaRepository ofertaRepository)
         {
             _mapper = mapper;
-            _ProdutoRepository = produtoRepository;
+            _produtoRepository = produtoRepository;
             _usuarioRepository = usuarioRepository;
+            _ofertaRepository = ofertaRepository;
         }
 
-        public async Task<ObjectResult> EnviarMensagem(MensagemModel model)
+        public async Task<ObjectResult> EnviarMensagemOferta(MensagemModel model)
         {
             try
             {
-                //TODO -  CRIAR ESTRUTURA PARA IDENTIFICAR QUAL O TIPO DE CONTEÚDO DA MENSAGEM.               
-                //NEGOCIACAO - NOME COMPRADOR E VENDEDOR E NOME PRODUTO.
-                //CRIAR USUÁRIO E RECUPERA SENHA - NOME USUARIO E SENHA
-                //VENDA - NOME VENDEDOR E COMPRADOR , NOME PRODUTO
-
-
                 var produto = await _ProdutoRepository.BuscarProdutoPorId(model.IdProduto);
                 var vendedor = await _usuarioRepository.BuscarUsuarioPorId(model.IdVendedor);
                 var comprador = await _usuarioRepository.BuscarUsuarioPorId(model.IdComprador);
-
-                string contato1 = vendedor.nome;
-                string contato2 = comprador.nome;
-                string telefone = vendedor.telefone;
-                var mensagem = "";
-                if (model.EnvioComprador)
+                if (produto != null && vendedor != null && comprador != null)
                 {
-                    contato1 = comprador.nome;
-                    contato2 = vendedor.nome;
-                    telefone = comprador.telefone;
-                }
-                if (model.TipoMensagem.ToUpper() == "OFERTA")
-                    mensagem = await CriarConteudoMensagemOferta(contato1, contato2, produto.nome);
-                else if (model.TipoMensagem.ToUpper() == "NEGOCIACAO")
-                {
-                    bool tipoEnvio = model.EnvioComprador ? true : false;
-                    mensagem = await CriarConteudoMensagemNegociacao(contato1, contato2, telefone, tipoEnvio);
-                }
-
-                if (mensagem != "")
-                {
-                    using var client = new HttpClient();
-                    var request = new
-                    {
-                        phone = model.prefixo + telefone,
-                        message = mensagem
-                    };
-                    var requestContent = new StringContent(JsonConvert.SerializeObject(request), Encoding.UTF8, "application/json");
-                    var response = await client.PostAsync("http://192.168.2.222:3000/whatsapp/send-text", requestContent);
-                    response.EnsureSuccessStatusCode();
-                    var responseString = await response.Content.ReadAsStringAsync();
-                    return new ObjectResult(new { message = "Mensagem enviada com sucesso!" })
-                    {
-                        StatusCode = StatusCodes.Status200OK
-                    };
+                    var mensagem = await CriarConteudoMensagemOferta(vendedor.nome, comprador.nome, produto.nome);
+                    if (mensagem != "")
+                        return await ExecutarPostAsync(model.Prefixo, vendedor.telefone, mensagem);
                 }
                 return new ObjectResult(new { message = "Erro ao enviar a mensagem!" })
                 {
@@ -85,6 +53,78 @@ namespace Yuppie.WebApi.CeasaDigital.Domain.Services
             catch (Exception)
             {
                 return new ObjectResult(new { message = "Falha ao enviar a mensagem!" })
+                {
+                    StatusCode = StatusCodes.Status500InternalServerError
+                };
+            }
+        }
+        public async Task<ObjectResult> EnviarMensagemNegociacao(MensagemModel model)
+        {
+            try
+            {
+                var produto = await _ProdutoRepository.BuscarProdutoPorId(model.IdProduto);
+                var vendedor = await _usuarioRepository.BuscarUsuarioPorId(model.IdVendedor);
+                var comprador = await _usuarioRepository.BuscarUsuarioPorId(model.IdComprador);
+                if (produto != null && vendedor != null && comprador != null)
+                {
+                    string contato1 = vendedor.nome;
+                    string contato2 = comprador.nome;
+                    string telefone = vendedor.telefone;
+                    var mensagem = "";
+                    if (model.EnvioComprador)
+                    {
+                        contato1 = comprador.nome;
+                        contato2 = vendedor.nome;
+                        telefone = comprador.telefone;
+                    }
+
+                    bool tipoEnvio = model.EnvioComprador ? true : false;
+                    mensagem = await CriarConteudoMensagemNegociacao(contato1, contato2, telefone, tipoEnvio);
+                    if (mensagem != "")
+                        return await ExecutarPostAsync(model.Prefixo, telefone, mensagem);
+
+                }
+                return new ObjectResult(new { message = "Erro ao enviar a mensagem!" })
+                {
+                    StatusCode = StatusCodes.Status400BadRequest
+                };
+            }
+            catch (Exception)
+            {
+                return new ObjectResult(new { message = "Falha ao enviar a mensagem!" })
+                {
+                    StatusCode = StatusCodes.Status500InternalServerError
+                };
+            }
+        }
+        public async Task<ObjectResult> EnviarMensagemVenda(MensagemModel model, bool EdicaoVenda)
+        {
+            try
+            {
+                var oferta = await _ofertaRepository.BuscarOfertaPorId(model.IdOferta);
+                if (oferta != null)
+                {
+                    var produto = await _produtoRepository.BuscarProdutoPorId(oferta.id_produto);
+                    var vendedor = await _usuarioRepository.BuscarUsuarioPorId(model.IdVendedor);
+                    var comprador = await _usuarioRepository.BuscarUsuarioPorId(model.IdComprador);
+                    if (produto != null && vendedor != null && comprador != null)
+                    {
+                        if (EdicaoVenda)
+                        {
+                            var mensagem = await CriarConteudoMensagemEditarVenda(vendedor.nome, comprador.nome, produto.nome, EdicaoVenda);
+                            if (mensagem != "")
+                                return await ExecutarPostAsync(model.Prefixo, vendedor.telefone, mensagem);
+                        }
+                    }
+                }
+                return new ObjectResult(new { message = $"Erro ao enviar a mensagem de edição da venda!" })
+                {
+                    StatusCode = StatusCodes.Status400BadRequest
+                };
+            }
+            catch (Exception)
+            {
+                return new ObjectResult(new { message = $"Erro ao enviar a mensagem de edição da venda!" })
                 {
                     StatusCode = StatusCodes.Status500InternalServerError
                 };
@@ -101,22 +141,7 @@ namespace Yuppie.WebApi.CeasaDigital.Domain.Services
                     mensagem = RecuperarSenha ? await CriarConteudoMensagemRecupearUsuario(usuario.nome, usuario.senha)
                                               : await CriarConteudoMensagemCriarUsuario(usuario.nome);
                     if (mensagem != "")
-                    {
-                        using var client = new HttpClient();
-                        var request = new
-                        {
-                            phone = "+55" + usuario.telefone,
-                            message = mensagem
-                        };
-                        var requestContent = new StringContent(JsonConvert.SerializeObject(request), Encoding.UTF8, "application/json");
-                        var response = await client.PostAsync("http://192.168.2.222:3000/whatsapp/send-text", requestContent);
-                        response.EnsureSuccessStatusCode();
-                        var responseString = await response.Content.ReadAsStringAsync();
-                        return new ObjectResult(new { message = "Mensagem enviada com sucesso!" })
-                        {
-                            StatusCode = StatusCodes.Status200OK
-                        };
-                    }
+                        return await ExecutarPostAsync("+55", usuario.telefone, mensagem);
                 }
                 return new ObjectResult(new { message = "Erro ao enviar a mensagem!" })
                 {
@@ -131,6 +156,35 @@ namespace Yuppie.WebApi.CeasaDigital.Domain.Services
                 };
             }
         }
+
+
+        #region Utilitarios
+        private async Task<ObjectResult> ExecutarPostAsync(string prefixo, string telefone, string mensagem)
+        {
+            try
+            {
+                var parameters = new Dictionary<string, string>
+                   {
+                        { "phone",prefixo + telefone },
+                        { "message",  mensagem }
+                    };
+                var encodedContent = new FormUrlEncodedContent(parameters);
+                using var client = new HttpClient();
+                var response = await client.PostAsync(urlEnvioMensagem, encodedContent);
+                var responseContent = await response.Content.ReadAsStringAsync();
+                return new ObjectResult(new { message = "Mensagem enviada com sucesso!" })
+                {
+                    StatusCode = StatusCodes.Status200OK
+                };
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+        #endregion
+
+        #region StringBuilders Mensagem
         public async Task<string> CriarConteudoMensagemOferta(string Contato1, string Contato2, string Produto)
         {
             try
@@ -157,7 +211,7 @@ namespace Yuppie.WebApi.CeasaDigital.Domain.Services
                 var messageBuilder = new StringBuilder();
                 messageBuilder.Append($"Olá, {Contato1}.\r\n");
                 messageBuilder.Append($"seu processo negocial com {Contato2}\r\n\r\n");
-                messageBuilder.Append($"relacionado a {tipo} de: *{Produto}.\r\n\r\n");
+                messageBuilder.Append($"relacionado a {tipo} de: *{Produto}*.\r\n\r\n");
                 messageBuilder.Append($"Link do Aplicativo: {appLink} \U0001F4F1 \r\n\r\n");
                 messageBuilder.Append("Atenciosamente,\r\nEquipe Ceasa Digital \U0001F600");
 
@@ -204,6 +258,25 @@ namespace Yuppie.WebApi.CeasaDigital.Domain.Services
                 return "";
             }
         }
+        public async Task<string> CriarConteudoMensagemEditarVenda(string Contato1, string Contato2, string Produto, bool MensagemEditar)
+        {
+            try
+            {
+                var messageBuilder = new StringBuilder();
+                messageBuilder.Append($"Olá, {Contato1}.\r\n");
+                messageBuilder.Append($"O nosso parceiro {Contato2}\r\n\r\n");
+                messageBuilder.Append($"fez uma alteração na negociação de: *{Produto}*.\r\n\r\n");
+                messageBuilder.Append($"Acesse o aplicativo e de continuidade ao processo de venda\r\n\r\n");
+                messageBuilder.Append($"Link do Aplicativo: {appLink} \U0001F4F1 \r\n\r\n");
+                messageBuilder.Append("Atenciosamente,\r\nEquipe Ceasa Digital \U0001F600");
 
+                return messageBuilder.ToString();
+            }
+            catch (Exception)
+            {
+                return "";
+            }
+        }
+        #endregion
     }
 }

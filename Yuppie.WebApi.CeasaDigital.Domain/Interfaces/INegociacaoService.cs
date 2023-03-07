@@ -12,6 +12,6 @@ namespace Yuppie.WebApi.CeasaDigital.Domain.Interfaces
         public Task<ObjectResult> BuscarNegociacaoPorId(int IdVenda);
         public Task<ObjectResult> ProcessoConclusao(int IdVenda, int IdUsuario);
         public Task<ObjectResult> ProcessoCancelamento(int IdVenda, int IdUsuario);
-        public Task<ObjectResult> CriarNegociacao(int IdVenda, int QuantidadeComprada);
+        public Task<ObjectResult> CriarNegociacao(int IdVenda, int QuantidadeComprada);       
     }
 }

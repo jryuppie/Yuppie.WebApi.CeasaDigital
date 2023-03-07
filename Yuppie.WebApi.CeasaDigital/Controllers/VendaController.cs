@@ -51,6 +51,13 @@ namespace Yuppie.WebApi.CeasaDigital.Controllers
             return await _vendaService.ExecutarVenda(oModel.idOferta, oModel.qtd, oModel.idComprador);            
         }
 
+        [Route("EditarVenda")]
+        [HttpPost]
+        public async Task<ObjectResult> EditarVenda([FromBody] EditarVendaFormulario oModel)
+        {
+            return await _vendaService.EditarVenda(oModel.idVenda, oModel.qtd);
+        }
+
         [Route("cancelamento")]
         [HttpPost]
         public async Task<ObjectResult> CancelarVenda([FromBody] VendaFormulario oModel)

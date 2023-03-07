@@ -16,4 +16,11 @@ namespace Yuppie.WebApi.CeasaDigital.Domain.Models.Formulario
         public int idComprador { get; set; }
         public int qtd { get; set; }      
     }
+
+
+    public class EditarVendaFormulario
+    {
+        public int idVenda { get; set; }        
+        public int qtd { get; set; }
+    }
 }

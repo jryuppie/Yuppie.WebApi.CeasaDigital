@@ -9,6 +9,7 @@ namespace Yuppie.WebApi.CeasaDigital.Domain.Interfaces
     {
         public Task<ObjectResult> BuscarTodasVendas();
         public Task<ObjectResult> ExecutarVenda(int idOferta, int quantidade, int idComprador);
+        public Task<ObjectResult> EditarVenda(int IdVenda, int Quantidade);
         public Task<ObjectResult> BuscarVendaPorId(int id);
         public Task<ObjectResult> BuscarVendaPorIdVendedor(int id);
         public Task<ObjectResult> BuscarVendaPorIdComprador(int id);

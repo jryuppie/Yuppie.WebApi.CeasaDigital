@@ -41,7 +41,6 @@ namespace Yuppie.WebApi.CeasaDigital.Domain.Services
                 };
             }
         }
-
         public async Task<ObjectResult> BuscarNegociacaoPorId(int IdVenda)
         {
             try
@@ -60,7 +59,6 @@ namespace Yuppie.WebApi.CeasaDigital.Domain.Services
                 };
             }
         }
-
         public async Task<ObjectResult> ProcessoCancelamento(int IdVenda, int IdUsuario)
         {
             try
@@ -79,7 +77,6 @@ namespace Yuppie.WebApi.CeasaDigital.Domain.Services
                 };
             }
         }
-
         public async Task<ObjectResult> ProcessoConclusao(int IdVenda, int IdUsuario)
         {
             try

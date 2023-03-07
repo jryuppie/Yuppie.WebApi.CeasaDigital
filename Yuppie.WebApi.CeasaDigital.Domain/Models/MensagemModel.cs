@@ -10,13 +10,13 @@ namespace Yuppie.WebApi.CeasaDigital.Domain.Models
     {
         public MensagemModel()
         {
-            prefixo = "+55";
+            Prefixo = "+55";
         }
         public int IdComprador { get; set; }
         public int IdVendedor { get; set; }
+        public int IdOferta { get; set; }
         public int IdProduto { get; set; }
-        public bool EnvioComprador { get; set; }
-        public string TipoMensagem { get; set; }
-        public string prefixo { get; set; }
+        public bool EnvioComprador { get; set; }        
+        public string Prefixo { get; set; }
     }
 }
