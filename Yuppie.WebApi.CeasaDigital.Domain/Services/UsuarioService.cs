@@ -15,17 +15,19 @@ namespace Yuppie.WebApi.CeasaDigital.Domain.Services
     {
         private readonly IMapper _mapper;
         private readonly IUsuarioRepository _usuarioRepository;
-        public UsuarioService(IMapper mapper, IUsuarioRepository usuarioRepository)
+        private readonly IWhatsappService _whatsappService;
+        public UsuarioService(IMapper mapper, IUsuarioRepository usuarioRepository, IWhatsappService whatsappService)
         {
             _usuarioRepository = usuarioRepository;
             _mapper = mapper;
+            _whatsappService = whatsappService;
         }
 
         public async Task<ObjectResult> BuscarUsuarioLogin(string user, string password)
         {
             try
             {
-                var usuario =  _mapper.Map<UsuarioModel>(await _usuarioRepository.BuscarUsuarioLogin(user, password));
+                var usuario = _mapper.Map<UsuarioModel>(await _usuarioRepository.BuscarUsuarioLogin(user, password));
                 return new ObjectResult(usuario)
                 {
                     StatusCode = StatusCodes.Status200OK
@@ -75,7 +77,7 @@ namespace Yuppie.WebApi.CeasaDigital.Domain.Services
                 {
                     StatusCode = StatusCodes.Status500InternalServerError
                 };
-            }          
+            }
         }
 
         public async Task<ObjectResult> BuscarUsuarioPorId(int id)
@@ -94,20 +96,25 @@ namespace Yuppie.WebApi.CeasaDigital.Domain.Services
                 {
                     StatusCode = StatusCodes.Status500InternalServerError
                 };
-            }       
+            }
         }
 
         public async Task<ObjectResult> CadastrarUsuario(UsuarioModel usuario)
         {
             try
             {
-              //TODO
-                return new ObjectResult(true)
+                var usuarioCadastro = _mapper.Map<Yuppie.WebApi.Infra.Models.UsuarioModel.UsuarioModel>(usuario);
+                if (await _usuarioRepository.BuscarUsuarioPorDocumento(usuarioCadastro.documento) == null)
                 {
-                    StatusCode = StatusCodes.Status200OK
+                    if (_usuarioRepository.CadastrarUsuario(usuarioCadastro).Result.StatusCode == 201)
+                        _whatsappService.EnviarMensagemUsuario(usuarioCadastro.documento, false);
+                }
+                return new ObjectResult(usuarioCadastro)
+                {
+                    StatusCode = StatusCodes.Status201Created
                 };
             }
-            catch (System.Exception ex)
+            catch (Exception ex)
             {
                 return new ObjectResult(new { message = $"Falha ao cadastrar o usuário: {usuario.nome}!" })
                 {
@@ -116,7 +123,7 @@ namespace Yuppie.WebApi.CeasaDigital.Domain.Services
             }
         }
 
-        public async Task<ObjectResult> MudarStatusUsuario(Domain.Models.UsuarioModel.UsuarioModel usuario)
+        public async Task<ObjectResult> MudarStatusUsuario(UsuarioModel usuario)
         {
             try
             {
@@ -132,7 +139,7 @@ namespace Yuppie.WebApi.CeasaDigital.Domain.Services
             return null;
         }
 
-        public async Task<ObjectResult> RecuperarSenhaUsuario(Domain.Models.UsuarioModel.UsuarioModel usuario)
+        public async Task<ObjectResult> RecuperarSenhaUsuario(UsuarioModel usuario)
         {
             try
             {
@@ -148,7 +155,7 @@ namespace Yuppie.WebApi.CeasaDigital.Domain.Services
             return null;
         }
 
-        public async Task<ObjectResult> AtualizarUsuario(Domain.Models.UsuarioModel.UsuarioModel usuario)
+        public async Task<ObjectResult> AtualizarUsuario(UsuarioModel usuario)
         {
             try
             {   //TODO

@@ -75,6 +75,7 @@ namespace Yuppie.WebApi.CeasaDigital
                 mc.CreateMap<Yuppie.WebApi.Infra.Models.Produto.UnidadeMedidaModel, UnidadeMedidaModel>();
                 mc.CreateMap<Yuppie.WebApi.Infra.Models.Negociacao.VendaModel, VendaModel>();
                 mc.CreateMap<Yuppie.WebApi.Infra.Models.UsuarioModel.UsuarioModel, UsuarioModel>();
+                
             });
 
             IMapper mapper = mappingConfig.CreateMapper();

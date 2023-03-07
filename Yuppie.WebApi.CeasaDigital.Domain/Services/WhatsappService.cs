@@ -36,7 +36,7 @@ namespace Yuppie.WebApi.CeasaDigital.Domain.Services
         {
             try
             {
-                var produto = await _ProdutoRepository.BuscarProdutoPorId(model.IdProduto);
+                var produto = await _produtoRepository.BuscarProdutoPorId(model.IdProduto);
                 var vendedor = await _usuarioRepository.BuscarUsuarioPorId(model.IdVendedor);
                 var comprador = await _usuarioRepository.BuscarUsuarioPorId(model.IdComprador);
                 if (produto != null && vendedor != null && comprador != null)
@@ -62,7 +62,7 @@ namespace Yuppie.WebApi.CeasaDigital.Domain.Services
         {
             try
             {
-                var produto = await _ProdutoRepository.BuscarProdutoPorId(model.IdProduto);
+                var produto = await _produtoRepository.BuscarProdutoPorId(model.IdProduto);
                 var vendedor = await _usuarioRepository.BuscarUsuarioPorId(model.IdVendedor);
                 var comprador = await _usuarioRepository.BuscarUsuarioPorId(model.IdComprador);
                 if (produto != null && vendedor != null && comprador != null)
@@ -130,12 +130,12 @@ namespace Yuppie.WebApi.CeasaDigital.Domain.Services
                 };
             }
         }
-        public async Task<ObjectResult> EnviarMensagemUsuario(int IdUsuario, bool RecuperarSenha)
+        public async Task<ObjectResult> EnviarMensagemUsuario(string Documento, bool RecuperarSenha)
         {
             try
             {
                 string mensagem = "";
-                var usuario = await _usuarioRepository.BuscarUsuarioPorId(IdUsuario);
+                var usuario = await _usuarioRepository.BuscarUsuarioPorDocumento(Documento);
                 if (usuario != null)
                 {
                     mensagem = RecuperarSenha ? await CriarConteudoMensagemRecupearUsuario(usuario.nome, usuario.senha)

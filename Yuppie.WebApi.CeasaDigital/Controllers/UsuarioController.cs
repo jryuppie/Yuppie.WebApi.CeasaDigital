@@ -11,31 +11,31 @@ namespace Yuppie.WebApi.CeasaDigital.Controllers
     public class UsuarioController : Controller
     {
         
-        private IUsuarioService _pgBaseService;
-        public UsuarioController( IUsuarioService pgBaseService)
-        {            
-            _pgBaseService = pgBaseService;
+        private IUsuarioService _pgUsuarioService;
+        public UsuarioController(IUsuarioService pgUsuarioService)
+        {
+            _pgUsuarioService = pgUsuarioService;
         }
 
         [Route("BuscarUsuarios")]
         [HttpGet]
         public async Task<ObjectResult> BuscarUsuarios()
         {
-            return await _pgBaseService.BuscarUsuarios();
+            return await _pgUsuarioService.BuscarUsuarios();
         }
 
         [Route("{documento}")]
         [HttpGet]
         public async Task<ObjectResult> BuscarUsuarioPorDocumento(string documento)
         {
-            return await _pgBaseService.BuscarUsuarioPorDocumento(documento);
+            return await _pgUsuarioService.BuscarUsuarioPorDocumento(documento);
         }
 
         [Route("id/{id}")]
         [HttpGet]
         public async Task<ObjectResult> BuscarUsuarioPorId(int id)
         {
-            return await _pgBaseService.BuscarUsuarioPorId(id);
+            return await _pgUsuarioService.BuscarUsuarioPorId(id);
         }
 
         [Route("cadastro")]
@@ -43,7 +43,7 @@ namespace Yuppie.WebApi.CeasaDigital.Controllers
         public async Task<ObjectResult> CadastrarUsuario([FromForm] object formModel)
         {
             UsuarioModel usuario = new UsuarioModel();
-            return await _pgBaseService.CadastrarUsuario(usuario);
+            return await _pgUsuarioService.CadastrarUsuario(usuario);
         }
 
         [Route("atualizar")]
@@ -51,7 +51,7 @@ namespace Yuppie.WebApi.CeasaDigital.Controllers
         public async Task<ObjectResult> AtualizarUsuario([FromForm] object formModel)
         {
             UsuarioModel usuario = new UsuarioModel();
-            return await _pgBaseService.AtualizarUsuario(usuario);
+            return await _pgUsuarioService.AtualizarUsuario(usuario);
         }
     }
 }

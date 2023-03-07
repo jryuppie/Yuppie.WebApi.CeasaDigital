@@ -29,8 +29,7 @@ namespace Yuppie.WebApi.CeasaDigital.Domain.Services
             _OfertaRepository = ofertaRepository;
             _NegociacaoRepository = negociacaoRepository;
             _mapper = mapper;
-            _WhatsappService = whatsappService;
-            _WhatsappService = whatsappService;
+            _WhatsappService = whatsappService;            
         }
 
         public async Task<ObjectResult> BuscarTodasVendas()
