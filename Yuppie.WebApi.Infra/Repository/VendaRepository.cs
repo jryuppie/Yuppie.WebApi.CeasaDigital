@@ -19,7 +19,7 @@ namespace Yuppie.WebApi.Infra.Repository
         public Task<ObjectResult> AdicionarVenda(VendaModel venda);
         public Task<ObjectResult> AtualizarVenda(VendaModel venda);
         public Task<ObjectResult> ExcluirVenda(int id);
-        public Task<VendaModel> BuscarVendaPorInformacoes(int idComprador, int idVenda, string status)
+        public Task<VendaModel> BuscarVendaPorInformacoes(int idComprador, int idVenda, string status);
     }
 
     public class VendaRepository : IVendaRepository

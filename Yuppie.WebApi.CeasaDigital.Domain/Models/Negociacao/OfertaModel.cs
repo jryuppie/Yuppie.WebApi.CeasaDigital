@@ -17,6 +17,8 @@ namespace Yuppie.WebApi.CeasaDigital.Domain.Models.Negociacao
         public DateTime update_date { get; set; }
         public float vlkg { get; set; }
         public float vl_un_medida { get; set; }
+        public DateTime? sent_message_date { get; set; }
+        public int sent_message_counter { get; set; }
     }
 }
 

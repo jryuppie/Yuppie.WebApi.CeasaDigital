@@ -20,14 +20,14 @@ namespace Yuppie.WebApi.CeasaDigital.Domain.Services
         private readonly IVendaRepository _VendaRepository;
         private readonly IOfertaRepository _OfertaRepository;
         private readonly IProcessoNegociacaoRepository _NegociacaoRepository;
-        private readonly IWhatsappService _WhatsappService;
+        //private readonly IWhatsappService _WhatsappService;
 
-        public VendaService(IVendaRepository VendaRepository, IOfertaRepository ofertaRepository, IProcessoNegociacaoRepository negociacaoRepository,IMapper mapper, IWhatsappService whatsappService)        {
+        public VendaService(IVendaRepository VendaRepository, IOfertaRepository ofertaRepository, IProcessoNegociacaoRepository negociacaoRepository,IMapper mapper)        {
             _VendaRepository = VendaRepository;
             _OfertaRepository = ofertaRepository;
             _NegociacaoRepository = negociacaoRepository;
             _mapper = mapper;
-            _WhatsappService= whatsappService;           
+            //_WhatsappService= whatsappService;           
         }
 
         public async Task<ObjectResult> BuscarTodasVendas()
@@ -114,7 +114,7 @@ namespace Yuppie.WebApi.CeasaDigital.Domain.Services
                 if (venda != null && (venda.id_comprador == IdUsuario || venda.id_vendedor == IdUsuario))
                 {
                     var negociacao = await _NegociacaoRepository.BuscarNegociacaoPorVenda(IdVenda);
-                    if (negociacao.status_negociacao != NegociacaoStatus.Andamento.PegarDescricao())
+                    if (negociacao.status_negociacao != NegociacaoStatus.Processo.PegarDescricao())
                     {
                         NegociacaoStatusResponse response = negociacao.status_negociacao == NegociacaoStatus.Cancelado.PegarDescricao() ? NegociacaoStatusResponse.Cancelado : NegociacaoStatusResponse.ConcluidoAnteriormente;
                         return new ObjectResult(new { message = response.PegarDescricao() }) { StatusCode = response.PegarCodigoStatus() };
@@ -222,7 +222,7 @@ namespace Yuppie.WebApi.CeasaDigital.Domain.Services
                             transacao.AtualizarQuantidadeOferta(quantidade, idOferta);                            
                             var negociacaoVendaAtualizada = await _VendaRepository.BuscarVendaPorInformacoes(idComprador, idOferta, NegociacaoStatus.Processo.PegarDescricao());
                             await _NegociacaoRepository.AdicionarNegociacao(new Infra.Models.Negociacao.ProcessoNegociacaoModel() { id_venda = negociacaoVendaAtualizada.id, qtd_comprada = quantidade });
-                            _WhatsappService.EnviarMensagem(idComprador, Oferta.id_vendedor, Oferta.id_produto);
+                            //_WhatsappService.EnviarMensagem(idComprador, Oferta.id_vendedor, Oferta.id_produto);
                         }                                            
                       
                     }

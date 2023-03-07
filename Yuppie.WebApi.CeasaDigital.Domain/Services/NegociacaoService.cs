@@ -28,7 +28,7 @@ namespace Yuppie.WebApi.CeasaDigital.Domain.Services
                 {
                     id_venda = IdVenda,
                     qtd_comprada = QuantidadeComprada,
-                    status_negociacao = NegociacaoStatus.Andamento.PegarDescricao(),
+                    status_negociacao = NegociacaoStatus.Processo.PegarDescricao(),
                     create_date = DateTime.Now
                 };
                 return await _negociacaoRepository.AdicionarNegociacao(negociacao);

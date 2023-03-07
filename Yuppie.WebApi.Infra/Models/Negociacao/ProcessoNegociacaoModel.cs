@@ -20,6 +20,8 @@ namespace Yuppie.WebApi.Infra.Models.Negociacao
         public bool avisa_conclusao_venda { get; set; }
         public DateTime create_date { get; set; }
         public DateTime update_date { get; set; }
+        public DateTime? sent_message_date { get; set; }
+        public int sent_message_counter { get; set; }
     }
 }
 
