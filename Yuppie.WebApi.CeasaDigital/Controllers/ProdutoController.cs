@@ -18,6 +18,19 @@ namespace Yuppie.WebApi.CeasaDigital.Controllers
         {
             _pgProdutoService = pgProdutoService;
         }
+        [Route("BuscarProdutos")]
+        [HttpGet]
+        public async Task<ObjectResult> BuscarProdutos()
+        {
+            return await _pgProdutoService.BuscarTodosProdutos();
+        }
+
+        [Route("BuscarProdutosPorNome")]
+        [HttpGet]
+        public async Task<ObjectResult> BuscarProdutosPorNome(string nomeProduto)
+        {
+            return await _pgProdutoService.BuscarProdutoPorNome(nomeProduto);
+        }
 
         [Route("CadastrarProduto")]
         [HttpPost]
@@ -38,20 +51,6 @@ namespace Yuppie.WebApi.CeasaDigital.Controllers
         public async Task<ObjectResult> DeletarProduto([FromForm] ProdutoFormulario formModel)
         {
             return await _pgProdutoService.DeletarProduto(formModel.Categoria, formModel.Nome);
-        }
-
-        [Route("BuscarProdutos")]
-        [HttpGet]
-        public async Task<ObjectResult> BuscarProdutos()
-        {
-            return await _pgProdutoService.BuscarTodosProdutos();
-        }
-
-        [Route("BuscarProdutosPorNome")]
-        [HttpGet]
-        public async Task<ObjectResult> BuscarProdutosPorNome(string nomeProduto)
-        {
-            return await _pgProdutoService.BuscarProdutoPorNome(nomeProduto);
-        }      
+        }       
     }
 }

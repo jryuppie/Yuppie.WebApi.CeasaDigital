@@ -39,6 +39,18 @@ namespace Yuppie.WebApi.CeasaDigital.Controllers
             return await _pgUsuarioService.BuscarUsuarioPorId(id);
         }
 
+        [Route("recuperarsenha")]
+        [HttpPatch]
+        public async Task<ObjectResult> RecuperarSenhaUsuario(string Documento, string Telefone)
+        {
+            return await _pgUsuarioService.RecuperarSenhaUsuario(Documento, Telefone);
+        }
+        [Route("status")]
+        [HttpPatch]
+        public async Task<ObjectResult> AtualizarStatusUsuario([FromForm] UsuarioStatusFormulario formModel)
+        {
+            return await _pgUsuarioService.AtualizarStatusUsuario(formModel.Documento, formModel.Status);
+        }      
         [Route("cadastro")]
         [HttpPost]
         public async Task<ObjectResult> CadastrarUsuario([FromForm] UsuarioFormulario formModel)
@@ -48,13 +60,13 @@ namespace Yuppie.WebApi.CeasaDigital.Controllers
                 nome = formModel.Nome,
                 sobrenome = formModel.Sobrenome,
                 tipo_usuario = formModel.TipoUsuario,
-                tipo_pessoa= formModel.TipoPessoa,
+                tipo_pessoa = formModel.TipoPessoa,
                 telefone = formModel.Telefone,
                 cep = formModel.Cep,
                 documento = formModel.Documento,
-                senha= formModel.Senha,
-                latitude= formModel.Latitude,
-                longitude= formModel.Longitude,
+                senha = formModel.Senha,
+                latitude = formModel.Latitude,
+                longitude = formModel.Longitude,
             };
             return await _pgUsuarioService.CadastrarUsuario(usuario);
         }
@@ -65,28 +77,14 @@ namespace Yuppie.WebApi.CeasaDigital.Controllers
         {
             UsuarioModel usuario = new UsuarioModel()
             {
-                id= formModel.Id,   
+                id = formModel.Id,
                 nome = formModel.Nome,
-                sobrenome = formModel.Sobrenome,              
-                telefone = formModel.Telefone,              
-                senha = formModel.Senha,              
+                sobrenome = formModel.Sobrenome,
+                telefone = formModel.Telefone,
+                senha = formModel.Senha,
             };
             return await _pgUsuarioService.AtualizarUsuario(usuario);
         }
 
-        [Route("status")]
-        [HttpPatch]
-        public async Task<ObjectResult> AtualizarStatusUsuario([FromForm] UsuarioStatusFormulario formModel)
-        {
-            return await _pgUsuarioService.AtualizarStatusUsuario(formModel.Documento, formModel.Status);
-        }
-
-
-        [Route("recuperarsenha")]
-        [HttpPatch]
-        public async Task<ObjectResult> RecuperarSenhaUsuario(string Documento, string Telefone)
-        {
-            return await _pgUsuarioService.RecuperarSenhaUsuario(Documento, Telefone);
-        }
     }
 }

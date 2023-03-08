@@ -14,15 +14,7 @@ namespace Yuppie.WebApi.CeasaDigital.Controllers
         public ChatFireBaseController(IChatFirebaseService pgChatFirebaseService)
         {
             _pgChatFirebaseService = pgChatFirebaseService;
-        }
-
-        [Route("initLogin")]
-        [HttpPost]
-
-        public async Task<ObjectResult> Login()
-        {
-            return await _pgChatFirebaseService.IniciaValidacaoLogin(8);
-        }      
+        }        
 
         [Route("user/{id}")]
         [HttpGet]
@@ -44,6 +36,13 @@ namespace Yuppie.WebApi.CeasaDigital.Controllers
         {
             _pgChatFirebaseService.BuscarContratosPorId(id);
             return true;
+        }
+        [Route("initLogin")]
+        [HttpPost]
+
+        public async Task<ObjectResult> Login()
+        {
+            return await _pgChatFirebaseService.IniciaValidacaoLogin(8);
         }
     }
 }

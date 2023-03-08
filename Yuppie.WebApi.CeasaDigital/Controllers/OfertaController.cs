@@ -35,14 +35,7 @@ namespace Yuppie.WebApi.CeasaDigital.Controllers
         public async Task<ObjectResult> BuscarOfertaPorVendedor(int idVendedor)
         {
             return await _OfertaService.BuscarOfertasPorVendedor(idVendedor);
-        }
-
-        [Route("cadastrarOferta")]
-        [HttpPost]
-        public async Task<ObjectResult> CadastrarOfertas([FromBody] CadastroOfertaFormulario oModel)
-        {            
-            return await _OfertaService.CadastrarOferta(oModel.IdProduto, oModel.IdUnMedida, oModel.IdVendedor, oModel.QtdDisponivel, oModel.PesoUnMedida, oModel.VlUnMedida);
-        }
+        }     
 
         [Route("encerraOferta")]
         [HttpPatch]
@@ -55,6 +48,12 @@ namespace Yuppie.WebApi.CeasaDigital.Controllers
         public async Task<ActionResult<OfertaModel>> AtivarOferta([FromBody]  AtivarOfertaFormulario oModel)
         {
             return await _OfertaService.AtivarOferta(oModel.Id);
+        }
+        [Route("cadastrarOferta")]
+        [HttpPost]
+        public async Task<ObjectResult> CadastrarOfertas([FromBody] CadastroOfertaFormulario oModel)
+        {
+            return await _OfertaService.CadastrarOferta(oModel.IdProduto, oModel.IdUnMedida, oModel.IdVendedor, oModel.QtdDisponivel, oModel.PesoUnMedida, oModel.VlUnMedida);
         }
 
         [Route("atualizaferta")]

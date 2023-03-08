@@ -17,6 +17,12 @@ namespace Yuppie.WebApi.CeasaDigital.Controllers
             _pgUnMedidaService = pgUnMedidaService;
         }
 
+        [Route("BuscarTodasUnMedidas")]
+        [HttpGet]
+        public async Task<ObjectResult> BuscarTodasUnMedidas()
+        {
+            return await _pgUnMedidaService.BuscarTodasUnMedidas();
+        }
 
         [Route("CadastrarUnMedida")]
         [HttpPost]
@@ -30,13 +36,6 @@ namespace Yuppie.WebApi.CeasaDigital.Controllers
         public async Task<ObjectResult> DeletarUnMedida(int id)
         {
             return await _pgUnMedidaService.DeletarUnMedida(id);
-        }
-
-        [Route("BuscarTodasUnMedidas")]
-        [HttpGet]
-        public async Task<ObjectResult> BuscarTodasUnMedidas()
-        {
-            return await _pgUnMedidaService.BuscarTodasUnMedidas();
         }
     }
 }
