@@ -8,6 +8,7 @@ namespace Yuppie.WebApi.CeasaDigital.Domain.Models.Formulario
 {
     public class UsuarioFormulario
     {
+        public int Id { get; set; }
         public string Nome { get; set; }
         public string Sobrenome { get; set; }
         public string TipoPessoa { get; set; }

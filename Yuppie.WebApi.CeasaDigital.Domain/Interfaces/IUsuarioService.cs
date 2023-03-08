@@ -14,6 +14,6 @@ namespace Yuppie.WebApi.CeasaDigital.Domain.Interfaces
         public Task<ObjectResult> CadastrarUsuario(UsuarioModel usuario);
         public Task<ObjectResult> AtualizarUsuario(UsuarioModel usuario);
         public Task<ObjectResult> AtualizarStatusUsuario(string documento, bool status);
-        public Task<ObjectResult> RecuperarSenhaUsuario(UsuarioModel usuario);
+        public Task<ObjectResult> RecuperarSenhaUsuario(string documento, string telefone);
     }
 }

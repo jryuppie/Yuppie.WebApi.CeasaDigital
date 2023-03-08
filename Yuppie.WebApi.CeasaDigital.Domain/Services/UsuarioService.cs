@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -66,8 +67,8 @@ namespace Yuppie.WebApi.CeasaDigital.Domain.Services
         {
             try
             {
-                var usuarios = _mapper.Map<UsuarioModel>(_usuarioRepository.BuscarUsuarioPorDocumento(documento));
-                return new ObjectResult(usuarios)
+                var usuario = _mapper.Map<UsuarioModel>(await _usuarioRepository.BuscarUsuarioPorDocumento(documento));
+                return new ObjectResult(usuario)
                 {
                     StatusCode = StatusCodes.Status200OK
                 };
@@ -136,38 +137,87 @@ namespace Yuppie.WebApi.CeasaDigital.Domain.Services
                 {
                     StatusCode = StatusCodes.Status500InternalServerError
                 };
-            }          
+            }
         }
 
-        public async Task<ObjectResult> RecuperarSenhaUsuario(UsuarioModel usuario)
+        public async Task<ObjectResult> RecuperarSenhaUsuario(string documento, string telefone)
         {
             try
             {
-                //TODO
-                return new ObjectResult(true)
+                var recuperaSenha = await _whatsappService.EnviarMensagemUsuario(documento, true, telefone);
+                if (recuperaSenha.StatusCode == 200)
                 {
-                    StatusCode = StatusCodes.Status200OK
-                };
+                    return new ObjectResult(new { message = "Caso os seus dados estejam corretos, você receberá uma mensagem em seu whatsapp com a senha de acesso" })
+                    {
+                        StatusCode = StatusCodes.Status200OK
+                    };
+                }
+                return recuperaSenha;
             }
             catch (Exception ex)
             {
+                return new ObjectResult(new { message = ex.Message })
+                {
+                    StatusCode = 400
+                };
             }
-            return null;
         }
 
         public async Task<ObjectResult> AtualizarUsuario(UsuarioModel usuario)
         {
             try
-            {   //TODO
-                return new ObjectResult(true)
+            {
+                var usuarioDB = await _usuarioRepository.BuscarUsuarioPorId(usuario.id);
+                usuarioDB = AtribuirCamposParaAtualizar(usuarioDB, usuario);
+                if (usuarioDB != null)                                  
+                    return await _usuarioRepository.AtualizarUsuario(usuarioDB);                
+                else
                 {
-                    StatusCode = StatusCodes.Status200OK
-                };
+                    return new ObjectResult(new { message = $"Usuário não encontrado!" })
+                    {
+                        StatusCode = StatusCodes.Status404NotFound
+                    };
+                }
+
             }
             catch (Exception ex)
             {
+                return new ObjectResult(new { message = $"Falha ao atualizar os dados do usuário: {usuario.nome}!" })
+                {
+                    StatusCode = StatusCodes.Status500InternalServerError
+                };
             }
-            return null;
+        }
+
+        private Infra.Models.UsuarioModel.UsuarioModel AtribuirCamposParaAtualizar(Infra.Models.UsuarioModel.UsuarioModel usuarioDb, UsuarioModel usuarioAtualiza)
+        {
+            try
+            {
+                if (usuarioDb != null && usuarioAtualiza != null)
+                {
+                    if (!string.IsNullOrWhiteSpace(usuarioAtualiza.documento))
+                        usuarioDb.documento = usuarioAtualiza.documento;
+                    if (!string.IsNullOrWhiteSpace(usuarioAtualiza.cep))
+                        usuarioDb.cep = usuarioAtualiza.cep;
+                    if (!string.IsNullOrWhiteSpace(usuarioAtualiza.nome))
+                        usuarioDb.nome = usuarioAtualiza.nome;
+                    if (!string.IsNullOrWhiteSpace(usuarioAtualiza.telefone))
+                        usuarioDb.telefone = usuarioAtualiza.telefone;
+                    if (!string.IsNullOrWhiteSpace(usuarioAtualiza.sobrenome))
+                        usuarioDb.sobrenome = usuarioAtualiza.sobrenome;
+                    if (!string.IsNullOrWhiteSpace(usuarioAtualiza.senha))
+                        usuarioDb.senha = usuarioAtualiza.senha;
+                    if (!string.IsNullOrWhiteSpace(usuarioAtualiza.latitude))
+                        usuarioDb.latitude = usuarioAtualiza.latitude;
+                    if (!string.IsNullOrWhiteSpace(usuarioAtualiza.longitude))
+                        usuarioDb.longitude = usuarioAtualiza.longitude;
+                }
+                return usuarioDb;
+            }
+            catch (Exception)
+            {
+                return null;
+            }
         }
     }
 }

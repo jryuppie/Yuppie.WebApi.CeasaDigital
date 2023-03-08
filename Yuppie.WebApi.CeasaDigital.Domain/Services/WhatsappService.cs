@@ -130,7 +130,7 @@ namespace Yuppie.WebApi.CeasaDigital.Domain.Services
                 };
             }
         }
-        public async Task<ObjectResult> EnviarMensagemUsuario(string Documento, bool RecuperarSenha)
+        public async Task<ObjectResult> EnviarMensagemUsuario(string Documento, bool RecuperarSenha, string telefone = "")
         {
             try
             {
@@ -138,8 +138,14 @@ namespace Yuppie.WebApi.CeasaDigital.Domain.Services
                 var usuario = await _usuarioRepository.BuscarUsuarioPorDocumento(Documento);
                 if (usuario != null)
                 {
-                    mensagem = RecuperarSenha ? await CriarConteudoMensagemRecupearUsuario(usuario.nome, usuario.senha)
-                                              : await CriarConteudoMensagemCriarUsuario(usuario.nome);
+                    if (RecuperarSenha)
+                    {
+                        if (telefone == usuario.telefone)                        
+                            mensagem = await CriarConteudoMensagemRecupearUsuario(usuario.nome, usuario.senha);                        
+                    }
+                    else
+                        mensagem = await CriarConteudoMensagemCriarUsuario(usuario.nome);
+
                     if (mensagem != "")
                         return await ExecutarPostAsync("55", usuario.telefone, mensagem);
                 }
@@ -246,9 +252,8 @@ namespace Yuppie.WebApi.CeasaDigital.Domain.Services
             {
                 var messageBuilder = new StringBuilder();
                 messageBuilder.Append($"Olá, {Contato1}.\r\n");
-                messageBuilder.Append($"Segue sua senha de acesso: *{senha}*\r\n\r\n");
-                messageBuilder.Append("Seja muito bem - vindo! 😀\r\n\r\n");
-                messageBuilder.Append($"Link do Aplicativo: {appLink} \U0001F4F1 \r\n\r\n");
+                messageBuilder.Append($"Segue sua senha de acesso: *{senha}*\r\n\r\n");                
+                messageBuilder.Append($"📱 Link do Aplicativo: {appLink}\r\n\r\n");
                 messageBuilder.Append("Atenciosamente,\r\nEquipe Ceasa Digital \U0001F600");
 
                 return messageBuilder.ToString();

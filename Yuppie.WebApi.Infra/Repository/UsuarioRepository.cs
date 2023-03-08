@@ -1,8 +1,10 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using FirebaseAdmin.Messaging;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.Intrinsics.X86;
 using System.Text;
 using System.Threading.Tasks;
 using Yuppie.WebApi.Infra.Context;
@@ -18,8 +20,7 @@ namespace Yuppie.WebApi.Infra.Repository
         public Task<UsuarioModel> BuscarUsuarioPorId(int id);
         public Task<UsuarioModel> BuscarUsuarioLogin(string documento, string senha);
         public Task<ObjectResult> CadastrarUsuario(UsuarioModel usuario);
-        public Task<ObjectResult> AtualizarUsuario(UsuarioModel usuario);
-        public Task<ObjectResult> RecuperarSenhaUsuario(UsuarioModel usuario);
+        public Task<ObjectResult> AtualizarUsuario(UsuarioModel usuario);        
         public Task<ObjectResult> AtualizarStatusUsuario(string documento, bool status);
     }
 
@@ -103,6 +104,7 @@ namespace Yuppie.WebApi.Infra.Repository
         {
             try
             {
+                usuario.update_date= DateTime.Now;
                 _dbContext.Usuarios.Add(usuario);
                 _dbContext.SaveChanges();
                 return new ObjectResult(usuario)
@@ -163,25 +165,6 @@ namespace Yuppie.WebApi.Infra.Repository
                     StatusCode = 400
                 };
             }
-        }
-        public async Task<ObjectResult> RecuperarSenhaUsuario(UsuarioModel usuario)
-        {
-            try
-            {
-                // var usuario = _dbContext.Usuarios.Find(usuario.id);
-                //TODO - ENTENDNER COMO É FEITO ESSE PROCESSO
-                return new ObjectResult(usuario)
-                {
-                    StatusCode = StatusCodes.Status200OK
-                };
-            }
-            catch (Exception ex)
-            {
-                return new ObjectResult(new { message = ex.Message })
-                {
-                    StatusCode = 400
-                };
-            }
-        }
+        }     
     }
 }

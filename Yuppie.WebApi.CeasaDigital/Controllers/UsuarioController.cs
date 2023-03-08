@@ -61,9 +61,16 @@ namespace Yuppie.WebApi.CeasaDigital.Controllers
 
         [Route("atualizar")]
         [HttpPut]
-        public async Task<ObjectResult> AtualizarUsuario([FromForm] object formModel)
+        public async Task<ObjectResult> AtualizarUsuario([FromForm] UsuarioFormulario formModel)
         {
-            UsuarioModel usuario = new UsuarioModel();
+            UsuarioModel usuario = new UsuarioModel()
+            {
+                id= formModel.Id,   
+                nome = formModel.Nome,
+                sobrenome = formModel.Sobrenome,              
+                telefone = formModel.Telefone,              
+                senha = formModel.Senha,              
+            };
             return await _pgUsuarioService.AtualizarUsuario(usuario);
         }
 
@@ -72,6 +79,14 @@ namespace Yuppie.WebApi.CeasaDigital.Controllers
         public async Task<ObjectResult> AtualizarStatusUsuario([FromForm] UsuarioStatusFormulario formModel)
         {
             return await _pgUsuarioService.AtualizarStatusUsuario(formModel.Documento, formModel.Status);
+        }
+
+
+        [Route("recuperarsenha")]
+        [HttpPatch]
+        public async Task<ObjectResult> RecuperarSenhaUsuario(string Documento, string Telefone)
+        {
+            return await _pgUsuarioService.RecuperarSenhaUsuario(Documento, Telefone);
         }
     }
 }
