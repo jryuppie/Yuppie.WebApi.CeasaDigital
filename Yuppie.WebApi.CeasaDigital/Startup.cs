@@ -46,6 +46,7 @@ namespace Yuppie.WebApi.CeasaDigital
             services.AddTransient<IChatFirebaseService, ChatFirebaseService>();
             services.AddTransient<IUnMedidaService, UnMedidaService>();
             services.AddTransient<IWhatsappService, WhatsappService>();
+            services.AddTransient<ILoginService, LoginService>();
             #endregion
 
             #region Repositories
@@ -81,7 +82,8 @@ namespace Yuppie.WebApi.CeasaDigital
             #endregion
 
             #region Cors and Swagger
-               services.AddCors(options =>
+            services.AddHttpClient();
+            services.AddCors(options =>
             {
                 options.AddPolicy("AllowOrigin", builder => builder.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod());
             });
@@ -92,7 +94,7 @@ namespace Yuppie.WebApi.CeasaDigital
             });
             #endregion
 
-
+          
 
             #region FireBase
             var credentialsPath = Path.Combine(_env.ContentRootPath, "ceasawebchat-adminsdk.json");

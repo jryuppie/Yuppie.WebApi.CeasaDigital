@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Yuppie.WebApi.CeasaDigital.Domain.Models.Formulario
+﻿namespace Yuppie.WebApi.CeasaDigital.Domain.Models.Formulario
 {
     public class UsuarioFormulario
     {
@@ -17,7 +11,7 @@ namespace Yuppie.WebApi.CeasaDigital.Domain.Models.Formulario
         public string Telefone { get; set; }
         public string Cep { get; set; }
         public string Latitude { get; set; }
-        public string Longitude { get; set; }        
+        public string Longitude { get; set; }
         public string Documento { get; set; }
         public bool Status { get; set; }
     }

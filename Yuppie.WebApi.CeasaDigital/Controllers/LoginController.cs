@@ -1,6 +1,9 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using System.Collections.Generic;
+using System.Net.Http;
 using System.Threading.Tasks;
 using Yuppie.WebApi.CeasaDigital.Domain.Interfaces;
+using Yuppie.WebApi.CeasaDigital.Domain.Models.Formulario;
 using Yuppie.WebApi.CeasaDigital.Domain.Models.UsuarioModel;
 
 namespace Yuppie.WebApi.CeasaDigital.Controllers
@@ -9,17 +12,16 @@ namespace Yuppie.WebApi.CeasaDigital.Controllers
     [ApiController]
     public class LoginController : Controller
     {
-        private IUsuarioService _usuarioService;
-        public LoginController(IUsuarioService usuarioService)
+        private ILoginService _LoginService;
+        public LoginController(ILoginService loginService)
         {
-            _usuarioService = usuarioService;
+            _LoginService = loginService;   
         }
         [Route("login")]
-        [HttpGet]
-        public async Task<ObjectResult> Login(string usuario, string senha)
+        [HttpPost]
+        public async Task<string> Login([FromBody] LoginFormulario lForm)
         {
-            //ADAPTAR PARA A REQUISIÇÃO OAUTH.
-           return await _usuarioService.BuscarUsuarioLogin(usuario, senha);          
+            return await _LoginService.Login(lForm.Usuario, lForm.Senha);
         }
     }
 }

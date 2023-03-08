@@ -15,7 +15,7 @@ namespace Yuppie.WebApi.CeasaDigital.Domain.Services
     public class UnMedidaService : IUnMedidaService
     {
         private readonly IMapper _mapper;
-       private readonly IUnidadeMedidaRepository _unMedidaService;
+        private readonly IUnidadeMedidaRepository _unMedidaService;
         public UnMedidaService(IUnidadeMedidaRepository unMedidaService, IMapper mapper)
         {
             _unMedidaService = unMedidaService;
@@ -38,7 +38,7 @@ namespace Yuppie.WebApi.CeasaDigital.Domain.Services
                 {
                     StatusCode = StatusCodes.Status500InternalServerError
                 };
-            }     
+            }
         }
 
 
