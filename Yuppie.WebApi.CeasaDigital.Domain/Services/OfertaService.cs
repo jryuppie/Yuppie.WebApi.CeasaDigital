@@ -95,21 +95,21 @@ namespace Yuppie.WebApi.CeasaDigital.Domain.Services
             var vlKG = (vlUnMedida / pesoUnMedida);
             Yuppie.WebApi.Infra.Models.Negociacao.OfertaModel ofertaCriacao = new Yuppie.WebApi.Infra.Models.Negociacao.OfertaModel
             {
-                id_produto = idProduto,
-                id_un_medida = idUnMedida,
-                id_vendedor = idVendedor,
-                qtd_disponivel = qtdDisponivel,
-                vlkg = vlKG,
-                vl_un_medida = vlUnMedida,
-                peso_un_medida = pesoUnMedida,
-                create_date = DateTime.Now,
-                update_date = DateTime.Now,
-                status = true
+                IdProduto = idProduto,
+                IdUnMedida= idUnMedida,
+                IdVendedor = idVendedor,
+                QtdDisponivel = qtdDisponivel,
+                ValorKg = vlKG,
+                ValorUnMedida = vlUnMedida,
+                PesoUnMedida = pesoUnMedida,
+                DataCriacao = DateTime.Now,
+                DataAtualizacao = DateTime.Now,
+                Status = true
             };
 
 
             var ofertas = await _OfertaRepository.BuscarOfertaPorVendedor(idVendedor);
-            if (ofertas != null && !ofertas.Any(x => x.id_produto == idProduto))
+            if (ofertas != null && !ofertas.Any(x => x.IdProduto == idProduto))
             {
                 return await _OfertaRepository.AdicionarOfertaAsync(ofertaCriacao);
             }
@@ -135,7 +135,7 @@ namespace Yuppie.WebApi.CeasaDigital.Domain.Services
                 var oferta = await _OfertaRepository.BuscarOfertaPorId(idOferta);
                 if (oferta != null)
                 {
-                    oferta.status = false;
+                    oferta.Status = false;
                     return await _OfertaRepository.AtualizarOfertaAsync(oferta);
                 }
                 else
@@ -159,7 +159,7 @@ namespace Yuppie.WebApi.CeasaDigital.Domain.Services
                 var oferta = await _OfertaRepository.BuscarOfertaPorId(idOferta);
                 if (oferta != null)
                 {
-                    oferta.status = true;
+                    oferta.Status = true;
                     return await _OfertaRepository.AtualizarOfertaAsync(oferta);
                 }
                 else
@@ -183,9 +183,9 @@ namespace Yuppie.WebApi.CeasaDigital.Domain.Services
                 var ofertaAtualiza = await _OfertaRepository.BuscarOfertaPorId(oferta.id);
                 if (ofertaAtualiza != null)
                 {
-                    ofertaAtualiza.qtd_disponivel = oferta.qtd;
-                    ofertaAtualiza.vl_un_medida = oferta.vlUnMedida;
-                    ofertaAtualiza.update_date = DateTime.Now;
+                    ofertaAtualiza.QtdDisponivel = oferta.qtd;
+                    ofertaAtualiza.ValorUnMedida = oferta.vlUnMedida;
+                    ofertaAtualiza.DataAtualizacao = DateTime.Now;
                     return await _OfertaRepository.AtualizarOfertaAsync(ofertaAtualiza);
                 }
                 else

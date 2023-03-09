@@ -6,10 +6,10 @@ namespace Yuppie.WebApi.Infra.Models.Produto
 {
     public class ProdutoModel
     {
-        public int id { get; set; }
-        public string nome { get; set; }
-        public string categoria { get; set; }
-        public DateTime create_date { get; set; }
-        public DateTime update_date { get; set; }
+        public int Id { get; set; }
+        public string Nome { get; set; }
+        public string Categoria { get; set; }
+        public DateTime DataCriacao { get; set; }
+        public DateTime DataAtualizacao { get; set; }
     }
 }

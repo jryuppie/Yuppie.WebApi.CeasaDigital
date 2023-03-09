@@ -54,9 +54,9 @@ namespace Yuppie.WebApi.Infra.Repository
             {
                 UnidadeMedidaModel medida = new UnidadeMedidaModel
                 {
-                    nome = unMedida,
-                    create_date = DateTime.Now,
-                    update_date = DateTime.Now
+                    Nome = unMedida,
+                    DataCriacao = DateTime.Now,
+                    DataAtualizacao = DateTime.Now
                 };
                 _dbContext.UnMedidas.Add(medida);
                 _dbContext.SaveChanges();

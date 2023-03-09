@@ -42,7 +42,7 @@ namespace Yuppie.WebApi.Infra.Repository
         {
             try
             {
-                return _dbContext.ProcessoNegociacoes.FirstOrDefault(x => x.id == idComprador && x.id_venda == idOferta && x.status_negociacao == status);
+                return _dbContext.ProcessoNegociacoes.FirstOrDefault(x => x.Id == idComprador && x.IdVenda == idOferta && x.StatusNegociacao == status);
             }
             catch (Exception ex)
             {
@@ -66,7 +66,7 @@ namespace Yuppie.WebApi.Infra.Repository
         {
             try
             {
-                negociacao.create_date = DateTime.Now;
+                negociacao.DataCriacao = DateTime.Now;
                 _dbContext.ProcessoNegociacoes.Add(negociacao);
                 _dbContext.SaveChanges();
                 return new ObjectResult(negociacao)
@@ -89,9 +89,9 @@ namespace Yuppie.WebApi.Infra.Repository
             {
                 var negociacao = new ProcessoNegociacaoModel()
                 {
-                    id_venda = IdNegociacao,
-                    qtd_comprada = Quantidade,
-                    create_date = DateTime.Now
+                    IdVenda = IdNegociacao,
+                    QtdComprada = Quantidade,
+                    DataCriacao = DateTime.Now
                 };
                 _dbContext.ProcessoNegociacoes.Add(negociacao);
                 _dbContext.SaveChanges();
@@ -155,7 +155,7 @@ namespace Yuppie.WebApi.Infra.Repository
         {
             try
             {
-                return _dbContext.ProcessoNegociacoes.Where(x => x.id_venda == IdVenda).FirstOrDefault();
+                return _dbContext.ProcessoNegociacoes.Where(x => x.IdVenda == IdVenda).FirstOrDefault();
             }
             catch (Exception ex)
             {

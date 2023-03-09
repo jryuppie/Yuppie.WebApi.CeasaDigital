@@ -30,7 +30,7 @@ namespace Yuppie.WebApi.Infra.Repository
         {
             try
             {
-                return _dbContext.Produtos.Where(x => x.nome == nomeProduto).FirstOrDefault();
+                return _dbContext.Produtos.Where(x => x.Nome == nomeProduto).FirstOrDefault();
             }
             catch (Exception ex)
             {
@@ -41,7 +41,7 @@ namespace Yuppie.WebApi.Infra.Repository
         {
             try
             {
-                return _dbContext.Produtos.Where(x => x.id == Id).FirstOrDefault();
+                return _dbContext.Produtos.Where(x => x.Id == Id).FirstOrDefault();
             }
             catch (Exception ex)
             {
@@ -66,10 +66,10 @@ namespace Yuppie.WebApi.Infra.Repository
             try
             {
                 ProdutoModel produto = new ProdutoModel{
-                    categoria = categoria,
-                    nome = nome,
-                    create_date = DateTime.Now,
-                    update_date = DateTime.Now
+                    Categoria = categoria,
+                    Nome = nome,
+                    DataCriacao = DateTime.Now,
+                    DataAtualizacao = DateTime.Now
                 };
 
                 _dbContext.Produtos.Add(produto);
@@ -92,9 +92,9 @@ namespace Yuppie.WebApi.Infra.Repository
         {
             try
             {
-                var produto = _dbContext.Produtos.Where(x => x.nome == nome).FirstOrDefault();
-                produto.update_date = DateTime.Now;
-                produto.categoria = categoria;
+                var produto = _dbContext.Produtos.Where(x => x.Nome == nome).FirstOrDefault();
+                produto.DataAtualizacao = DateTime.Now;
+                produto.Categoria = categoria;
                 _dbContext.Produtos.Update(produto);
                 _dbContext.SaveChanges();
                 return new ObjectResult(produto)
@@ -116,7 +116,7 @@ namespace Yuppie.WebApi.Infra.Repository
         {
             try
             {
-                var produto = _dbContext.Produtos.Where(x => x.categoria == categoria && x.nome == nome).FirstOrDefault();
+                var produto = _dbContext.Produtos.Where(x => x.Categoria == categoria && x.Nome == nome).FirstOrDefault();
                 _dbContext.Produtos.Remove(produto);
                 _dbContext.SaveChanges();
                 return new ObjectResult(produto)

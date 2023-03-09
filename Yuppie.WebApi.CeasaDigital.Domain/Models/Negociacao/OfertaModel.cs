@@ -6,19 +6,19 @@ namespace Yuppie.WebApi.CeasaDigital.Domain.Models.Negociacao
     public class OfertaModel
     {
         [Key]
-        public int id { get; set; }
-        public DateTime create_date { get; set; }
-        public int id_produto { get; set; }
-        public int id_un_medida { get; set; }
-        public int id_vendedor { get; set; }
-        public float peso_un_medida { get; set; }
-        public int qtd_disponivel { get; set; }
-        public bool status { get; set; }
-        public DateTime update_date { get; set; }
-        public float vlkg { get; set; }
-        public float vl_un_medida { get; set; }
-        public DateTime? sent_message_date { get; set; }
-        public int sent_message_counter { get; set; }
+        public int Id { get; set; }
+        public DateTime DataCriacao { get; set; }
+        public int IdProduto { get; set; }
+        public int IdUnMedida { get; set; }
+        public int IdVendedor { get; set; }
+        public float PesoUnMedida { get; set; }
+        public int QtdDisponivel { get; set; }
+        public bool Status { get; set; }
+        public DateTime DataAtualizacao { get; set; }
+        public float ValorKg { get; set; }
+        public float ValorUnMedida { get; set; }
+        public DateTime? DataEnvioMensagem { get; set; }
+        public int EnvioMensagemContador { get; set; }
     }
 }
 

@@ -6,16 +6,16 @@ namespace Yuppie.WebApi.CeasaDigital.Domain.Models.Negociacao
 {
     public class VendaModel
     {
-        public int id { get; set; }
-        public int id_oferta { get; set; }
-        public int id_vendedor { get; set; }
-        public int id_comprador { get; set; }
-        public int qtd_comprada { get; set; }
-        public float valor_transacao { get; set; }
-        public int avaliacao_vendedor { get; set; }
-        public int avaliacao_comprador { get; set; }
-        public string venda_status { get; set; }
-        public DateTime create_date { get; set; }
-        public DateTime update_date { get; set; }      
+        public int Id { get; set; }
+        public int IdOferta { get; set; }
+        public int IdVendedor { get; set; }
+        public int IdComprador { get; set; }
+        public int QtdComprada { get; set; }
+        public float ValorTransacao { get; set; }
+        public int AvaliacaoVendedor { get; set; }
+        public int AvaliacaoComprador { get; set; }
+        public string VendaStatus { get; set; }
+        public DateTime DataCriacao { get; set; }
+        public DateTime DataAtualizacao { get; set; }
     }
 }

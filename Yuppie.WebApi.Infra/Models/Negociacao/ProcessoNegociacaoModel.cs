@@ -6,22 +6,22 @@ namespace Yuppie.WebApi.Infra.Models.Negociacao
 {
     public class ProcessoNegociacaoModel
     {
-        public int id { get; set; }
-        public int id_venda { get; set; }
-        public string status_negociacao { get; set; }
-        public string sub_status_negociacao { get; set; }
-        public int qtd_comprada { get; set; }
-        public bool aprovacao_vendedor { get; set; }
-        public bool aprovacao_comprador { get; set; }
-        public bool avisa_inicio_negociacao { get; set; }
-        public bool avisa_negociacao_pendente { get; set; }
-        public bool avisa_proposta_cancelamento { get; set; }
-        public bool avisa_cancelamento { get; set; }
-        public bool avisa_conclusao_venda { get; set; }
-        public DateTime create_date { get; set; }
-        public DateTime update_date { get; set; }
-        public DateTime? sent_message_date { get; set; }
-        public int sent_message_counter { get; set; }
+        public int Id { get; set; }
+        public int IdVenda { get; set; }
+        public string StatusNegociacao { get; set; }
+        public string SubStatusNegociacao { get; set; }
+        public int QtdComprada { get; set; }
+        public bool AprovacaoVendedor { get; set; }
+        public bool AprovacaoComprador { get; set; }
+        public bool AvisaInicioNegociacao { get; set; }
+        public bool AvisaNegociacaoPendente { get; set; }
+        public bool AvisaPropostaCancelada { get; set; }
+        public bool AvisaCancelamento { get; set; }
+        public bool AvisaConclusaoVenda { get; set; }
+        public DateTime DataCriacao { get; set; }
+        public DateTime DataAtualizacao { get; set; }
+        public DateTime? DataEnvioMensagem { get; set; }
+        public int EnvioMensagemContador { get; set; }
     }
 }
 

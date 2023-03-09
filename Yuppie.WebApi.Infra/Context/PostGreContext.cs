@@ -99,25 +99,25 @@ namespace Yuppie.WebApi.Infra.Context
             {
                 entity.ToTable("produtos");
 
-                entity.HasKey(e => e.id)
+                entity.HasKey(e => e.Id)
                     .HasName("produtos_pkey");
 
-                entity.Property(e => e.id)
+                entity.Property(e => e.Id)
                     .HasColumnName("id")
                     .ValueGeneratedOnAdd()
                     .HasDefaultValueSql("nextval('produtos_id_seq'::regclass)");
 
-                entity.Property(e => e.create_date)
+                entity.Property(e => e.DataCriacao)
                     .HasColumnName("create_date");
 
-                entity.Property(e => e.nome)
+                entity.Property(e => e.Nome)
                     .HasColumnName("nome")
                     .HasMaxLength(100);
 
-                entity.Property(e => e.update_date)
+                entity.Property(e => e.DataAtualizacao)
                     .HasColumnName("update_date");
 
-                entity.Property(e => e.categoria)
+                entity.Property(e => e.Categoria)
                     .HasColumnName("categoria")
                     .HasMaxLength(100);
             });
@@ -126,49 +126,49 @@ namespace Yuppie.WebApi.Infra.Context
             {
                 entity.ToTable("processo_negociacao");
 
-                entity.HasKey(e => e.id);
+                entity.HasKey(e => e.Id);
 
-                entity.Property(e => e.id)
+                entity.Property(e => e.Id)
                     .HasColumnName("id")
                     .ValueGeneratedOnAdd();
 
-                entity.Property(e => e.aprovacao_comprador)
+                entity.Property(e => e.AprovacaoComprador)
                     .HasColumnName("aprovacao_comprador");
 
-                entity.Property(e => e.aprovacao_vendedor)
+                entity.Property(e => e.AprovacaoVendedor)
                     .HasColumnName("aprovacao_vendedor");
 
-                entity.Property(e => e.avisa_cancelamento)
+                entity.Property(e => e.AvisaCancelamento)
                     .HasColumnName("avisa_cancelamento");
 
-                entity.Property(e => e.avisa_conclusao_venda)
+                entity.Property(e => e.AvisaConclusaoVenda)
                     .HasColumnName("avisa_conclusao_venda");
 
-                entity.Property(e => e.avisa_negociacao_pendente)
+                entity.Property(e => e.AvisaNegociacaoPendente)
                     .HasColumnName("avisa_negociacao_pendente");
 
-                entity.Property(e => e.avisa_proposta_cancelamento)
+                entity.Property(e => e.AvisaPropostaCancelada)
                     .HasColumnName("avisa_proposta_cancelamento");
 
-                entity.Property(e => e.avisa_inicio_negociacao)
+                entity.Property(e => e.AvisaInicioNegociacao)
                     .HasColumnName("avisa_inicio_negociacao");
 
-                entity.Property(e => e.create_date)
+                entity.Property(e => e.DataCriacao)
                     .HasColumnName("create_date");
 
-                entity.Property(e => e.id_venda)
+                entity.Property(e => e.IdVenda)
                     .HasColumnName("id_venda");
 
-                entity.Property(e => e.qtd_comprada)
+                entity.Property(e => e.QtdComprada)
                     .HasColumnName("qtd_comprada");
 
-                entity.Property(e => e.status_negociacao)
+                entity.Property(e => e.StatusNegociacao)
                     .HasColumnName("status_negociacao");
 
-                entity.Property(e => e.sub_status_negociacao)
+                entity.Property(e => e.SubStatusNegociacao)
                     .HasColumnName("sub_status_negociacao");
 
-                entity.Property(e => e.update_date)
+                entity.Property(e => e.DataAtualizacao)
                     .HasColumnName("update_date");
             });
 
@@ -176,41 +176,41 @@ namespace Yuppie.WebApi.Infra.Context
             {
                 entity.ToTable("oferta");
 
-                entity.HasKey(e => e.id);
+                entity.HasKey(e => e.Id);
 
-                entity.Property(e => e.id)
+                entity.Property(e => e.Id)
                     .HasColumnName("id")
                     .ValueGeneratedOnAdd()
                     .HasDefaultValueSql("nextval('oferta_id_seq'::regclass)");
 
-                entity.Property(e => e.create_date)
+                entity.Property(e => e.DataCriacao)
                     .HasColumnName("create_date");
 
-                entity.Property(e => e.id_produto)
+                entity.Property(e => e.IdProduto)
                     .HasColumnName("id_produto");
 
-                entity.Property(e => e.id_un_medida)
+                entity.Property(e => e.IdUnMedida)
                     .HasColumnName("id_un_medida");
 
-                entity.Property(e => e.id_vendedor)
+                entity.Property(e => e.IdVendedor)
                     .HasColumnName("id_vendedor");
 
-                entity.Property(e => e.peso_un_medida)
+                entity.Property(e => e.PesoUnMedida)
                     .HasColumnName("peso_un_medida");
 
-                entity.Property(e => e.qtd_disponivel)
+                entity.Property(e => e.QtdDisponivel)
                     .HasColumnName("qtd_disponivel");
 
-                entity.Property(e => e.status)
+                entity.Property(e => e.Status)
                     .HasColumnName("status");
 
-                entity.Property(e => e.update_date)
+                entity.Property(e => e.DataAtualizacao)
                     .HasColumnName("update_date");
 
-                entity.Property(e => e.vlkg)
+                entity.Property(e => e.ValorKg)
                     .HasColumnName("vlkg");
 
-                entity.Property(e => e.vl_un_medida)
+                entity.Property(e => e.ValorUnMedida)
                     .HasColumnName("vl_un_medida");
             });
 
@@ -218,20 +218,20 @@ namespace Yuppie.WebApi.Infra.Context
             {
                 entity.ToTable("unidade_medidas");
 
-                entity.HasKey(e => e.id)
+                entity.HasKey(e => e.Id)
                     .HasName("unidade_medidas_pkey");
 
-                entity.Property(e => e.id)
+                entity.Property(e => e.Id)
                     .HasColumnName("id");
 
-                entity.Property(e => e.create_date)
+                entity.Property(e => e.DataCriacao)
                     .HasColumnName("create_date");
 
-                entity.Property(e => e.nome)
+                entity.Property(e => e.Nome)
                     .HasColumnName("nome")
                     .HasMaxLength(50);
 
-                entity.Property(e => e.update_date)
+                entity.Property(e => e.DataAtualizacao)
                     .HasColumnName("update_date");
             });
 
@@ -239,38 +239,38 @@ namespace Yuppie.WebApi.Infra.Context
             {
                 entity.ToTable("venda");
 
-                entity.Property(e => e.id)
+                entity.Property(e => e.Id)
                     .HasColumnName("id")
                     .ValueGeneratedOnAdd();
 
-                entity.Property(e => e.avaliacao_comprador)
+                entity.Property(e => e.AvaliacaoComprador)
                     .HasColumnName("avaliacao_comprador");
 
-                entity.Property(e => e.avaliacao_vendedor)
+                entity.Property(e => e.AvaliacaoVendedor)
                     .HasColumnName("avaliacao_vendedor");
 
-                entity.Property(e => e.create_date)
+                entity.Property(e => e.DataCriacao)
                     .HasColumnName("create_date");
 
-                entity.Property(e => e.id_comprador)
+                entity.Property(e => e.IdComprador)
                     .HasColumnName("id_comprador");
 
-                entity.Property(e => e.id_oferta)
+                entity.Property(e => e.IdOferta)
                     .HasColumnName("id_oferta");
 
-                entity.Property(e => e.id_vendedor)
+                entity.Property(e => e.IdVendedor)
                     .HasColumnName("id_vendedor");
 
-                entity.Property(e => e.qtd_comprada)
+                entity.Property(e => e.QtdComprada)
                     .HasColumnName("qtd_comprada");
 
-                entity.Property(e => e.update_date)
+                entity.Property(e => e.DataAtualizacao)
                     .HasColumnName("update_date");
 
-                entity.Property(e => e.valor_transacao)
+                entity.Property(e => e.ValorTransacao)
                     .HasColumnName("valor_transacao");
 
-                entity.Property(e => e.venda_status)
+                entity.Property(e => e.VendaStatus)
                     .HasColumnName("venda_status");
             });
         }

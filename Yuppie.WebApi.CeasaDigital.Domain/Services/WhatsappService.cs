@@ -41,7 +41,7 @@ namespace Yuppie.WebApi.CeasaDigital.Domain.Services
                 var comprador = await _usuarioRepository.BuscarUsuarioPorId(model.IdComprador);
                 if (produto != null && vendedor != null && comprador != null)
                 {
-                    var mensagem = await CriarConteudoMensagemOferta(vendedor.Nome, comprador.Nome, produto.nome);
+                    var mensagem = await CriarConteudoMensagemOferta(vendedor.Nome, comprador.Nome, produto.Nome);
                     if (mensagem != "")
                         return await ExecutarPostAsync(model.Prefixo, vendedor.Telefone, mensagem);
                 }
@@ -104,14 +104,14 @@ namespace Yuppie.WebApi.CeasaDigital.Domain.Services
                 var oferta = await _ofertaRepository.BuscarOfertaPorId(model.IdOferta);
                 if (oferta != null)
                 {
-                    var produto = await _produtoRepository.BuscarProdutoPorId(oferta.id_produto);
+                    var produto = await _produtoRepository.BuscarProdutoPorId(oferta.IdProduto);
                     var vendedor = await _usuarioRepository.BuscarUsuarioPorId(model.IdVendedor);
                     var comprador = await _usuarioRepository.BuscarUsuarioPorId(model.IdComprador);
                     if (produto != null && vendedor != null && comprador != null)
                     {
                         if (EdicaoVenda)
                         {
-                            var mensagem = await CriarConteudoMensagemEditarVenda(vendedor.Nome, comprador.Nome, produto.nome, EdicaoVenda);
+                            var mensagem = await CriarConteudoMensagemEditarVenda(vendedor.Nome, comprador.Nome, produto.Nome, EdicaoVenda);
                             if (mensagem != "")
                                 return await ExecutarPostAsync(model.Prefixo, vendedor.Telefone, mensagem);
                         }

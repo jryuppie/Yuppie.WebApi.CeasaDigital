@@ -113,33 +113,33 @@ namespace Yuppie.WebApi.CeasaDigital.Domain.Services
             try
             {
                 var venda = await _VendaRepository.BuscarVendaPorId(IdVenda);
-                if (venda != null && (venda.id_comprador == IdUsuario || venda.id_vendedor == IdUsuario))
+                if (venda != null && (venda.IdComprador == IdUsuario || venda.IdVendedor == IdUsuario))
                 {
                     var negociacao = await _NegociacaoRepository.BuscarNegociacaoPorVenda(IdVenda);
-                    if (negociacao.status_negociacao != NegociacaoStatus.Processo.PegarDescricao())
+                    if (negociacao.StatusNegociacao != NegociacaoStatus.Processo.PegarDescricao())
                     {
-                        NegociacaoStatusResponse response = negociacao.status_negociacao == NegociacaoStatus.Cancelado.PegarDescricao() ? NegociacaoStatusResponse.Cancelado : NegociacaoStatusResponse.ConcluidoAnteriormente;
+                        NegociacaoStatusResponse response = negociacao.StatusNegociacao == NegociacaoStatus.Cancelado.PegarDescricao() ? NegociacaoStatusResponse.Cancelado : NegociacaoStatusResponse.ConcluidoAnteriormente;
                         return new ObjectResult(new { message = response.PegarDescricao() }) { StatusCode = response.PegarCodigoStatus() };
                     }
 
 
-                    if (venda.id_comprador == IdUsuario)
+                    if (venda.IdComprador == IdUsuario)
                     {
-                        negociacao.aprovacao_comprador = true;
-                        if (negociacao.aprovacao_comprador == false)
+                        negociacao.AprovacaoComprador = true;
+                        if (negociacao.AprovacaoComprador == false)
                         {
-                            negociacao.sub_status_negociacao = NegociacaoSubStatusEnum.AguardandoAprovacaoConclusaoVendedor.PegarDescricao();
+                            negociacao.SubStatusNegociacao = NegociacaoSubStatusEnum.AguardandoAprovacaoConclusaoVendedor.PegarDescricao();
                             await _NegociacaoRepository.AtualizarNegociacao(negociacao);
                             NegociacaoStatusResponse response = NegociacaoStatusResponse.ConcluidoPendenteVendedor;
                             return new ObjectResult(new { message = response.PegarDescricao() }) { StatusCode = response.PegarCodigoStatus() };
                         }
 
-                        if (negociacao.aprovacao_vendedor == true)
+                        if (negociacao.AprovacaoVendedor == true)
                         {
-                            negociacao.sub_status_negociacao = NegociacaoSubStatusEnum.Concluido.PegarDescricao();
-                            negociacao.status_negociacao = NegociacaoStatus.Concluido.PegarDescricao();
+                            negociacao.SubStatusNegociacao = NegociacaoSubStatusEnum.Concluido.PegarDescricao();
+                            negociacao.StatusNegociacao = NegociacaoStatus.Concluido.PegarDescricao();
                             await _NegociacaoRepository.AtualizarNegociacao(negociacao);
-                            venda.venda_status = NegociacaoStatus.Concluido.PegarDescricao();
+                            venda.VendaStatus = NegociacaoStatus.Concluido.PegarDescricao();
                             await _VendaRepository.AtualizarVenda(venda);
 
 
@@ -150,20 +150,20 @@ namespace Yuppie.WebApi.CeasaDigital.Domain.Services
                     }
                     else
                     {
-                        negociacao.aprovacao_vendedor = true;
-                        if (negociacao.aprovacao_comprador == false)
+                        negociacao.AprovacaoVendedor = true;
+                        if (negociacao.AprovacaoComprador == false)
                         {
-                            negociacao.sub_status_negociacao = NegociacaoSubStatusEnum.AguardandoAprovacaoCompradorCancelamento.PegarDescricao();
+                            negociacao.SubStatusNegociacao = NegociacaoSubStatusEnum.AguardandoAprovacaoCompradorCancelamento.PegarDescricao();
                             await _NegociacaoRepository.AtualizarNegociacao(negociacao);
                             NegociacaoStatusResponse response = NegociacaoStatusResponse.DesativadoPendenteComprador;
                             return new ObjectResult(new { message = response.PegarDescricao() }) { StatusCode = response.PegarCodigoStatus() };
                         }
 
-                        if (negociacao.aprovacao_vendedor == true)
+                        if (negociacao.AprovacaoVendedor == true)
                         {
-                            negociacao.sub_status_negociacao = NegociacaoSubStatusEnum.Cancelado.PegarDescricao();
-                            negociacao.status_negociacao = NegociacaoStatus.Cancelado.PegarDescricao();
-                            venda.venda_status = NegociacaoStatus.Cancelado.PegarDescricao();
+                            negociacao.SubStatusNegociacao = NegociacaoSubStatusEnum.Cancelado.PegarDescricao();
+                            negociacao.StatusNegociacao = NegociacaoStatus.Cancelado.PegarDescricao();
+                            venda.VendaStatus = NegociacaoStatus.Cancelado.PegarDescricao();
                             //TODO - COLOCAR A LOGICA DE ENVIO DE MENSAGEM
 
                             await _NegociacaoRepository.AtualizarNegociacao(negociacao);
@@ -179,7 +179,7 @@ namespace Yuppie.WebApi.CeasaDigital.Domain.Services
                     NegociacaoStatusResponse response = NegociacaoStatusResponse.Inexistente;
                     var negociacao = await _NegociacaoRepository.BuscarNegociacaoPorVenda(IdVenda);
                     if (negociacao != null)
-                        response = negociacao.status_negociacao == NegociacaoStatus.Concluido.PegarDescricao() ?
+                        response = negociacao.StatusNegociacao == NegociacaoStatus.Concluido.PegarDescricao() ?
                             NegociacaoStatusResponse.Concluido : NegociacaoStatusResponse.Cancelado;
 
                     return new ObjectResult(new { message = response.PegarDescricao() }) { StatusCode = response.PegarCodigoStatus() };
@@ -200,24 +200,24 @@ namespace Yuppie.WebApi.CeasaDigital.Domain.Services
                 var novaVenda = new Infra.Models.Negociacao.VendaModel();
                 var transacao = new TransacaoTools(_OfertaRepository);
                 var Oferta = await _OfertaRepository.BuscarOfertaPorId(idOferta);
-                if (Oferta != null && Oferta.qtd_disponivel > 0 && Oferta.qtd_disponivel > quantidade && Oferta.id_vendedor != idComprador)
+                if (Oferta != null && Oferta.QtdDisponivel > 0 && Oferta.QtdDisponivel > quantidade && Oferta.IdVendedor != idComprador)
                 {
                     var NegociacaoVenda = await _VendaRepository.BuscarVendaPorInformacoes(idComprador, idOferta, NegociacaoStatus.Processo.PegarDescricao());
                     if (NegociacaoVenda == null)
                     {
-                        var vlrTransacao = Oferta.vl_un_medida * quantidade;
+                        var vlrTransacao = Oferta.ValorUnMedida * quantidade;
                         if (vlrTransacao > 0)
                         {
                             novaVenda = new Infra.Models.Negociacao.VendaModel()
                             {
-                                id_comprador = idComprador,
-                                id_oferta = idOferta,
-                                qtd_comprada = quantidade,
-                                valor_transacao = vlrTransacao,
-                                id_vendedor = Oferta.id_vendedor,
-                                create_date = DateTime.Now,
-                                update_date = DateTime.Now,
-                                venda_status = NegociacaoStatus.Processo.PegarDescricao()
+                                IdComprador= idComprador,
+                                IdOferta= idOferta,
+                                QtdComprada = quantidade,
+                                ValorTransacao = vlrTransacao,
+                                IdVendedor = Oferta.IdVendedor,
+                                DataCriacao = DateTime.Now,
+                                DataAtualizacao = DateTime.Now,
+                                VendaStatus = NegociacaoStatus.Processo.PegarDescricao()
                             };
 
                             //TODO - IMPLEMENTAR A ESTRUTURA DE CRIAÇÃO DE CONTRATO NO FIREBASE
@@ -227,13 +227,13 @@ namespace Yuppie.WebApi.CeasaDigital.Domain.Services
                             transacao.AtualizarQuantidadeOferta(quantidade, idOferta);
 
                             //CRIA NEGOCIAÇÃO
-                            await IniciarNegociacao(idComprador, Oferta.id, quantidade);
+                            await IniciarNegociacao(idComprador, Oferta.Id, quantidade);
                             _WhatsappService.EnviarMensagemOferta(
                                new MensagemModel()
                                {
                                    IdComprador = idComprador,
-                                   IdVendedor = Oferta.id_vendedor,
-                                   IdProduto = Oferta.id_produto,
+                                   IdVendedor = Oferta.IdVendedor,
+                                   IdProduto = Oferta.IdProduto,
                                    EnvioComprador = false
                                });
                         }
@@ -255,23 +255,23 @@ namespace Yuppie.WebApi.CeasaDigital.Domain.Services
             try
             {
                 var venda = await _VendaRepository.BuscarVendaPorId(IdVenda);
-                var oferta = await _OfertaRepository.BuscarOfertaPorId(venda.id_oferta);
-                if (oferta != null && oferta.qtd_disponivel >= Quantidade)
+                var oferta = await _OfertaRepository.BuscarOfertaPorId(venda.IdOferta);
+                if (oferta != null && oferta.QtdDisponivel >= Quantidade)
                 {
-                    venda.qtd_comprada = Quantidade;
+                    venda.QtdComprada = Quantidade;
                     if (_VendaRepository.AtualizarVenda(venda).Result.StatusCode == 200)
                     {
-                        var negociacao = await _NegociacaoRepository.BuscarNegociacaoPorVenda(venda.id);
+                        var negociacao = await _NegociacaoRepository.BuscarNegociacaoPorVenda(venda.Id);
                         if (negociacao != null)
                         {
-                            negociacao.qtd_comprada = Quantidade;
+                            negociacao.QtdComprada = Quantidade;
                             if (_NegociacaoRepository.AtualizarNegociacao(negociacao).Result.StatusCode == 200)
                             {
                                 _WhatsappService.EnviarMensagemVenda(new MensagemModel()
                                 {
-                                    IdComprador = venda.id_comprador,
-                                    IdVendedor = venda.id_vendedor,
-                                    IdOferta = oferta.id,
+                                    IdComprador = venda.IdComprador,
+                                    IdVendedor = venda.IdVendedor,
+                                    IdOferta = oferta.Id,
                                     Prefixo = "55"
                                 }, true);
                             }
@@ -297,7 +297,7 @@ namespace Yuppie.WebApi.CeasaDigital.Domain.Services
             {
                 var negociacao = await _VendaRepository.BuscarVendaPorInformacoes(IdComprador, IdOferta, NegociacaoStatus.Processo.PegarDescricao());
                 if (negociacao != null)
-                    await _NegociacaoRepository.AdicionarNegociacao(negociacao.id, Quantidade);
+                    await _NegociacaoRepository.AdicionarNegociacao(negociacao.Id, Quantidade);
                 return true;
             }
             catch (Exception)

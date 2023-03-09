@@ -56,7 +56,7 @@ namespace Yuppie.WebApi.Infra.Repository
         {
             try
             {
-                return _dbContext.Vendas.Where(x => x.id_vendedor == id).ToList();
+                return _dbContext.Vendas.Where(x => x.IdVendedor == id).ToList();
             }
             catch (Exception ex)
             {
@@ -68,7 +68,7 @@ namespace Yuppie.WebApi.Infra.Repository
         {
             try
             {
-                return _dbContext.Vendas.Where(x => x.id_comprador == id).ToList();
+                return _dbContext.Vendas.Where(x => x.IdComprador == id).ToList();
             }
             catch (Exception ex)
             {
@@ -140,7 +140,7 @@ namespace Yuppie.WebApi.Infra.Repository
         {
             try
             {
-                return _dbContext.Vendas.FirstOrDefault(x => x.id == idComprador && x.id == idVenda && x.venda_status == status);
+                return _dbContext.Vendas.FirstOrDefault(x => x.Id == idComprador && x.Id == idVenda && x.VendaStatus == status);
             }
             catch (Exception ex)
             {

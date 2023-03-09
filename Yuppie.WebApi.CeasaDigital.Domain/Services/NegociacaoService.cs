@@ -26,10 +26,10 @@ namespace Yuppie.WebApi.CeasaDigital.Domain.Services
             {
                 var negociacao = new Infra.Models.Negociacao.ProcessoNegociacaoModel()
                 {
-                    id_venda = IdVenda,
-                    qtd_comprada = QuantidadeComprada,
-                    status_negociacao = NegociacaoStatus.Processo.PegarDescricao(),
-                    create_date = DateTime.Now
+                    IdVenda = IdVenda,
+                    QtdComprada = QuantidadeComprada,
+                    StatusNegociacao = NegociacaoStatus.Processo.PegarDescricao(),
+                    DataCriacao = DateTime.Now
                 };
                 return await _negociacaoRepository.AdicionarNegociacao(negociacao);
             }

@@ -31,7 +31,7 @@ namespace Yuppie.WebApi.Infra.Repository
         {
             try
             {
-                return _dbContext.Ofertas.Where(x => x.id_vendedor == idVendedor).ToList();              
+                return _dbContext.Ofertas.Where(x => x.IdVendedor == idVendedor).ToList();              
             }
             catch (Exception ex)
             {
@@ -56,7 +56,7 @@ namespace Yuppie.WebApi.Infra.Repository
             try
             {
                 var umaSemanaAtras = DateTime.Now.AddDays(-diasAtras);
-             return _dbContext.Ofertas.Where(x => x.id_vendedor == idVendedor && x.update_date <= umaSemanaAtras).ToList();
+             return _dbContext.Ofertas.Where(x => x.IdVendedor == idVendedor && x.DataAtualizacao <= umaSemanaAtras).ToList();
              
             }
             catch (Exception ex)
@@ -69,7 +69,7 @@ namespace Yuppie.WebApi.Infra.Repository
         {
             try
             {
-                return _dbContext.Ofertas.Where(x => x.id == idOferta).FirstOrDefault();              
+                return _dbContext.Ofertas.Where(x => x.Id == idOferta).FirstOrDefault();              
             }
             catch (Exception ex)
             {
