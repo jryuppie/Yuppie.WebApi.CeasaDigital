@@ -22,12 +22,11 @@ namespace Yuppie.WebApi.CeasaDigital.Domain.Services
                 request.Headers.Add("Authorization", "Basic OTk1MjdiMTgtMjljMi00NTk4LTk0YTYtZDQ2MGU2MDZhYmYwOjhkMWUyMjk4LTRkYTgtNDFkNy05MmJhLThiOTlhMzE1MmUxOQ==");
 
                 var formData = new List<KeyValuePair<string, string>>
-                    {
+                {
                         new KeyValuePair<string, string>("username", Usuario),
                         new KeyValuePair<string, string>("password", Senha),
                         new KeyValuePair<string, string>("grant_type", "password")
-                    };
-
+                 };
                 request.Content = new FormUrlEncodedContent(formData);
                 var response = await client.SendAsync(request);
                 var responseContent = await response.Content.ReadAsStringAsync();

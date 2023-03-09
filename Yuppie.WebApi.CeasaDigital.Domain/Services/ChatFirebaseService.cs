@@ -49,12 +49,12 @@ namespace Yuppie.WebApi.CeasaDigital.Domain.Services
                     UsuarioModel user = (UsuarioModel)consulta.Value;
                     var cfbModel = new ChatFirebaseUserModel
                     {
-                        id = user.id,
-                        name = user.nome,
+                        id = user.Id,
+                        name = user.Nome,
                         status = "Offline"
                     };
 
-                    var docID = user.id.ToString();
+                    var docID = user.Id.ToString();
                     await docRef.Document(docID).CreateAsync(cfbModel);                 
                     return new ObjectResult(cfbModel)
                     {
@@ -65,11 +65,11 @@ namespace Yuppie.WebApi.CeasaDigital.Domain.Services
                 {
                     var consulta = await _usuarioService.BuscarUsuarioPorId(idChat);
                     UsuarioModel user = (UsuarioModel)consulta.Value;
-                    var docID = user.id.ToString();
+                    var docID = user.Id.ToString();
                     var objUser = new Dictionary<string, object>
                     {
-                            { "id", user.id },
-                            { "name", user.nome },
+                            { "id", user.Id },
+                            { "name", user.Nome },
                             { "status", "Online" }
                     };
 

@@ -106,19 +106,26 @@ namespace Yuppie.WebApi.CeasaDigital.Domain.Services
             try
             {
                 var usuarioCadastro = _mapper.Map<Yuppie.WebApi.Infra.Models.UsuarioModel.UsuarioModel>(usuario);
-                if (await _usuarioRepository.BuscarUsuarioPorDocumento(usuarioCadastro.documento) == null)
+                if (await _usuarioRepository.BuscarUsuarioPorDocumento(usuarioCadastro.Documento) == null)
                 {
                     if (_usuarioRepository.CadastrarUsuario(usuarioCadastro).Result.StatusCode == 201)
-                        _whatsappService.EnviarMensagemUsuario(usuarioCadastro.documento, false);
+                        _whatsappService.EnviarMensagemUsuario(usuarioCadastro.Documento, false);
                 }
-                return new ObjectResult(usuarioCadastro)
+                else
+                {
+                    return new ObjectResult(new { message = $"Usuário {usuario.Nome} já cadastrado!" })
+                    {
+                        StatusCode = StatusCodes.Status400BadRequest
+                    };
+                }
+                return new ObjectResult(new { message = $"Usuário cadastrado com sucesso!" })
                 {
                     StatusCode = StatusCodes.Status201Created
                 };
             }
             catch (Exception ex)
             {
-                return new ObjectResult(new { message = $"Falha ao cadastrar o usuário: {usuario.nome}!" })
+                return new ObjectResult(new { message = $"Falha ao cadastrar o usuário: {usuario.Nome}!" })
                 {
                     StatusCode = StatusCodes.Status500InternalServerError
                 };
@@ -167,7 +174,7 @@ namespace Yuppie.WebApi.CeasaDigital.Domain.Services
         {
             try
             {
-                var usuarioDB = await _usuarioRepository.BuscarUsuarioPorId(usuario.id);
+                var usuarioDB = await _usuarioRepository.BuscarUsuarioPorId(usuario.Id);
                 usuarioDB = AtribuirCamposParaAtualizar(usuarioDB, usuario);
                 if (usuarioDB != null)                                  
                     return await _usuarioRepository.AtualizarUsuario(usuarioDB);                
@@ -182,7 +189,7 @@ namespace Yuppie.WebApi.CeasaDigital.Domain.Services
             }
             catch (Exception ex)
             {
-                return new ObjectResult(new { message = $"Falha ao atualizar os dados do usuário: {usuario.nome}!" })
+                return new ObjectResult(new { message = $"Falha ao atualizar os dados do usuário: {usuario.Nome}!" })
                 {
                     StatusCode = StatusCodes.Status500InternalServerError
                 };
@@ -195,22 +202,22 @@ namespace Yuppie.WebApi.CeasaDigital.Domain.Services
             {
                 if (usuarioDb != null && usuarioAtualiza != null)
                 {
-                    if (!string.IsNullOrWhiteSpace(usuarioAtualiza.documento))
-                        usuarioDb.documento = usuarioAtualiza.documento;
-                    if (!string.IsNullOrWhiteSpace(usuarioAtualiza.cep))
-                        usuarioDb.cep = usuarioAtualiza.cep;
-                    if (!string.IsNullOrWhiteSpace(usuarioAtualiza.nome))
-                        usuarioDb.nome = usuarioAtualiza.nome;
-                    if (!string.IsNullOrWhiteSpace(usuarioAtualiza.telefone))
-                        usuarioDb.telefone = usuarioAtualiza.telefone;
-                    if (!string.IsNullOrWhiteSpace(usuarioAtualiza.sobrenome))
-                        usuarioDb.sobrenome = usuarioAtualiza.sobrenome;
-                    if (!string.IsNullOrWhiteSpace(usuarioAtualiza.senha))
-                        usuarioDb.senha = usuarioAtualiza.senha;
-                    if (!string.IsNullOrWhiteSpace(usuarioAtualiza.latitude))
-                        usuarioDb.latitude = usuarioAtualiza.latitude;
-                    if (!string.IsNullOrWhiteSpace(usuarioAtualiza.longitude))
-                        usuarioDb.longitude = usuarioAtualiza.longitude;
+                    if (!string.IsNullOrWhiteSpace(usuarioAtualiza.Documento))
+                        usuarioDb.Documento = usuarioAtualiza.Documento;
+                    if (!string.IsNullOrWhiteSpace(usuarioAtualiza.Cep))
+                        usuarioDb.Cep = usuarioAtualiza.Cep;
+                    if (!string.IsNullOrWhiteSpace(usuarioAtualiza.Nome))
+                        usuarioDb.Nome = usuarioAtualiza.Nome;
+                    if (!string.IsNullOrWhiteSpace(usuarioAtualiza.Telefone))
+                        usuarioDb.Telefone = usuarioAtualiza.Telefone;
+                    if (!string.IsNullOrWhiteSpace(usuarioAtualiza.Sobrenome))
+                        usuarioDb.Sobrenome = usuarioAtualiza.Sobrenome;
+                    if (!string.IsNullOrWhiteSpace(usuarioAtualiza.Senha))
+                        usuarioDb.Senha = usuarioAtualiza.Senha;
+                    if (!string.IsNullOrWhiteSpace(usuarioAtualiza.Latitude))
+                        usuarioDb.Latitude = usuarioAtualiza.Latitude;
+                    if (!string.IsNullOrWhiteSpace(usuarioAtualiza.Longitude))
+                        usuarioDb.Longitude = usuarioAtualiza.Longitude;
                 }
                 return usuarioDb;
             }

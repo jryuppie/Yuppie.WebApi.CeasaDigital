@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Cors;
+using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 using Yuppie.WebApi.CeasaDigital.Domain.Interfaces;
 using Yuppie.WebApi.CeasaDigital.Domain.Models.Chat;
@@ -8,6 +9,7 @@ namespace Yuppie.WebApi.CeasaDigital.Controllers
 {
     [Route("api/chat")]
     [ApiController]
+    [EnableCors]
     public class ChatFireBaseController : Controller
     {
         private IChatFirebaseService _pgChatFirebaseService;
@@ -37,9 +39,9 @@ namespace Yuppie.WebApi.CeasaDigital.Controllers
             _pgChatFirebaseService.BuscarContratosPorId(id);
             return true;
         }
+
         [Route("initLogin")]
         [HttpPost]
-
         public async Task<ObjectResult> Login()
         {
             return await _pgChatFirebaseService.IniciaValidacaoLogin(8);

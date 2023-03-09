@@ -21,4 +21,14 @@
         public string Documento { get; set; }
         public bool Status { get; set; }
     }
+
+    public class CadastrarUsuarioFormulario
+    {
+        public string documento { get; set; }
+        public string nome { get; set; }
+        public string senha { get; set; }
+        public string telefone { get; set; }
+        public string tipo_pessoa { get; set; }
+        public string termos { get; set; }
+    }
 }

@@ -19,6 +19,9 @@ using Google.Cloud.Firestore;
 using Google.Cloud.Firestore.V1;
 using FirebaseAdmin;
 using Yuppie.WebApi.CeasaDigital.Domain.Models.UsuarioModel;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
 
 namespace Yuppie.WebApi.CeasaDigital
 {
@@ -36,7 +39,7 @@ namespace Yuppie.WebApi.CeasaDigital
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
-        {      
+        {
             #region Services           
             services.AddTransient<IUsuarioService, UsuarioService>();
             services.AddTransient<IProdutoService, ProdutoService>();
@@ -51,7 +54,7 @@ namespace Yuppie.WebApi.CeasaDigital
 
             #region Repositories
             services.AddTransient<IOfertaRepository, OfertaRepository>();
-            services.AddTransient<IUsuarioRepository,UsuarioRepository>();
+            services.AddTransient<IUsuarioRepository, UsuarioRepository>();
             services.AddTransient<IProdutoRepository, ProdutoRepository>();
             services.AddTransient<IVendaRepository, VendaRepository>();
             services.AddTransient<IProcessoNegociacaoRepository, ProcessoNegociacaoRepository>();
@@ -63,6 +66,27 @@ namespace Yuppie.WebApi.CeasaDigital
            (options =>
            options.UseNpgsql(Configuration.GetConnectionString("DefaultConnection")));
             services.AddControllers();
+            //services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+            //.AddJwtBearer(options =>
+            //{
+            //    options.TokenValidationParameters = new TokenValidationParameters
+            //    {
+            //        ValidateIssuer = true,
+            //        ValidateAudience = true,
+            //        ValidateLifetime = true,
+            //        ValidateIssuerSigningKey = true,
+            //        ValidIssuer = "",
+            //        ValidAudience = "99527b18-29c2-4598-94a6-d460e606abf0",
+            //        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("8d1e2298-4da8-41d7-92ba-8b99a3152e19"))
+            //    };
+            //});
+
+            //services.AddAuthentication("Bearer")
+            //    .AddJwtBearer("Bearer", options =>
+            //    {
+            //        options.Authority = "https://seu-servidor-identity-server.com";
+            //        options.Audience = "99527b18-29c2-4598-94a6-d460e606abf0";
+            //    });
             #endregion
 
             #region Mapper
@@ -74,7 +98,7 @@ namespace Yuppie.WebApi.CeasaDigital
                 mc.CreateMap<Yuppie.WebApi.Infra.Models.Produto.UnidadeMedidaModel, UnidadeMedidaModel>();
                 mc.CreateMap<Yuppie.WebApi.Infra.Models.Negociacao.VendaModel, VendaModel>();
                 mc.CreateMap<Yuppie.WebApi.Infra.Models.UsuarioModel.UsuarioModel, UsuarioModel>();
-                mc.CreateMap<UsuarioModel,Yuppie.WebApi.Infra.Models.UsuarioModel.UsuarioModel>();
+                mc.CreateMap<UsuarioModel, Yuppie.WebApi.Infra.Models.UsuarioModel.UsuarioModel>();
             });
 
             IMapper mapper = mappingConfig.CreateMapper();
@@ -94,7 +118,7 @@ namespace Yuppie.WebApi.CeasaDigital
             });
             #endregion
 
-          
+
 
             #region FireBase
             var credentialsPath = Path.Combine(_env.ContentRootPath, "ceasawebchat-adminsdk.json");
@@ -114,17 +138,18 @@ namespace Yuppie.WebApi.CeasaDigital
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
+
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
             }
 
-            app.UseHttpsRedirection();
+            //app.UseHttpsRedirection();
+            
 
             app.UseRouting();
-
+            app.UseCors(options => options.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod());
             app.UseAuthorization();
-
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
@@ -138,13 +163,15 @@ namespace Yuppie.WebApi.CeasaDigital
             });
 
             app.UseAuthentication();
+
+
         }
 
 
         string GetConnectionString()
         {
             return Configuration.GetConnectionString("DefaultConnection");
-        
+
             //string connectionUrl = Configuration.GetConnectionString("DefaultConnection");
             //var databaseUri = new Uri(connectionUrl);
 

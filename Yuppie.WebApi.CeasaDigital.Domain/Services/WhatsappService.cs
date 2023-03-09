@@ -41,9 +41,9 @@ namespace Yuppie.WebApi.CeasaDigital.Domain.Services
                 var comprador = await _usuarioRepository.BuscarUsuarioPorId(model.IdComprador);
                 if (produto != null && vendedor != null && comprador != null)
                 {
-                    var mensagem = await CriarConteudoMensagemOferta(vendedor.nome, comprador.nome, produto.nome);
+                    var mensagem = await CriarConteudoMensagemOferta(vendedor.Nome, comprador.Nome, produto.nome);
                     if (mensagem != "")
-                        return await ExecutarPostAsync(model.Prefixo, vendedor.telefone, mensagem);
+                        return await ExecutarPostAsync(model.Prefixo, vendedor.Telefone, mensagem);
                 }
                 return new ObjectResult(new { message = "Erro ao enviar a mensagem!" })
                 {
@@ -67,15 +67,15 @@ namespace Yuppie.WebApi.CeasaDigital.Domain.Services
                 var comprador = await _usuarioRepository.BuscarUsuarioPorId(model.IdComprador);
                 if (produto != null && vendedor != null && comprador != null)
                 {
-                    string contato1 = vendedor.nome;
-                    string contato2 = comprador.nome;
-                    string telefone = vendedor.telefone;
+                    string contato1 = vendedor.Nome;
+                    string contato2 = comprador.Nome;
+                    string telefone = vendedor.Telefone;
                     var mensagem = "";
                     if (model.EnvioComprador)
                     {
-                        contato1 = comprador.nome;
-                        contato2 = vendedor.nome;
-                        telefone = comprador.telefone;
+                        contato1 = comprador.Nome;
+                        contato2 = vendedor.Nome;
+                        telefone = comprador.Telefone;
                     }
 
                     bool tipoEnvio = model.EnvioComprador ? true : false;
@@ -111,9 +111,9 @@ namespace Yuppie.WebApi.CeasaDigital.Domain.Services
                     {
                         if (EdicaoVenda)
                         {
-                            var mensagem = await CriarConteudoMensagemEditarVenda(vendedor.nome, comprador.nome, produto.nome, EdicaoVenda);
+                            var mensagem = await CriarConteudoMensagemEditarVenda(vendedor.Nome, comprador.Nome, produto.nome, EdicaoVenda);
                             if (mensagem != "")
-                                return await ExecutarPostAsync(model.Prefixo, vendedor.telefone, mensagem);
+                                return await ExecutarPostAsync(model.Prefixo, vendedor.Telefone, mensagem);
                         }
                     }
                 }
@@ -140,14 +140,14 @@ namespace Yuppie.WebApi.CeasaDigital.Domain.Services
                 {
                     if (RecuperarSenha)
                     {
-                        if (telefone == usuario.telefone)                        
-                            mensagem = await CriarConteudoMensagemRecupearUsuario(usuario.nome, usuario.senha);                        
+                        if (telefone == usuario.Telefone)                        
+                            mensagem = await CriarConteudoMensagemRecupearUsuario(usuario.Nome, usuario.Senha);                        
                     }
                     else
-                        mensagem = await CriarConteudoMensagemCriarUsuario(usuario.nome);
+                        mensagem = await CriarConteudoMensagemCriarUsuario(usuario.Nome);
 
                     if (mensagem != "")
-                        return await ExecutarPostAsync("55", usuario.telefone, mensagem);
+                        return await ExecutarPostAsync("55", usuario.Telefone, mensagem);
                 }
                 return new ObjectResult(new { message = "Erro ao enviar a mensagem!" })
                 {

@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Cors;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -10,6 +12,7 @@ namespace Yuppie.WebApi.CeasaDigital.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [EnableCors]
     public class OfertaController : ControllerBase
     {
         private IOfertaService _OfertaService;
@@ -17,50 +20,52 @@ namespace Yuppie.WebApi.CeasaDigital.Controllers
         {
             _OfertaService = OfertaService;
         }
-        [Route("buscarOfertas")]
+        //[Authorize]
         [HttpGet]
         public async Task<ObjectResult> BuscarOfertas()
         {
             return await _OfertaService.BuscarTodasOfertas();
         }
+        //[Authorize]
+        //TODO - TRANSFORMAR EM UMA CONTROLLER DE VENCIMENTO.
         [Route("vendedor/vencendo/{idVendedor}/{dias}")]
         [HttpGet]
         public async Task<ObjectResult> BuscarOfertasComVencimentoEm(int dias, int idVendedor)
         {
             return await _OfertaService.BuscarOfertasComVencimentoEm(dias, idVendedor);
         }
-
-        [Route("vendedor/{idVendedor}")]
+        //[Authorize]
+        [Route("vendedor/{id}")]
         [HttpGet]
-        public async Task<ObjectResult> BuscarOfertaPorVendedor(int idVendedor)
+        public async Task<ObjectResult> BuscarOfertaPorVendedor(int id)
         {
-            return await _OfertaService.BuscarOfertasPorVendedor(idVendedor);
-        }     
-
-        [Route("encerraOferta")]
-        [HttpPatch]
-        public async Task<ActionResult<OfertaModel>> FinalizarOfertas([FromBody]  EncerrarOfertaFormulario oModel)
-        {
-            return await _OfertaService.FinalizarOferta(oModel.Id);
+            return await _OfertaService.BuscarOfertasPorVendedor(id);
         }
-        [Route("ativaroferta")]
+
+        //[Authorize]
+        [Route("ativar")]
         [HttpPatch]
-        public async Task<ActionResult<OfertaModel>> AtivarOferta([FromBody]  AtivarOfertaFormulario oModel)
+        public async Task<ActionResult<OfertaModel>> AtivarOferta([FromBody] AtivarOfertaFormulario oModel)
         {
             return await _OfertaService.AtivarOferta(oModel.Id);
         }
-        [Route("cadastrarOferta")]
+        //[Authorize]
         [HttpPost]
         public async Task<ObjectResult> CadastrarOfertas([FromBody] CadastroOfertaFormulario oModel)
         {
             return await _OfertaService.CadastrarOferta(oModel.IdProduto, oModel.IdUnMedida, oModel.IdVendedor, oModel.QtdDisponivel, oModel.PesoUnMedida, oModel.VlUnMedida);
         }
-
-        [Route("atualizaferta")]
+        //[Authorize]
         [HttpPut]
-        public async Task<ActionResult<OfertaModel>> AtualizarOferta([FromForm] AtualizarOfertaFormulario oModel)
+        public async Task<ActionResult<OfertaModel>> AtualizarOferta([FromBody] AtualizarOfertaFormulario oModel)
         {
             return await _OfertaService.AtualizarOferta(oModel);
+        }
+        //[Authorize]
+        [HttpDelete]
+        public async Task<ActionResult<OfertaModel>> FinalizarOfertas([FromBody] EncerrarOfertaFormulario oModel)
+        {
+            return await _OfertaService.FinalizarOferta(oModel.Id);
         }
     }
 }

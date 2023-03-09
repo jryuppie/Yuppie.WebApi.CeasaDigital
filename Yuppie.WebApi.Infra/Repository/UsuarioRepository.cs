@@ -34,7 +34,7 @@ namespace Yuppie.WebApi.Infra.Repository
         {
             try
             {
-                return _dbContext.Usuarios.Where(x => x.id == id).FirstOrDefault();
+                return _dbContext.Usuarios.Where(x => x.Id == id).FirstOrDefault();
             }
             catch (Exception ex)
             {
@@ -46,7 +46,7 @@ namespace Yuppie.WebApi.Infra.Repository
         {
             try
             {
-                return _dbContext.Usuarios.Where(x => x.documento == documento).FirstOrDefault();
+                return _dbContext.Usuarios.Where(x => x.Documento == documento).FirstOrDefault();
             }
             catch (Exception ex)
             {
@@ -58,7 +58,7 @@ namespace Yuppie.WebApi.Infra.Repository
         {
             try
             {
-                return _dbContext.Usuarios.Where(x => x.documento == documento && x.senha == senha).FirstOrDefault();
+                return _dbContext.Usuarios.Where(x => x.Documento == documento && x.Senha == senha).FirstOrDefault();
             }
             catch (Exception ex)
             {
@@ -83,7 +83,7 @@ namespace Yuppie.WebApi.Infra.Repository
         {
             try
             {
-                usuario.create_date = DateTime.Now;
+                usuario.DataCriacao = DateTime.Now;
                 _dbContext.Usuarios.Add(usuario);
                 _dbContext.SaveChanges();
                 return new ObjectResult(usuario)
@@ -104,17 +104,17 @@ namespace Yuppie.WebApi.Infra.Repository
         {
             try
             {
-                usuario.update_date= DateTime.Now;
+                usuario.DataAtualizacao= DateTime.Now;
                 _dbContext.Usuarios.Add(usuario);
                 _dbContext.SaveChanges();
-                return new ObjectResult(usuario)
+                return new ObjectResult(new { message = $"Usuário {usuario.Nome} foi atualizado com sucesso!" })
                 {
                     StatusCode = StatusCodes.Status200OK
                 };
             }
             catch (Exception ex)
             {
-                return new ObjectResult(new { message = ex.Message })
+                return new ObjectResult(new { message = $"Falha ao atualizar o usuário: {usuario.Nome}!" })
                 {
                     StatusCode = 400
                 };
@@ -125,22 +125,22 @@ namespace Yuppie.WebApi.Infra.Repository
         {
             try
             {
-                var usuario = _dbContext.Usuarios.Where(x => x.documento == documento).FirstOrDefault();
+                var usuario = _dbContext.Usuarios.Where(x => x.Documento == documento).FirstOrDefault();
                 if (usuario != null)
                 {
-                    usuario.status = status;
-                    usuario.update_date= DateTime.Now;  
+                    usuario.Status = status;
+                    usuario.DataAtualizacao= DateTime.Now;  
                 }
                 _dbContext.Usuarios.Update(usuario);
                 _dbContext.SaveChanges();
-                return new ObjectResult(usuario)
+                return new ObjectResult(new { message = $"O status do usuário {usuario.Nome} foi atualizado com sucesso!" })
                 {
                     StatusCode = StatusCodes.Status200OK
                 };
             }
             catch (Exception ex)
             {
-                return new ObjectResult(new { message = ex.Message })
+                return new ObjectResult(new { message = $"Falha ao atualizar o status!" })
                 {
                     StatusCode = 400
                 };
@@ -153,14 +153,14 @@ namespace Yuppie.WebApi.Infra.Repository
                 var usuario = _dbContext.Usuarios.Find(idUsuario);
                 _dbContext.Usuarios.Remove(usuario);
                 _dbContext.SaveChanges();
-                return new ObjectResult(usuario)
+                return new ObjectResult(new { message = $"Usuário {usuario.Nome} foi excluído com sucesso!" })
                 {
                     StatusCode = StatusCodes.Status200OK
                 };
             }
             catch (Exception ex)
             {
-                return new ObjectResult(new { message = ex.Message })
+                return new ObjectResult(new { message = $"Falha ao excluir o usuário!" })
                 {
                     StatusCode = 400
                 };

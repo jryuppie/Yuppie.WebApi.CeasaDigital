@@ -30,65 +30,65 @@ namespace Yuppie.WebApi.Infra.Context
             {
                 entity.ToTable("usuario");
 
-                entity.Property(e => e.id)
+                entity.Property(e => e.Id)
                     .HasColumnName("id")
                     .HasDefaultValueSql("nextval('usuario_id_seq'::regclass)");
 
-                entity.Property(e => e.cep)
+                entity.Property(e => e.Cep)
                     .HasColumnName("cep")
                     .HasMaxLength(8);
 
-                entity.Property(e => e.create_date)
+                entity.Property(e => e.DataCriacao)
                     .HasColumnName("create_date")
                     .HasColumnType("timestamp without time zone");
 
-                entity.Property(e => e.documento)
+                entity.Property(e => e.Documento)
                     .HasColumnName("documento")
                     .HasMaxLength(16);
 
-                entity.Property(e => e.latitude)
+                entity.Property(e => e.Latitude)
                     .HasColumnName("latitude")
                     .HasMaxLength(50);
 
-                entity.Property(e => e.longitude)
+                entity.Property(e => e.Longitude)
                     .HasColumnName("longitude")
                     .HasMaxLength(50);
 
-                entity.Property(e => e.nome)
+                entity.Property(e => e.Nome)
                     .HasColumnName("nome")
                     .HasMaxLength(255);
 
-                entity.Property(e => e.senha)
+                entity.Property(e => e.Senha)
                     .HasColumnName("senha")
                     .HasMaxLength(255);
 
-                entity.Property(e => e.sobrenome)
+                entity.Property(e => e.Sobrenome)
                     .HasColumnName("sobrenome")
                     .HasMaxLength(100);
 
-                entity.Property(e => e.status)
+                entity.Property(e => e.Status)
                     .HasColumnName("status");
 
-                entity.Property(e => e.telefone)
+                entity.Property(e => e.Telefone)
                     .HasColumnName("telefone")
                     .HasMaxLength(11);
 
-                entity.Property(e => e.tipo_pessoa)
+                entity.Property(e => e.TipoPessoa)
                     .HasColumnName("tipo_pessoa")
                     .HasMaxLength(8);
 
-                entity.Property(e => e.tipo_usuario)
+                entity.Property(e => e.TipoUsuario)
                     .HasColumnName("tipo_usuario")
                     .HasMaxLength(10);
 
-                entity.Property(e => e.update_date)
+                entity.Property(e => e.DataAtualizacao)
                     .HasColumnName("update_date")
                     .HasColumnType("timestamp without time zone");
 
-                entity.HasKey(e => e.id)
+                entity.HasKey(e => e.Id)
                     .HasName("usuario_pkey");
 
-                entity.Property(e => e.id)
+                entity.Property(e => e.Id)
                     .HasColumnName("id")
                     .HasDefaultValueSql("nextval('usuario_id_seq'::regclass)");
 
@@ -216,7 +216,7 @@ namespace Yuppie.WebApi.Infra.Context
 
             modelBuilder.Entity<UnidadeMedidaModel>(entity =>
             {
-                entity.ToTable("public.unidade_medidas");
+                entity.ToTable("unidade_medidas");
 
                 entity.HasKey(e => e.id)
                     .HasName("unidade_medidas_pkey");

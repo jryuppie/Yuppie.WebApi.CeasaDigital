@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Cors;
+using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Yuppie.WebApi.CeasaDigital.Domain.Interfaces;
@@ -11,6 +13,7 @@ namespace Yuppie.WebApi.CeasaDigital.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [EnableCors]
     public class ProdutoController : ControllerBase
     {
         private IProdutoService _pgProdutoService;
@@ -18,39 +21,41 @@ namespace Yuppie.WebApi.CeasaDigital.Controllers
         {
             _pgProdutoService = pgProdutoService;
         }
-        [Route("BuscarProdutos")]
+
+       //[Authorize]
         [HttpGet]
         public async Task<ObjectResult> BuscarProdutos()
         {
             return await _pgProdutoService.BuscarTodosProdutos();
         }
 
-        [Route("BuscarProdutosPorNome")]
+       //[Authorize]
+        [Route("nome/{nome}")]
         [HttpGet]
         public async Task<ObjectResult> BuscarProdutosPorNome(string nomeProduto)
         {
             return await _pgProdutoService.BuscarProdutoPorNome(nomeProduto);
         }
 
-        [Route("CadastrarProduto")]
-        [HttpPost]
-        public async Task<ObjectResult> CadastrarProduto([FromForm] ProdutoFormulario formModel)
-        {
-            return await _pgProdutoService.CadastrarProduto(formModel.Categoria, formModel.Nome);
-        }
-
-        [Route("AtualizarProduto")]
-        [HttpPost]
-        public async Task<ObjectResult> AtualizarProduto([FromForm] ProdutoFormulario formModel)
+       //[Authorize]
+        [HttpPatch]
+        public async Task<ObjectResult> AtualizarProduto([FromBody] ProdutoFormulario formModel)
         {
             return await _pgProdutoService.AtualizarProduto(formModel.Categoria, formModel.Nome);
         }
 
-        [Route("DeletarProduto")]
+       //[Authorize]
         [HttpPost]
-        public async Task<ObjectResult> DeletarProduto([FromForm] ProdutoFormulario formModel)
+        public async Task<ObjectResult> CadastrarProduto([FromBody] ProdutoFormulario formModel)
+        {
+            return await _pgProdutoService.CadastrarProduto(formModel.Categoria, formModel.Nome);
+        }
+
+       //[Authorize]
+        [HttpDelete]
+        public async Task<ObjectResult> DeletarProduto([FromBody] ProdutoFormulario formModel)
         {
             return await _pgProdutoService.DeletarProduto(formModel.Categoria, formModel.Nome);
-        }       
+        }
     }
 }

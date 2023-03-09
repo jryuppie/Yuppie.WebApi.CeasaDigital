@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Cors;
+using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 using Yuppie.WebApi.CeasaDigital.Domain.Interfaces;
 using Yuppie.WebApi.CeasaDigital.Domain.Models.Formulario;
@@ -6,8 +8,9 @@ using Yuppie.WebApi.CeasaDigital.Domain.Models.Produto;
 
 namespace Yuppie.WebApi.CeasaDigital.Controllers
 {
-    [Route("api/medidas")]
+    [Route("api/medida")]
     [ApiController]
+    [EnableCors]
     public class UnMedidaController : Controller
     {
 
@@ -17,22 +20,22 @@ namespace Yuppie.WebApi.CeasaDigital.Controllers
             _pgUnMedidaService = pgUnMedidaService;
         }
 
-        [Route("BuscarTodasUnMedidas")]
+        //[Authorize]
         [HttpGet]
         public async Task<ObjectResult> BuscarTodasUnMedidas()
         {
             return await _pgUnMedidaService.BuscarTodasUnMedidas();
         }
 
-        [Route("CadastrarUnMedida")]
+        //[Authorize]
         [HttpPost]
-        public async Task<ObjectResult> CadastrarUnMedida([FromForm] UnMedidaFormulario formModel)
+        public async Task<ObjectResult> CadastrarUnMedida([FromBody] UnMedidaFormulario formModel)
         {
-           return await _pgUnMedidaService.CadastrarUnMedida(formModel.Nome);
+            return await _pgUnMedidaService.CadastrarUnMedida(formModel.Nome);
         }
 
-        [Route("DeletarUnMedida/{id}")]
-        [HttpPost]
+        //[Authorize]
+        [HttpDelete]
         public async Task<ObjectResult> DeletarUnMedida(int id)
         {
             return await _pgUnMedidaService.DeletarUnMedida(id);
