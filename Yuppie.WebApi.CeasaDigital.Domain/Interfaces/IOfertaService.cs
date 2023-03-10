@@ -11,6 +11,7 @@ namespace Yuppie.WebApi.CeasaDigital.Domain.Interfaces
     public interface IOfertaService
     {
         public Task<ObjectResult> BuscarTodasOfertas();
+        public Task<ObjectResult> BuscarTodasOfertasAtivas();
         public Task<ObjectResult> BuscarOfertasPorVendedor(int idVendedor);
         public Task<ObjectResult> BuscarOfertasComVencimentoEm(int dias, int idVendedor);
         public Task<ObjectResult> CadastrarOferta(int idProduto, int idUnMedida, int idVendedor, int qtdDisponivel,

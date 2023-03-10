@@ -27,6 +27,13 @@ namespace Yuppie.WebApi.CeasaDigital.Controllers
             return await _OfertaService.BuscarTodasOfertas();
         }
         //[Authorize]
+        [HttpGet]
+        [Route("ativas")]
+        public async Task<ObjectResult> BuscarOfertasAtivas()
+        {
+            return await _OfertaService.BuscarTodasOfertasAtivas();
+        }
+        //[Authorize]
         //TODO - TRANSFORMAR EM UMA CONTROLLER DE VENCIMENTO.
         [Route("vendedor/vencendo/{idVendedor}/{dias}")]
         [HttpGet]

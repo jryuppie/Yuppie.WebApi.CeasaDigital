@@ -21,7 +21,7 @@ namespace Yuppie.WebApi.CeasaDigital.Domain.Services
         private readonly IProdutoRepository _produtoRepository;
         private readonly IUsuarioRepository _usuarioRepository;
         private readonly IOfertaRepository _ofertaRepository;
-        private static string appLink = "https://www.yuppie.in/";
+        private static string appLink = "http://app.ceasadigital.com.br:3001";
         private static string telefonePrefixo = "55";
         private static string urlEnvioMensagem = "http://192.168.2.222:3000/whatsapp/send-text";
         public WhatsappService(IMapper mapper, IProdutoRepository produtoRepository, IUsuarioRepository usuarioRepository, IOfertaRepository ofertaRepository)
@@ -62,7 +62,14 @@ namespace Yuppie.WebApi.CeasaDigital.Domain.Services
         {
             try
             {
-                var produto = await _produtoRepository.BuscarProdutoPorId(model.IdProduto);
+                var IdProduto = model.IdProduto != null ? model.IdProduto : 0;
+
+                if (IdProduto == 0 && model.IdOferta != 0)
+                {
+                    var oferta = await _ofertaRepository.BuscarOfertaPorId(model.IdOferta);
+                    IdProduto = oferta.IdProduto;
+                }
+                var produto = await _produtoRepository.BuscarProdutoPorId(IdProduto);
                 var vendedor = await _usuarioRepository.BuscarUsuarioPorId(model.IdVendedor);
                 var comprador = await _usuarioRepository.BuscarUsuarioPorId(model.IdComprador);
                 if (produto != null && vendedor != null && comprador != null)
@@ -70,6 +77,7 @@ namespace Yuppie.WebApi.CeasaDigital.Domain.Services
                     string contato1 = vendedor.Nome;
                     string contato2 = comprador.Nome;
                     string telefone = vendedor.Telefone;
+                    string produtoNome = produto.Nome;
                     var mensagem = "";
                     if (model.EnvioComprador)
                     {
@@ -79,7 +87,8 @@ namespace Yuppie.WebApi.CeasaDigital.Domain.Services
                     }
 
                     bool tipoEnvio = model.EnvioComprador ? true : false;
-                    mensagem = await CriarConteudoMensagemNegociacao(contato1, contato2, telefone, tipoEnvio);
+                    if (model.ConclusaoVenda) { tipoEnvio = model.ConclusaoVenda; }
+                    mensagem = await CriarConteudoMensagemNegociacao(contato1, contato2, produtoNome, tipoEnvio);
                     if (mensagem != "")
                         return await ExecutarPostAsync(model.Prefixo, telefone, mensagem);
 
@@ -140,8 +149,8 @@ namespace Yuppie.WebApi.CeasaDigital.Domain.Services
                 {
                     if (RecuperarSenha)
                     {
-                        if (telefone == usuario.Telefone)                        
-                            mensagem = await CriarConteudoMensagemRecupearUsuario(usuario.Nome, usuario.Senha);                        
+                        if (telefone == usuario.Telefone)
+                            mensagem = await CriarConteudoMensagemRecupearUsuario(usuario.Nome, usuario.Senha);
                     }
                     else
                         mensagem = await CriarConteudoMensagemCriarUsuario(usuario.Nome);
@@ -214,10 +223,11 @@ namespace Yuppie.WebApi.CeasaDigital.Domain.Services
             try
             {
                 string tipo = venda ? "venda" : "compra";
+                string status = venda ? "concluído" : "cancelado";
                 var messageBuilder = new StringBuilder();
                 messageBuilder.Append($"Olá, {Contato1}.\r\n");
                 messageBuilder.Append($"seu processo negocial com {Contato2}\r\n\r\n");
-                messageBuilder.Append($"relacionado a {tipo} de: *{Produto}*.\r\n\r\n");
+                messageBuilder.Append($"relacionado a {tipo} de: *{Produto}* foi *{status}* com sucesso!.\r\n\r\n");
                 messageBuilder.Append($"Link do Aplicativo: {appLink} \U0001F4F1 \r\n\r\n");
                 messageBuilder.Append("Atenciosamente,\r\nEquipe Ceasa Digital \U0001F600");
 
@@ -252,7 +262,7 @@ namespace Yuppie.WebApi.CeasaDigital.Domain.Services
             {
                 var messageBuilder = new StringBuilder();
                 messageBuilder.Append($"Olá, {Contato1}.\r\n");
-                messageBuilder.Append($"Segue sua senha de acesso: *{senha}*\r\n\r\n");                
+                messageBuilder.Append($"Segue sua senha de acesso: *{senha}*\r\n\r\n");
                 messageBuilder.Append($"📱 Link do Aplicativo: {appLink}\r\n\r\n");
                 messageBuilder.Append("Atenciosamente,\r\nEquipe Ceasa Digital \U0001F600");
 

@@ -32,7 +32,27 @@ namespace Yuppie.WebApi.CeasaDigital.Domain.Services
         {
             try
             {
-                var oferta =  _mapper.Map<List<OfertaModel>>(await _OfertaRepository.BuscarTodasOfertas());
+                var oferta = _mapper.Map<List<OfertaModel>>(await _OfertaRepository.BuscarTodasOfertas());
+                return new ObjectResult(oferta)
+                {
+                    StatusCode = StatusCodes.Status200OK
+                };
+            }
+            catch (System.Exception ex)
+            {
+                return new ObjectResult(new { message = "Falha ao buscar as ofertas!" })
+                {
+                    StatusCode = StatusCodes.Status500InternalServerError
+                };
+            }
+        }
+
+
+        public async Task<ObjectResult> BuscarTodasOfertasAtivas()
+        {
+            try
+            {
+                var oferta = _mapper.Map<List<OfertaModel>>(await _OfertaRepository.BuscarTodasOfertasAtivas());
                 return new ObjectResult(oferta)
                 {
                     StatusCode = StatusCodes.Status200OK
@@ -55,7 +75,7 @@ namespace Yuppie.WebApi.CeasaDigital.Domain.Services
                 return new ObjectResult(oferta)
                 {
                     StatusCode = StatusCodes.Status200OK
-                };              
+                };
             }
             catch (System.Exception ex)
             {
@@ -96,7 +116,7 @@ namespace Yuppie.WebApi.CeasaDigital.Domain.Services
             Yuppie.WebApi.Infra.Models.Negociacao.OfertaModel ofertaCriacao = new Yuppie.WebApi.Infra.Models.Negociacao.OfertaModel
             {
                 IdProduto = idProduto,
-                IdUnMedida= idUnMedida,
+                IdUnMedida = idUnMedida,
                 IdVendedor = idVendedor,
                 QtdDisponivel = qtdDisponivel,
                 ValorKg = vlKG,
@@ -126,10 +146,6 @@ namespace Yuppie.WebApi.CeasaDigital.Domain.Services
 
         public async Task<ObjectResult> FinalizarOferta(int idOferta)
         {
-            var objResult = new ObjectResult(new { message = "Falha ao finalizar a oferta." })
-            {
-                StatusCode = 400
-            };
             try
             {
                 var oferta = await _OfertaRepository.BuscarOfertaPorId(idOferta);
@@ -138,22 +154,17 @@ namespace Yuppie.WebApi.CeasaDigital.Domain.Services
                     oferta.Status = false;
                     return await _OfertaRepository.AtualizarOfertaAsync(oferta);
                 }
-                else
-                    return objResult;
+                return new ObjectResult(new { message = $"Falha ao finalizar a oferta: {idOferta}" }) { StatusCode = 400 };
             }
             catch (Exception)
             {
-                return objResult;
+                return new ObjectResult(new { message = "Falha ao finalizar a oferta." }) { StatusCode = 500 };
             }
         }
 
 
         public async Task<ObjectResult> AtivarOferta(int idOferta)
         {
-            var objResult = new ObjectResult(new { message = "Falha ao ativar a oferta." })
-            {
-                StatusCode = 400
-            };
             try
             {
                 var oferta = await _OfertaRepository.BuscarOfertaPorId(idOferta);
@@ -162,22 +173,25 @@ namespace Yuppie.WebApi.CeasaDigital.Domain.Services
                     oferta.Status = true;
                     return await _OfertaRepository.AtualizarOfertaAsync(oferta);
                 }
-                else
-                    return objResult;
+
+                return new ObjectResult(new { message = $"Falha ao ativar a oferta: {idOferta}." })
+                {
+                    StatusCode = 400
+                };
+
             }
             catch (Exception)
             {
-                return objResult;
+                return new ObjectResult(new { message = $"Falha ao ativar a oferta." })
+                {
+                    StatusCode = 500
+                };
             }
         }
 
 
         public async Task<ObjectResult> AtualizarOferta(AtualizarOfertaFormulario oferta)
         {
-            var objResult = new ObjectResult(new { message = "Falha ao atualizar a oferta." })
-            {
-                StatusCode = 400
-            };
             try
             {
                 var ofertaAtualiza = await _OfertaRepository.BuscarOfertaPorId(oferta.id);
@@ -189,11 +203,13 @@ namespace Yuppie.WebApi.CeasaDigital.Domain.Services
                     return await _OfertaRepository.AtualizarOfertaAsync(ofertaAtualiza);
                 }
                 else
-                    return objResult;
+                {
+                    return new ObjectResult(new { message = $"Falha ao atualizar a oferta: {oferta.id}." }) { StatusCode = 400 };
+                }
             }
             catch (Exception)
             {
-                return objResult;
+                return new ObjectResult(new { message = $"Falha ao atualizar a oferta." }) { StatusCode = 500 };
             }
         }
     }

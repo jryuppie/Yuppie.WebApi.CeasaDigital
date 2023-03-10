@@ -20,9 +20,11 @@ namespace Yuppie.WebApi.CeasaDigital.Controllers
         //[Authorize]
         [Route("venda/{id}")]
         [HttpGet]
-        public async Task<ObjectResult> BuscarNegociacao(int id)
+        public async Task<ObjectResult> BuscarNegociacaoPorIdVenda(int id)
         {
-            return await _pgNegociacaoService.BuscarNegociacaoPorId(id);
+            return await _pgNegociacaoService.BuscarNegociacaoPorIdVenda(id);
         }
+
+        //TODO - CRIAR O PROCESSO DE CONCLUSÃO/EDIÇÃO/CANCELAMENTO DE NEGOCIACAO
     }
 }

@@ -19,7 +19,7 @@ namespace Yuppie.WebApi.Infra.Repository
         public Task<ObjectResult> AdicionarVenda(VendaModel venda);
         public Task<ObjectResult> AtualizarVenda(VendaModel venda);
         public Task<ObjectResult> ExcluirVenda(int id);
-        public Task<VendaModel> BuscarVendaPorInformacoes(int idComprador, int idVenda, string status);
+        public Task<VendaModel> BuscarVendaPorInformacoes(int IdComprador, int IdOferta, string Status);
     }
 
     public class VendaRepository : IVendaRepository
@@ -136,11 +136,11 @@ namespace Yuppie.WebApi.Infra.Repository
             }
         }
 
-        public async Task<VendaModel> BuscarVendaPorInformacoes(int idComprador, int idVenda, string status)
+        public async Task<VendaModel> BuscarVendaPorInformacoes(int idComprador, int idOferta, string status)
         {
             try
             {
-                return _dbContext.Vendas.FirstOrDefault(x => x.Id == idComprador && x.Id == idVenda && x.VendaStatus == status);
+                return _dbContext.Vendas.FirstOrDefault(x => x.IdComprador == idComprador && x.IdOferta == idOferta && x.VendaStatus == status);
             }
             catch (Exception ex)
             {

@@ -12,12 +12,13 @@ namespace Yuppie.WebApi.Infra.Repository
     public interface IProcessoNegociacaoRepository
     {
         public Task<ProcessoNegociacaoModel> BuscarNegociacaoPorId(int id);
+        public Task<ProcessoNegociacaoModel> BuscarNegociacaoPorIdVenda(int IdVenda);
         public Task<ProcessoNegociacaoModel> BuscarNegociacaoPorInformacoes(int idComprador, int idOferta, string status);
         public Task<List<ProcessoNegociacaoModel>> BuscarTodasNegociacoes();
         public Task<ObjectResult> AtualizarNegociacao(ProcessoNegociacaoModel negociacao);
         public Task<ObjectResult> DeletarNegociacao(int id);
         public Task<ObjectResult> AdicionarNegociacao(ProcessoNegociacaoModel negociacao);
-        public Task<ObjectResult> AdicionarNegociacao(int IdNegociacao, int Quantidade);
+        public Task<ObjectResult> AdicionarNegociacao(int IdNegociacao, int Quantidade, string status);
         public Task<ProcessoNegociacaoModel> BuscarNegociacaoPorVenda(int IdVenda);
 
     }
@@ -32,6 +33,17 @@ namespace Yuppie.WebApi.Infra.Repository
             try
             {
                 return _dbContext.ProcessoNegociacoes.Find(id);
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+        }
+        public async Task<ProcessoNegociacaoModel> BuscarNegociacaoPorIdVenda(int IdVenda)
+        {
+            try
+            {
+                return _dbContext.ProcessoNegociacoes.Where(x => x.IdVenda == IdVenda).FirstOrDefault();
             }
             catch (Exception ex)
             {
@@ -83,7 +95,7 @@ namespace Yuppie.WebApi.Infra.Repository
             }
         }
 
-        public async Task<ObjectResult> AdicionarNegociacao(int IdNegociacao, int Quantidade)
+        public async Task<ObjectResult> AdicionarNegociacao(int IdNegociacao, int Quantidade, string status)
         {
             try
             {
@@ -91,7 +103,8 @@ namespace Yuppie.WebApi.Infra.Repository
                 {
                     IdVenda = IdNegociacao,
                     QtdComprada = Quantidade,
-                    DataCriacao = DateTime.Now
+                    DataCriacao = DateTime.Now,
+                    StatusNegociacao = status
                 };
                 _dbContext.ProcessoNegociacoes.Add(negociacao);
                 _dbContext.SaveChanges();
@@ -113,6 +126,7 @@ namespace Yuppie.WebApi.Infra.Repository
         {
             try
             {
+                negociacao.DataAtualizacao = DateTime.Now;
                 _dbContext.ProcessoNegociacoes.Update(negociacao);
                 _dbContext.SaveChanges();
                 return new ObjectResult(negociacao)

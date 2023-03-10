@@ -108,14 +108,16 @@ namespace Yuppie.WebApi.Infra.Context
                     .HasDefaultValueSql("nextval('produtos_id_seq'::regclass)");
 
                 entity.Property(e => e.DataCriacao)
-                    .HasColumnName("create_date");
+                    .HasColumnName("create_date")
+                  .HasColumnType("timestamp without time zone");
 
                 entity.Property(e => e.Nome)
                     .HasColumnName("nome")
                     .HasMaxLength(100);
 
                 entity.Property(e => e.DataAtualizacao)
-                    .HasColumnName("update_date");
+                    .HasColumnName("update_date")
+                      .HasColumnType("timestamp without time zone");
 
                 entity.Property(e => e.Categoria)
                     .HasColumnName("categoria")
@@ -154,7 +156,8 @@ namespace Yuppie.WebApi.Infra.Context
                     .HasColumnName("avisa_inicio_negociacao");
 
                 entity.Property(e => e.DataCriacao)
-                    .HasColumnName("create_date");
+                    .HasColumnName("create_date")
+                      .HasColumnType("timestamp without time zone");
 
                 entity.Property(e => e.IdVenda)
                     .HasColumnName("id_venda");
@@ -169,7 +172,15 @@ namespace Yuppie.WebApi.Infra.Context
                     .HasColumnName("sub_status_negociacao");
 
                 entity.Property(e => e.DataAtualizacao)
-                    .HasColumnName("update_date");
+                    .HasColumnName("update_date")
+                      .HasColumnType("timestamp without time zone");
+
+                entity.Property(e => e.DataEnvioMensagem)
+                  .HasColumnName("sent_message_date")
+                    .HasColumnType("timestamp without time zone");
+
+                entity.Property(e => e.EnvioMensagemContador)
+                      .HasColumnName("sent_message_counter");
             });
 
             modelBuilder.Entity<OfertaModel>(entity =>
@@ -184,7 +195,8 @@ namespace Yuppie.WebApi.Infra.Context
                     .HasDefaultValueSql("nextval('oferta_id_seq'::regclass)");
 
                 entity.Property(e => e.DataCriacao)
-                    .HasColumnName("create_date");
+                    .HasColumnName("create_date")
+                      .HasColumnType("timestamp without time zone");
 
                 entity.Property(e => e.IdProduto)
                     .HasColumnName("id_produto");
@@ -205,13 +217,21 @@ namespace Yuppie.WebApi.Infra.Context
                     .HasColumnName("status");
 
                 entity.Property(e => e.DataAtualizacao)
-                    .HasColumnName("update_date");
+                    .HasColumnName("update_date")
+                      .HasColumnType("timestamp without time zone");
 
                 entity.Property(e => e.ValorKg)
                     .HasColumnName("vlkg");
 
                 entity.Property(e => e.ValorUnMedida)
                     .HasColumnName("vl_un_medida");
+
+                entity.Property(e => e.DataEnvioMensagem)
+                      .HasColumnName("sent_message_date")
+                        .HasColumnType("timestamp without time zone");
+
+                entity.Property(e => e.EnvioMensagemContador)
+                      .HasColumnName("sent_message_counter");
             });
 
             modelBuilder.Entity<UnidadeMedidaModel>(entity =>
@@ -225,14 +245,16 @@ namespace Yuppie.WebApi.Infra.Context
                     .HasColumnName("id");
 
                 entity.Property(e => e.DataCriacao)
-                    .HasColumnName("create_date");
+                    .HasColumnName("create_date")
+                      .HasColumnType("timestamp without time zone");
 
                 entity.Property(e => e.Nome)
                     .HasColumnName("nome")
                     .HasMaxLength(50);
 
                 entity.Property(e => e.DataAtualizacao)
-                    .HasColumnName("update_date");
+                    .HasColumnName("update_date")
+                      .HasColumnType("timestamp without time zone");
             });
 
             modelBuilder.Entity<VendaModel>(entity =>
@@ -250,7 +272,8 @@ namespace Yuppie.WebApi.Infra.Context
                     .HasColumnName("avaliacao_vendedor");
 
                 entity.Property(e => e.DataCriacao)
-                    .HasColumnName("create_date");
+                    .HasColumnName("create_date")
+                      .HasColumnType("timestamp without time zone");
 
                 entity.Property(e => e.IdComprador)
                     .HasColumnName("id_comprador");
@@ -265,7 +288,8 @@ namespace Yuppie.WebApi.Infra.Context
                     .HasColumnName("qtd_comprada");
 
                 entity.Property(e => e.DataAtualizacao)
-                    .HasColumnName("update_date");
+                    .HasColumnName("update_date")
+                      .HasColumnType("timestamp without time zone");
 
                 entity.Property(e => e.ValorTransacao)
                     .HasColumnName("valor_transacao");

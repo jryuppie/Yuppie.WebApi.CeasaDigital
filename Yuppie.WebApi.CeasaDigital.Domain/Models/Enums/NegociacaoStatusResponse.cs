@@ -25,7 +25,7 @@ namespace Yuppie.WebApi.CeasaDigital.Domain.Models.Enums
 
     public static class NegociacaoStatusResponseExtensions
     {
-        public static string PegarDescricao(this NegociacaoStatusResponse status)
+        public static string BuscarDescricao(this NegociacaoStatusResponse status)
         {
             switch (status)
             {
@@ -62,7 +62,7 @@ namespace Yuppie.WebApi.CeasaDigital.Domain.Models.Enums
             }
         }
 
-        public static int PegarCodigoStatus(this NegociacaoStatusResponse status)
+        public static int BuscarCodigoStatus(this NegociacaoStatusResponse status)
         {
             switch (status)
             {

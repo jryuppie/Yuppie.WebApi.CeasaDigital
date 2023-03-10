@@ -12,6 +12,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using AutoMapper;
 using Yuppie.WebApi.CeasaDigital.Domain.Models;
+using static Google.Rpc.Context.AttributeContext.Types;
 
 namespace Yuppie.WebApi.CeasaDigital.Domain.Services
 {
@@ -29,7 +30,7 @@ namespace Yuppie.WebApi.CeasaDigital.Domain.Services
             _OfertaRepository = ofertaRepository;
             _NegociacaoRepository = negociacaoRepository;
             _mapper = mapper;
-            _WhatsappService = whatsappService;            
+            _WhatsappService = whatsappService;
         }
 
         public async Task<ObjectResult> BuscarTodasVendas()
@@ -116,36 +117,43 @@ namespace Yuppie.WebApi.CeasaDigital.Domain.Services
                 if (venda != null && (venda.IdComprador == IdUsuario || venda.IdVendedor == IdUsuario))
                 {
                     var negociacao = await _NegociacaoRepository.BuscarNegociacaoPorVenda(IdVenda);
-                    if (negociacao.StatusNegociacao != NegociacaoStatus.Processo.PegarDescricao())
+                    if (negociacao == null)
+                        return new ObjectResult(new { message = "Negociação não encontrada!" }) { StatusCode = 404 };
+
+                    if (negociacao.StatusNegociacao != NegociacaoStatus.Processo.BuscarDescricao())
                     {
-                        NegociacaoStatusResponse response = negociacao.StatusNegociacao == NegociacaoStatus.Cancelado.PegarDescricao() ? NegociacaoStatusResponse.Cancelado : NegociacaoStatusResponse.ConcluidoAnteriormente;
-                        return new ObjectResult(new { message = response.PegarDescricao() }) { StatusCode = response.PegarCodigoStatus() };
+                        NegociacaoStatusResponse response = negociacao.StatusNegociacao == NegociacaoStatus.Cancelado.BuscarDescricao() ? NegociacaoStatusResponse.Cancelado : NegociacaoStatusResponse.ConcluidoAnteriormente;
+                        return new ObjectResult(new { message = response.BuscarDescricao() }) { StatusCode = response.BuscarCodigoStatus() };
                     }
 
 
                     if (venda.IdComprador == IdUsuario)
                     {
                         negociacao.AprovacaoComprador = true;
-                        if (negociacao.AprovacaoComprador == false)
+                        if (negociacao.AprovacaoVendedor == false)
                         {
-                            negociacao.SubStatusNegociacao = NegociacaoSubStatusEnum.AguardandoAprovacaoConclusaoVendedor.PegarDescricao();
+                            negociacao.SubStatusNegociacao = NegociacaoSubStatusEnum.AguardandoAprovacaoVendedorCancelamento.BuscarDescricao();
+                            negociacao.AvisaCancelamento = true;
                             await _NegociacaoRepository.AtualizarNegociacao(negociacao);
                             NegociacaoStatusResponse response = NegociacaoStatusResponse.ConcluidoPendenteVendedor;
-                            return new ObjectResult(new { message = response.PegarDescricao() }) { StatusCode = response.PegarCodigoStatus() };
+                            return new ObjectResult(new { message = response.BuscarDescricao() }) { StatusCode = response.BuscarCodigoStatus() };
                         }
 
                         if (negociacao.AprovacaoVendedor == true)
                         {
-                            negociacao.SubStatusNegociacao = NegociacaoSubStatusEnum.Concluido.PegarDescricao();
-                            negociacao.StatusNegociacao = NegociacaoStatus.Concluido.PegarDescricao();
-                            await _NegociacaoRepository.AtualizarNegociacao(negociacao);
-                            venda.VendaStatus = NegociacaoStatus.Concluido.PegarDescricao();
+                            negociacao.SubStatusNegociacao = NegociacaoSubStatusEnum.Cancelado.BuscarDescricao();
+                            negociacao.StatusNegociacao = NegociacaoStatus.Cancelado.BuscarDescricao();
+                            venda.VendaStatus = NegociacaoStatus.Cancelado.BuscarDescricao();
                             await _VendaRepository.AtualizarVenda(venda);
 
 
                             //TODO - COLOCAR A LOGICA DE ENVIO DE MENSAGEM
+
+                            negociacao.AvisaCancelamento = true;
+                            await _NegociacaoRepository.AtualizarNegociacao(negociacao);
+
                             NegociacaoStatusResponse response = NegociacaoStatusResponse.Concluido;
-                            return new ObjectResult(new { message = response.PegarDescricao() }) { StatusCode = response.PegarCodigoStatus() };
+                            return new ObjectResult(new { message = response.BuscarDescricao() }) { StatusCode = response.BuscarCodigoStatus() };
                         }
                     }
                     else
@@ -153,24 +161,24 @@ namespace Yuppie.WebApi.CeasaDigital.Domain.Services
                         negociacao.AprovacaoVendedor = true;
                         if (negociacao.AprovacaoComprador == false)
                         {
-                            negociacao.SubStatusNegociacao = NegociacaoSubStatusEnum.AguardandoAprovacaoCompradorCancelamento.PegarDescricao();
+                            negociacao.SubStatusNegociacao = NegociacaoSubStatusEnum.AguardandoAprovacaoCompradorCancelamento.BuscarDescricao();
                             await _NegociacaoRepository.AtualizarNegociacao(negociacao);
                             NegociacaoStatusResponse response = NegociacaoStatusResponse.DesativadoPendenteComprador;
-                            return new ObjectResult(new { message = response.PegarDescricao() }) { StatusCode = response.PegarCodigoStatus() };
+                            return new ObjectResult(new { message = response.BuscarDescricao() }) { StatusCode = response.BuscarCodigoStatus() };
                         }
 
                         if (negociacao.AprovacaoVendedor == true)
                         {
-                            negociacao.SubStatusNegociacao = NegociacaoSubStatusEnum.Cancelado.PegarDescricao();
-                            negociacao.StatusNegociacao = NegociacaoStatus.Cancelado.PegarDescricao();
-                            venda.VendaStatus = NegociacaoStatus.Cancelado.PegarDescricao();
+                            negociacao.SubStatusNegociacao = NegociacaoSubStatusEnum.Cancelado.BuscarDescricao();
+                            negociacao.StatusNegociacao = NegociacaoStatus.Cancelado.BuscarDescricao();
+                            venda.VendaStatus = NegociacaoStatus.Cancelado.BuscarDescricao();
                             //TODO - COLOCAR A LOGICA DE ENVIO DE MENSAGEM
 
                             await _NegociacaoRepository.AtualizarNegociacao(negociacao);
                             await _VendaRepository.AtualizarVenda(venda);
 
                             NegociacaoStatusResponse response = NegociacaoStatusResponse.Desativado;
-                            return new ObjectResult(new { message = response.PegarDescricao() }) { StatusCode = response.PegarCodigoStatus() };
+                            return new ObjectResult(new { message = response.BuscarDescricao() }) { StatusCode = response.BuscarCodigoStatus() };
                         }
                     }
                 }
@@ -179,17 +187,17 @@ namespace Yuppie.WebApi.CeasaDigital.Domain.Services
                     NegociacaoStatusResponse response = NegociacaoStatusResponse.Inexistente;
                     var negociacao = await _NegociacaoRepository.BuscarNegociacaoPorVenda(IdVenda);
                     if (negociacao != null)
-                        response = negociacao.StatusNegociacao == NegociacaoStatus.Concluido.PegarDescricao() ?
+                        response = negociacao.StatusNegociacao == NegociacaoStatus.Concluido.BuscarDescricao() ?
                             NegociacaoStatusResponse.Concluido : NegociacaoStatusResponse.Cancelado;
 
-                    return new ObjectResult(new { message = response.PegarDescricao() }) { StatusCode = response.PegarCodigoStatus() };
+                    return new ObjectResult(new { message = response.BuscarDescricao() }) { StatusCode = response.BuscarCodigoStatus() };
                 }
                 return null;
             }
             catch (System.Exception ex)
             {
                 NegociacaoStatusResponse response = NegociacaoStatusResponse.ErroProcessamento;
-                return new ObjectResult(new { message = response.PegarDescricao() }) { StatusCode = response.PegarCodigoStatus() };
+                return new ObjectResult(new { message = response.BuscarDescricao() }) { StatusCode = response.BuscarCodigoStatus() };
             }
         }
 
@@ -197,12 +205,12 @@ namespace Yuppie.WebApi.CeasaDigital.Domain.Services
         {
             try
             {
-                var novaVenda = new Infra.Models.Negociacao.VendaModel();
-                var transacao = new TransacaoTools(_OfertaRepository);
+                var mensagemErro = "Falha ao iniciar a negociação!";
+                var novaVenda = new Infra.Models.Negociacao.VendaModel();              
                 var Oferta = await _OfertaRepository.BuscarOfertaPorId(idOferta);
-                if (Oferta != null && Oferta.QtdDisponivel > 0 && Oferta.QtdDisponivel > quantidade && Oferta.IdVendedor != idComprador)
+                if (Oferta != null && Oferta.QtdDisponivel > 0 && Oferta.QtdDisponivel >= quantidade && Oferta.IdVendedor != idComprador)
                 {
-                    var NegociacaoVenda = await _VendaRepository.BuscarVendaPorInformacoes(idComprador, idOferta, NegociacaoStatus.Processo.PegarDescricao());
+                    var NegociacaoVenda = await _VendaRepository.BuscarVendaPorInformacoes(idComprador, idOferta, NegociacaoStatus.Processo.BuscarDescricao());
                     if (NegociacaoVenda == null)
                     {
                         var vlrTransacao = Oferta.ValorUnMedida * quantidade;
@@ -210,36 +218,40 @@ namespace Yuppie.WebApi.CeasaDigital.Domain.Services
                         {
                             novaVenda = new Infra.Models.Negociacao.VendaModel()
                             {
-                                IdComprador= idComprador,
-                                IdOferta= idOferta,
+                                IdComprador = idComprador,
+                                IdOferta = idOferta,
                                 QtdComprada = quantidade,
                                 ValorTransacao = vlrTransacao,
                                 IdVendedor = Oferta.IdVendedor,
                                 DataCriacao = DateTime.Now,
                                 DataAtualizacao = DateTime.Now,
-                                VendaStatus = NegociacaoStatus.Processo.PegarDescricao()
+                                VendaStatus = NegociacaoStatus.Processo.BuscarDescricao()
                             };
 
                             //TODO - IMPLEMENTAR A ESTRUTURA DE CRIAÇÃO DE CONTRATO NO FIREBASE
 
                             //CRIA E ATUALIZA VENDA
-                            await _VendaRepository.AdicionarVenda(novaVenda);
-                            transacao.AtualizarQuantidadeOferta(quantidade, idOferta);
+                            await _VendaRepository.AdicionarVenda(novaVenda);                          
 
                             //CRIA NEGOCIAÇÃO
-                            await IniciarNegociacao(idComprador, Oferta.Id, quantidade);
-                            _WhatsappService.EnviarMensagemOferta(
-                               new MensagemModel()
-                               {
-                                   IdComprador = idComprador,
-                                   IdVendedor = Oferta.IdVendedor,
-                                   IdProduto = Oferta.IdProduto,
-                                   EnvioComprador = false
-                               });
+                            if (await IniciarNegociacao(idComprador, Oferta.Id, quantidade))
+                            {
+                                _WhatsappService.EnviarMensagemOferta(
+                             new MensagemModel()
+                             {
+                                 IdComprador = idComprador,
+                                 IdVendedor = Oferta.IdVendedor,
+                                 IdProduto = Oferta.IdProduto,
+                                 EnvioComprador = false
+                             });
+                                return new ObjectResult(new { message = "Negociação iniciada com sucesso!" }) { StatusCode = StatusCodes.Status201Created };
+                            }
                         }
                     }
+                    else
+                        mensagemErro = "Negociação da oferta já existente!";
                 }
-                return new ObjectResult(novaVenda) { StatusCode = StatusCodes.Status201Created };
+                return new ObjectResult(new { message = mensagemErro }) { StatusCode = StatusCodes.Status500InternalServerError };
             }
             catch (Exception ex)
             {
@@ -291,13 +303,138 @@ namespace Yuppie.WebApi.CeasaDigital.Domain.Services
                 };
             }
         }
+
+        public async Task<ObjectResult> ConcluirVenda(int IdVenda, int IdUsuario)
+        {
+            try
+            {
+                var transacao = new TransacaoTools(_OfertaRepository);
+                var venda = await _VendaRepository.BuscarVendaPorId(IdVenda);
+                if (venda != null && (venda.IdComprador == IdUsuario || venda.IdVendedor == IdUsuario))
+                {
+                    var negociacao = await _NegociacaoRepository.BuscarNegociacaoPorVenda(IdVenda);
+                    if(negociacao == null)                    
+                        return new ObjectResult(new { message = "Negociação não encontrada!" }) { StatusCode = 404 };
+                    
+                    if (negociacao.StatusNegociacao != NegociacaoStatus.Processo.BuscarDescricao())
+                    {
+                        NegociacaoStatusResponse response = negociacao.StatusNegociacao == NegociacaoStatus.Cancelado.BuscarDescricao() ? NegociacaoStatusResponse.Cancelado : NegociacaoStatusResponse.ConcluidoAnteriormente;
+                        return new ObjectResult(new { message = response.BuscarDescricao() }) { StatusCode = response.BuscarCodigoStatus() };
+                    }
+
+                   
+                    if (venda.IdComprador == IdUsuario)
+                    {
+                        negociacao.AprovacaoComprador = true;
+                        if (negociacao.AprovacaoVendedor == false)
+                        {
+                            negociacao.SubStatusNegociacao = NegociacaoSubStatusEnum.AguardandoAprovacaoConclusaoVendedor.BuscarDescricao();
+                            negociacao.AvisaConclusaoVenda = true;
+                            await _NegociacaoRepository.AtualizarNegociacao(negociacao);
+                            NegociacaoStatusResponse response = NegociacaoStatusResponse.ConcluidoPendenteVendedor;
+                            return new ObjectResult(new { message = response.BuscarDescricao() }) { StatusCode = response.BuscarCodigoStatus() };
+                        }
+                        else
+                        {
+                            negociacao.AvisaConclusaoVenda = true;
+                            negociacao.SubStatusNegociacao = NegociacaoSubStatusEnum.Concluido.BuscarDescricao();
+                            negociacao.StatusNegociacao = NegociacaoStatus.Concluido.BuscarDescricao();
+                            venda.VendaStatus = NegociacaoStatus.Concluido.BuscarDescricao();
+                            await _VendaRepository.AtualizarVenda(venda);
+                            await _NegociacaoRepository.AtualizarNegociacao(negociacao);
+
+                            //DEBITAR ESTOQUE
+                            transacao.AtualizarQuantidadeOferta(venda.QtdComprada, venda.IdOferta);
+
+                            _WhatsappService.EnviarMensagemNegociacao(new MensagemModel { 
+                            IdComprador= venda.IdComprador,
+                            IdVendedor= venda.IdVendedor,
+                            IdOferta = venda.IdOferta,   
+                            EnvioComprador = true
+                            });
+
+                            _WhatsappService.EnviarMensagemNegociacao(new MensagemModel
+                            {
+                                IdComprador = venda.IdComprador,
+                                IdVendedor = venda.IdVendedor,
+                                IdOferta = venda.IdOferta,
+                                EnvioComprador = false
+                            });
+
+                            return new ObjectResult(new { message = $"O status da sua negociação foi atualizado!" })
+                            {
+                                StatusCode = StatusCodes.Status200OK
+                            };
+                        }
+                    }
+                    else
+                    {
+                        negociacao.AprovacaoVendedor = true;
+                        if (negociacao.AprovacaoComprador == false)
+                        {
+                            negociacao.SubStatusNegociacao = NegociacaoSubStatusEnum.AgardandoAprovacaoConclusaoComprador.BuscarDescricao();
+                            negociacao.AvisaConclusaoVenda = true;
+                            await _NegociacaoRepository.AtualizarNegociacao(negociacao);
+                            NegociacaoStatusResponse response = NegociacaoStatusResponse.ConcluidoPendenteComprador;
+                            return new ObjectResult(new { message = response.BuscarDescricao() }) { StatusCode = response.BuscarCodigoStatus() };
+                        }
+                        else
+                        {
+                            negociacao.AvisaConclusaoVenda = true;
+                            negociacao.SubStatusNegociacao = NegociacaoSubStatusEnum.Concluido.BuscarDescricao();
+                            negociacao.StatusNegociacao = NegociacaoStatus.Concluido.BuscarDescricao();
+                            venda.VendaStatus = NegociacaoStatus.Concluido.BuscarDescricao();
+                            await _VendaRepository.AtualizarVenda(venda);
+                            await _NegociacaoRepository.AtualizarNegociacao(negociacao);
+
+                            transacao.AtualizarQuantidadeOferta(venda.QtdComprada, venda.IdOferta);
+
+                            _WhatsappService.EnviarMensagemNegociacao(new MensagemModel
+                            {
+                                IdComprador = venda.IdComprador,
+                                IdVendedor = venda.IdVendedor,
+                                IdOferta = venda.IdOferta,
+                                EnvioComprador = true,
+                                ConclusaoVenda = true
+                            });
+
+                            _WhatsappService.EnviarMensagemNegociacao(new MensagemModel
+                            {
+                                IdComprador = venda.IdComprador,
+                                IdVendedor = venda.IdVendedor,
+                                IdOferta = venda.IdOferta,
+                                EnvioComprador = false,
+                                ConclusaoVenda = true
+                            });
+                            return new ObjectResult(new { message = $"O status da sua negociação foi atualizado!" })
+                            {
+                                StatusCode = StatusCodes.Status200OK
+                            };
+                        }
+                    }
+                }
+                return new ObjectResult(new { message = $"Falha ao realizar o processo de conclusão de venda!" })
+                {
+                    StatusCode = StatusCodes.Status400BadRequest
+                };
+
+            }
+            catch (Exception ex)
+            {
+                return new ObjectResult(new { message = $"Falha ao realizar o processo de conclusão de venda!" })
+                {
+                    StatusCode = StatusCodes.Status500InternalServerError
+                };
+            }
+        }
+
         private async Task<bool> IniciarNegociacao(int IdComprador, int IdOferta, int Quantidade)
         {
             try
             {
-                var negociacao = await _VendaRepository.BuscarVendaPorInformacoes(IdComprador, IdOferta, NegociacaoStatus.Processo.PegarDescricao());
+                var negociacao = await _VendaRepository.BuscarVendaPorInformacoes(IdComprador, IdOferta, NegociacaoStatus.Processo.BuscarDescricao());
                 if (negociacao != null)
-                    await _NegociacaoRepository.AdicionarNegociacao(negociacao.Id, Quantidade);
+                    await _NegociacaoRepository.AdicionarNegociacao(negociacao.Id, Quantidade, NegociacaoStatus.Processo.BuscarDescricao());
                 return true;
             }
             catch (Exception)

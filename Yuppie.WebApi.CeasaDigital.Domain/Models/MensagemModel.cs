@@ -16,7 +16,8 @@ namespace Yuppie.WebApi.CeasaDigital.Domain.Models
         public int IdVendedor { get; set; }
         public int IdOferta { get; set; }
         public int IdProduto { get; set; }
-        public bool EnvioComprador { get; set; }        
+        public bool EnvioComprador { get; set; }
+        public bool ConclusaoVenda { get; set; }
         public string Prefixo { get; set; }
     }
 }

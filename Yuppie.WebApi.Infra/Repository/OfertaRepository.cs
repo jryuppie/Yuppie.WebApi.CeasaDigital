@@ -16,6 +16,7 @@ namespace Yuppie.WebApi.Infra.Repository
         public Task<OfertaModel> BuscarOfertaPorId(int idOferta);
         public Task<List<OfertaModel>> BuscarOfertaPorVendedor(int idVendedor);
         public Task<List<OfertaModel>> BuscarTodasOfertas();
+        public Task<List<OfertaModel>> BuscarTodasOfertasAtivas();
         public Task<List<OfertaModel>> BuscarOfertasComVencimentoEm(int dias, int idVendedor);                 
         public Task<ObjectResult> AdicionarOfertaAsync(OfertaModel oferta);
         public Task<ObjectResult> AtualizarOfertaAsync(OfertaModel oferta);
@@ -51,6 +52,18 @@ namespace Yuppie.WebApi.Infra.Repository
             }           
         }
 
+        public async Task<List<OfertaModel>> BuscarTodasOfertasAtivas()
+        {
+            try
+            {
+                return _dbContext.Ofertas.Where(x=>x.Status == true).ToList();
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+        }
+
         public async Task<List<OfertaModel>> BuscarOfertasComVencimentoEm(int diasAtras, int idVendedor)
         {
             try
@@ -81,9 +94,10 @@ namespace Yuppie.WebApi.Infra.Repository
         {
             try
             {
+                oferta.DataCriacao = DateTime.Now;
                 _dbContext.Ofertas.Add(oferta);
                 _dbContext.SaveChanges();
-                return new ObjectResult(oferta)
+                return new ObjectResult(new { message = "Oferta criada com sucesso!" })
                 {
                     StatusCode = StatusCodes.Status201Created
                 };
@@ -103,7 +117,7 @@ namespace Yuppie.WebApi.Infra.Repository
             {
                 _dbContext.Ofertas.Update(oferta);
                 _dbContext.SaveChanges();
-                return new ObjectResult(oferta)
+                return new ObjectResult(new { message = "Oferta atualizada com sucesso!" })
                 {
                     StatusCode = StatusCodes.Status200OK
                 };

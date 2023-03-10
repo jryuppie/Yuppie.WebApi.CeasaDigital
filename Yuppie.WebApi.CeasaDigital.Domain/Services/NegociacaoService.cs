@@ -13,8 +13,7 @@ namespace Yuppie.WebApi.CeasaDigital.Domain.Services
     public class NegociacaoService : INegociacaoService
     {
         private readonly IMapper _mapper;
-        private readonly IProcessoNegociacaoRepository _negociacaoRepository;
-        private readonly VendaService VendaService;
+        private readonly IProcessoNegociacaoRepository _negociacaoRepository;        
         public NegociacaoService(IProcessoNegociacaoRepository negociacaoRepository, IMapper mapper)
         {
             _negociacaoRepository = negociacaoRepository;
@@ -28,7 +27,7 @@ namespace Yuppie.WebApi.CeasaDigital.Domain.Services
                 {
                     IdVenda = IdVenda,
                     QtdComprada = QuantidadeComprada,
-                    StatusNegociacao = NegociacaoStatus.Processo.PegarDescricao(),
+                    StatusNegociacao = NegociacaoStatus.Processo.BuscarDescricao(),
                     DataCriacao = DateTime.Now
                 };
                 return await _negociacaoRepository.AdicionarNegociacao(negociacao);
@@ -41,12 +40,31 @@ namespace Yuppie.WebApi.CeasaDigital.Domain.Services
                 };
             }
         }
-        public async Task<ObjectResult> BuscarNegociacaoPorId(int IdVenda)
+        public async Task<ObjectResult> BuscarNegociacaoPorId(int Id)
         {
             try
             {
-                var oferta = _mapper.Map<ProcessoNegociacaoModel>(await _negociacaoRepository.BuscarNegociacaoPorId(IdVenda));
+                var oferta = _mapper.Map<ProcessoNegociacaoModel>(await _negociacaoRepository.BuscarNegociacaoPorId(Id));
                 return new ObjectResult(oferta)
+                {
+                    StatusCode = StatusCodes.Status200OK
+                };
+            }
+            catch (System.Exception ex)
+            {
+                return new ObjectResult(new { message = "Falha ao buscar aa negociação!" })
+                {
+                    StatusCode = StatusCodes.Status500InternalServerError
+                };
+            }
+        }
+
+        public async Task<ObjectResult> BuscarNegociacaoPorIdVenda(int IdVenda)
+        {
+            try
+            {
+                var negociacao = _mapper.Map<ProcessoNegociacaoModel>(await _negociacaoRepository.BuscarNegociacaoPorIdVenda(IdVenda));
+                return new ObjectResult(negociacao)
                 {
                     StatusCode = StatusCodes.Status200OK
                 };

@@ -17,7 +17,7 @@ namespace Yuppie.WebApi.CeasaDigital.Domain.Models.Enums
 
     public static class NegociacaoSubStatusEnumExtensions
     {
-        public static string PegarDescricao(this NegociacaoSubStatusEnum status)
+        public static string BuscarDescricao(this NegociacaoSubStatusEnum status)
         {
             switch (status)
             {
