@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
+using System;
 using System.Threading.Tasks;
 using Yuppie.WebApi.CeasaDigital.Domain.Interfaces;
 using Yuppie.WebApi.CeasaDigital.Domain.Models.Endereco;
@@ -32,7 +33,8 @@ namespace Yuppie.WebApi.CeasaDigital.Controllers
         }
         [HttpPost]
         public async Task<ObjectResult> CadastrarEndereco([FromBody] EnderecoFormulario formModel)
-        {
+        {           
+
             EnderecoModel endereco = new EnderecoModel()
             {
                 IdUsuario = formModel.IdUsuario,

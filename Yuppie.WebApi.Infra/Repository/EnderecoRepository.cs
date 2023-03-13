@@ -50,7 +50,9 @@ namespace Yuppie.WebApi.Infra.Repository
         {
             try
             {
+                
                 Endereco.DataCriacao = DateTime.Now;
+                Endereco.Status = true;
                 _dbContext.Enderecos.Add(Endereco);
                 _dbContext.SaveChanges();
                 return new ObjectResult(new { message = "Endereço cadastrado com sucesso!" })
