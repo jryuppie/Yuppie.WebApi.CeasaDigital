@@ -1,14 +1,10 @@
-﻿using FirebaseAdmin.Messaging;
-using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.Intrinsics.X86;
-using System.Text;
 using System.Threading.Tasks;
 using Yuppie.WebApi.Infra.Context;
-using Yuppie.WebApi.Infra.Models.Produto;
 using Yuppie.WebApi.Infra.Models.UsuarioModel;
 
 namespace Yuppie.WebApi.Infra.Repository
@@ -20,7 +16,7 @@ namespace Yuppie.WebApi.Infra.Repository
         public Task<UsuarioModel> BuscarUsuarioPorId(int id);
         public Task<UsuarioModel> BuscarUsuarioLogin(string documento, string senha);
         public Task<ObjectResult> CadastrarUsuario(UsuarioModel usuario);
-        public Task<ObjectResult> AtualizarUsuario(UsuarioModel usuario);        
+        public Task<ObjectResult> AtualizarUsuario(UsuarioModel usuario);
         public Task<ObjectResult> AtualizarStatusUsuario(string documento, bool status);
     }
 
@@ -34,7 +30,7 @@ namespace Yuppie.WebApi.Infra.Repository
         {
             try
             {
-                return _dbContext.Usuarios.Where(x => x.Id == id).FirstOrDefault();
+                return _dbContext.Usuarios.Where(x => x.Id == id && x.Status == true).FirstOrDefault();
             }
             catch (Exception ex)
             {
@@ -104,8 +100,8 @@ namespace Yuppie.WebApi.Infra.Repository
         {
             try
             {
-                usuario.DataAtualizacao= DateTime.Now;
-                _dbContext.Usuarios.Add(usuario);
+                usuario.DataAtualizacao = DateTime.Now;
+                _dbContext.Update(usuario);
                 _dbContext.SaveChanges();
                 return new ObjectResult(new { message = $"Usuário {usuario.Nome} foi atualizado com sucesso!" })
                 {
@@ -129,7 +125,7 @@ namespace Yuppie.WebApi.Infra.Repository
                 if (usuario != null)
                 {
                     usuario.Status = status;
-                    usuario.DataAtualizacao= DateTime.Now;  
+                    usuario.DataAtualizacao = DateTime.Now;
                 }
                 _dbContext.Usuarios.Update(usuario);
                 _dbContext.SaveChanges();
@@ -165,6 +161,6 @@ namespace Yuppie.WebApi.Infra.Repository
                     StatusCode = 400
                 };
             }
-        }     
+        }
     }
 }

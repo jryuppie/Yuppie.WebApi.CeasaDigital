@@ -202,21 +202,21 @@ namespace Yuppie.WebApi.CeasaDigital.Domain.Services
             {
                 if (usuarioDb != null && usuarioAtualiza != null)
                 {
-                    if (!string.IsNullOrWhiteSpace(usuarioAtualiza.Documento))
+                    if (!string.IsNullOrWhiteSpace(usuarioAtualiza.Documento) && usuarioAtualiza.Documento != usuarioDb.Documento)
                         usuarioDb.Documento = usuarioAtualiza.Documento;
-                    if (!string.IsNullOrWhiteSpace(usuarioAtualiza.Cep))
+                    if (!string.IsNullOrWhiteSpace(usuarioAtualiza.Cep) && usuarioAtualiza.Cep != usuarioDb.Cep)
                         usuarioDb.Cep = usuarioAtualiza.Cep;
-                    if (!string.IsNullOrWhiteSpace(usuarioAtualiza.Nome))
+                    if (!string.IsNullOrWhiteSpace(usuarioAtualiza.Nome) && usuarioAtualiza.Nome != usuarioDb.Nome)
                         usuarioDb.Nome = usuarioAtualiza.Nome;
-                    if (!string.IsNullOrWhiteSpace(usuarioAtualiza.Telefone))
+                    if (!string.IsNullOrWhiteSpace(usuarioAtualiza.Telefone) && usuarioAtualiza.Telefone != usuarioDb.Telefone)
                         usuarioDb.Telefone = usuarioAtualiza.Telefone;
-                    if (!string.IsNullOrWhiteSpace(usuarioAtualiza.Sobrenome))
+                    if (!string.IsNullOrWhiteSpace(usuarioAtualiza.Sobrenome) && usuarioAtualiza.Sobrenome != usuarioDb.Sobrenome)
                         usuarioDb.Sobrenome = usuarioAtualiza.Sobrenome;
-                    if (!string.IsNullOrWhiteSpace(usuarioAtualiza.Senha))
+                    if (!string.IsNullOrWhiteSpace(usuarioAtualiza.Senha) && usuarioAtualiza.Senha != usuarioDb.Senha)
                         usuarioDb.Senha = usuarioAtualiza.Senha;
-                    if (!string.IsNullOrWhiteSpace(usuarioAtualiza.Latitude))
+                    if (!string.IsNullOrWhiteSpace(usuarioAtualiza.Latitude) && usuarioAtualiza.Latitude != usuarioDb.Latitude)
                         usuarioDb.Latitude = usuarioAtualiza.Latitude;
-                    if (!string.IsNullOrWhiteSpace(usuarioAtualiza.Longitude))
+                    if (!string.IsNullOrWhiteSpace(usuarioAtualiza.Longitude) && usuarioAtualiza.Longitude != usuarioDb.Longitude)
                         usuarioDb.Longitude = usuarioAtualiza.Longitude;
                 }
                 return usuarioDb;

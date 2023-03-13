@@ -22,6 +22,7 @@ using Yuppie.WebApi.CeasaDigital.Domain.Models.UsuarioModel;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using Yuppie.WebApi.CeasaDigital.Domain.Models.Endereco;
 
 namespace Yuppie.WebApi.CeasaDigital
 {
@@ -50,6 +51,7 @@ namespace Yuppie.WebApi.CeasaDigital
             services.AddTransient<IUnMedidaService, UnMedidaService>();
             services.AddTransient<IWhatsappService, WhatsappService>();
             services.AddTransient<ILoginService, LoginService>();
+            services.AddTransient<IEnderecoService, EnderecoService>();
             #endregion
 
             #region Repositories
@@ -59,6 +61,7 @@ namespace Yuppie.WebApi.CeasaDigital
             services.AddTransient<IVendaRepository, VendaRepository>();
             services.AddTransient<IProcessoNegociacaoRepository, ProcessoNegociacaoRepository>();
             services.AddTransient<IUnidadeMedidaRepository, UnidadeMedidaRepository>();
+            services.AddTransient<IEnderecoRepository, EnderecoRepository>();
             #endregion
 
             #region Context
@@ -99,6 +102,8 @@ namespace Yuppie.WebApi.CeasaDigital
                 mc.CreateMap<Yuppie.WebApi.Infra.Models.Negociacao.VendaModel, VendaModel>();
                 mc.CreateMap<Yuppie.WebApi.Infra.Models.UsuarioModel.UsuarioModel, UsuarioModel>();
                 mc.CreateMap<UsuarioModel, Yuppie.WebApi.Infra.Models.UsuarioModel.UsuarioModel>();
+                mc.CreateMap<Yuppie.WebApi.Infra.Models.Endereco.EnderecoModel, EnderecoModel>();
+                mc.CreateMap<EnderecoModel,Yuppie.WebApi.Infra.Models.Endereco.EnderecoModel>();
             });
 
             IMapper mapper = mappingConfig.CreateMapper();

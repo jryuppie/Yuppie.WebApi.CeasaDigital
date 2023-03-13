@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Yuppie.WebApi.Infra.Models.Endereco;
 using Yuppie.WebApi.Infra.Models.Negociacao;
 using Yuppie.WebApi.Infra.Models.Produto;
 using Yuppie.WebApi.Infra.Models.UsuarioModel;
@@ -21,6 +22,7 @@ namespace Yuppie.WebApi.Infra.Context
         public DbSet<VendaModel> Vendas { get; set; }
         public DbSet<OfertaModel> Ofertas { get; set; }
         public DbSet<ProcessoNegociacaoModel> ProcessoNegociacoes { get; set; }
+        public DbSet<EnderecoModel> Enderecos { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -296,6 +298,73 @@ namespace Yuppie.WebApi.Infra.Context
 
                 entity.Property(e => e.VendaStatus)
                     .HasColumnName("venda_status");
+            });
+
+            modelBuilder.Entity<EnderecoModel>(entity =>
+            {
+                entity.ToTable("enderecos");
+
+                entity.HasKey(e => e.Id);
+
+                entity.Property(e => e.Id)
+                    .HasColumnName("id")
+                    .ValueGeneratedOnAdd();
+
+                entity.Property(e => e.UF)
+                    .HasColumnName("uf")
+                    .HasMaxLength(2);
+
+                entity.Property(e => e.Bairro)
+                    .HasColumnName("bairro")
+                    .HasMaxLength(255);
+
+                entity.Property(e => e.Cep)
+                    .HasColumnName("cep")
+                    .HasMaxLength(15);
+
+                entity.Property(e => e.Cidade)
+                    .HasColumnName("cidade")
+                    .HasMaxLength(50);
+
+                entity.Property(e => e.Complemento)
+                    .HasColumnName("complemento")
+                    .HasMaxLength(100);
+
+                entity.Property(e => e.DataCriacao)
+                    .HasColumnName("create_date")
+                    .HasColumnType("timestamp without time zone");
+
+                entity.Property(e => e.IdUsuario)
+                    .HasColumnName("id_usuario");
+
+                entity.Property(e => e.Latitude)
+                    .HasColumnName("latitude")
+                    .HasMaxLength(50);
+
+                entity.Property(e => e.Logradouro)
+                    .HasColumnName("logradouro")
+                    .HasMaxLength(255);
+
+                entity.Property(e => e.Longitude)
+                    .HasColumnName("longitude")
+                    .HasMaxLength(50);
+
+                entity.Property(e => e.Numero)
+                    .HasColumnName("numero");
+
+                entity.Property(e => e.Radius)
+                    .HasColumnName("radius");
+
+                entity.Property(e => e.Status)
+                    .HasColumnName("status");
+
+                entity.Property(e => e.DataAtualizacao)
+                    .HasColumnName("update_date")
+                    .HasColumnType("timestamp without time zone");
+
+                entity.HasCheckConstraint("enderecos_id_usuario_check", "id_usuario >= 1 AND id_usuario <= '9223372036854775807'::bigint");
+
+                entity.HasCheckConstraint("enderecos_radius_check", "radius >= 1 AND radius <= '9223372036854775807'::bigint");
             });
         }
     }
