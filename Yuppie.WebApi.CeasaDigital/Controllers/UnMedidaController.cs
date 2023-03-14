@@ -11,6 +11,7 @@ namespace Yuppie.WebApi.CeasaDigital.Controllers
     [Route("api/medida")]
     [ApiController]
     [EnableCors]
+    [Authorize]
     public class UnMedidaController : Controller
     {
 
@@ -20,21 +21,21 @@ namespace Yuppie.WebApi.CeasaDigital.Controllers
             _pgUnMedidaService = pgUnMedidaService;
         }
 
-        //[Authorize]
+        
         [HttpGet]
         public async Task<ObjectResult> BuscarTodasUnMedidas()
         {
             return await _pgUnMedidaService.BuscarTodasUnMedidas();
         }
 
-        //[Authorize]
+        
         [HttpPost]
         public async Task<ObjectResult> CadastrarUnMedida([FromBody] UnMedidaFormulario formModel)
         {
             return await _pgUnMedidaService.CadastrarUnMedida(formModel.Nome);
         }
 
-        //[Authorize]
+       
         [HttpDelete]
         public async Task<ObjectResult> DeletarUnMedida(int id)
         {

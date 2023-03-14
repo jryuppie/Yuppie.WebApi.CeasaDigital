@@ -20,7 +20,7 @@ namespace Yuppie.WebApi.CeasaDigital.Controllers
         {
             _LoginService = loginService;   
         }
-        //[AllowAnonymous]
+        [AllowAnonymous]
         [HttpPost]
         public async Task<string> Login([FromBody] LoginFormulario lForm)
         {

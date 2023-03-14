@@ -1,6 +1,6 @@
-﻿using Microsoft.AspNetCore.Cors;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
-using System;
 using System.Threading.Tasks;
 using Yuppie.WebApi.CeasaDigital.Domain.Interfaces;
 using Yuppie.WebApi.CeasaDigital.Domain.Models.Endereco;
@@ -12,6 +12,7 @@ namespace Yuppie.WebApi.CeasaDigital.Controllers
     [Route("api/[Controller]")]
     [ApiController]
     [EnableCors]
+    [Authorize]
     public class EnderecoController : Controller
     {
         private IEnderecoService _EnderecoService;
@@ -19,21 +20,23 @@ namespace Yuppie.WebApi.CeasaDigital.Controllers
         {
             _EnderecoService = EnderecoService;
         }
-        //[AllowAnonymous]
+
         [HttpGet]
         public async Task<ObjectResult> ListaEnderecos()
         {
             return await _EnderecoService.BuscarTodosEnderecos();
         }
+
         [HttpGet]
         [Route("{idUsuario}")]
         public async Task<ObjectResult> BuscarEnderecoPorIdUsuario(int idUsuario)
         {
             return await _EnderecoService.BuscarEnderecoPorIdUsuario(idUsuario);
         }
+
         [HttpPost]
         public async Task<ObjectResult> CadastrarEndereco([FromBody] EnderecoFormulario formModel)
-        {           
+        {
 
             EnderecoModel endereco = new EnderecoModel()
             {
@@ -47,10 +50,11 @@ namespace Yuppie.WebApi.CeasaDigital.Controllers
                 Latitude = formModel.Latitude,
                 Longitude = formModel.Longitude,
                 Radius = formModel.Radius,
-                Status = formModel.Status             
+                Status = formModel.Status
             };
             return await _EnderecoService.CadastrarEndereco(endereco);
         }
+
         [HttpPatch]
         public async Task<ObjectResult> AtualizarEndereco([FromBody] EnderecoFormulario formModel)
         {
@@ -71,6 +75,7 @@ namespace Yuppie.WebApi.CeasaDigital.Controllers
             };
             return await _EnderecoService.AtualizarEndereco(endereco);
         }
+
         [HttpPatch]
         [Route("desativar/{idEndereco}")]
         public async Task<ObjectResult> DesabiltiarEndereco(int idEndereco)

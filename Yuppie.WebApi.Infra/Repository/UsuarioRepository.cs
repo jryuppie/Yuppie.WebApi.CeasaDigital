@@ -1,9 +1,11 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Xml.Schema;
 using Yuppie.WebApi.Infra.Context;
 using Yuppie.WebApi.Infra.Models.UsuarioModel;
 
@@ -18,6 +20,7 @@ namespace Yuppie.WebApi.Infra.Repository
         public Task<ObjectResult> CadastrarUsuario(UsuarioModel usuario);
         public Task<ObjectResult> AtualizarUsuario(UsuarioModel usuario);
         public Task<ObjectResult> AtualizarStatusUsuario(string documento, bool status);
+        public Task<ObjectResult> BuscaUsuariosPorAvaliacao(string statusVenda);
     }
 
     public class UsuarioRepository : IUsuarioRepository
@@ -150,6 +153,38 @@ namespace Yuppie.WebApi.Infra.Repository
                 _dbContext.Usuarios.Remove(usuario);
                 _dbContext.SaveChanges();
                 return new ObjectResult(new { message = $"Usuário {usuario.Nome} foi excluído com sucesso!" })
+                {
+                    StatusCode = StatusCodes.Status200OK
+                };
+            }
+            catch (Exception ex)
+            {
+                return new ObjectResult(new { message = $"Falha ao excluir o usuário!" })
+                {
+                    StatusCode = 400
+                };
+            }
+        }
+
+        public async Task<ObjectResult> BuscaUsuariosPorAvaliacao(string statusVenda)
+        {
+            try
+            {                
+                   var retornoQuery = _dbContext.Usuarios
+                  .Join(_dbContext.Vendas.Where(v=> v.VendaStatus == statusVenda), p => p.Id, c => c.IdVendedor, (p, c) => new { Usuario = p, Venda = c })
+                  .GroupBy(pc => new { pc.Usuario.Id, pc.Usuario.Nome })
+                  .Select(g => new
+                  {
+                      IdVendedor = g.Key.Id,
+                      NomeVendedor = g.Key.Nome,
+                      Avalicao = g.Average(pc => pc.Venda.AvaliacaoComprador)
+                  })
+                  .ToList();
+
+                if(retornoQuery.Count == 0 || retornoQuery == null)
+                    return new ObjectResult(new { message = $"Não foram encontrados usuários para exibição!" }) {StatusCode = StatusCodes.Status404NotFound};
+
+                return new ObjectResult(retornoQuery)
                 {
                     StatusCode = StatusCodes.Status200OK
                 };

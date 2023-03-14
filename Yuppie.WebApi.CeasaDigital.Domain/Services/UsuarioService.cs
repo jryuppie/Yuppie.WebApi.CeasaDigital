@@ -176,8 +176,8 @@ namespace Yuppie.WebApi.CeasaDigital.Domain.Services
             {
                 var usuarioDB = await _usuarioRepository.BuscarUsuarioPorId(usuario.Id);
                 usuarioDB = AtribuirCamposParaAtualizar(usuarioDB, usuario);
-                if (usuarioDB != null)                                  
-                    return await _usuarioRepository.AtualizarUsuario(usuarioDB);                
+                if (usuarioDB != null)
+                    return await _usuarioRepository.AtualizarUsuario(usuarioDB);
                 else
                 {
                     return new ObjectResult(new { message = $"Usuário não encontrado!" })
@@ -190,6 +190,22 @@ namespace Yuppie.WebApi.CeasaDigital.Domain.Services
             catch (Exception ex)
             {
                 return new ObjectResult(new { message = $"Falha ao atualizar os dados do usuário: {usuario.Nome}!" })
+                {
+                    StatusCode = StatusCodes.Status500InternalServerError
+                };
+            }
+        }
+
+
+        public async Task<ObjectResult> BuscarUsuariosComAvaliacao()
+        {
+            try
+            {
+                return await _usuarioRepository.BuscaUsuariosPorAvaliacao(NegociacaoStatus.Concluido.BuscarDescricao());
+            }
+            catch (Exception ex)
+            {
+                return new ObjectResult(new { message = $"Falha ao buscar a lista de usuários por avaliação!" })
                 {
                     StatusCode = StatusCodes.Status500InternalServerError
                 };

@@ -14,6 +14,7 @@ namespace Yuppie.WebApi.CeasaDigital.Controllers
     [Route("api/[controller]")]
     [ApiController]
     [EnableCors]
+    [Authorize]
     public class ProdutoController : ControllerBase
     {
         private IProdutoService _pgProdutoService;
@@ -22,14 +23,14 @@ namespace Yuppie.WebApi.CeasaDigital.Controllers
             _pgProdutoService = pgProdutoService;
         }
 
-       //[Authorize]
+        
         [HttpGet]
         public async Task<ObjectResult> BuscarProdutos()
         {
             return await _pgProdutoService.BuscarTodosProdutos();
         }
 
-       //[Authorize]
+        
         [Route("nome/{nome}")]
         [HttpGet]
         public async Task<ObjectResult> BuscarProdutosPorNome(string nomeProduto)
@@ -37,21 +38,21 @@ namespace Yuppie.WebApi.CeasaDigital.Controllers
             return await _pgProdutoService.BuscarProdutoPorNome(nomeProduto);
         }
 
-       //[Authorize]
+        
         [HttpPatch]
         public async Task<ObjectResult> AtualizarProduto([FromBody] ProdutoFormulario formModel)
         {
             return await _pgProdutoService.AtualizarProduto(formModel.Categoria, formModel.Nome);
         }
 
-       //[Authorize]
+        
         [HttpPost]
         public async Task<ObjectResult> CadastrarProduto([FromBody] ProdutoFormulario formModel)
         {
             return await _pgProdutoService.CadastrarProduto(formModel.Categoria, formModel.Nome);
         }
 
-       //[Authorize]
+        
         [HttpDelete]
         public async Task<ObjectResult> DeletarProduto([FromBody] ProdutoFormulario formModel)
         {

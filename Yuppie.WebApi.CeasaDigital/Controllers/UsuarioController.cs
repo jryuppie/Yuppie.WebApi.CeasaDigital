@@ -13,6 +13,7 @@ namespace Yuppie.WebApi.CeasaDigital.Controllers
     [Route("api/usuario/")]
     [ApiController]
     [EnableCors]
+    //[Authorize]
     public class UsuarioController : Controller
     {
 
@@ -21,25 +22,32 @@ namespace Yuppie.WebApi.CeasaDigital.Controllers
         {
             _pgUsuarioService = pgUsuarioService;
         }
-        //[Authorize]
+         
         [HttpGet]
         public async Task<ObjectResult> BuscarUsuarios()
         {
             return await _pgUsuarioService.BuscarUsuarios();
         }
-        ////[Authorize]
+        
         [Route("documento/{documento}")]
         [HttpGet]
         public async Task<ObjectResult> BuscarUsuarioPorDocumento(string documento)
         {
             return await _pgUsuarioService.BuscarUsuarioPorDocumento(documento);
         }
-        //[Authorize]
+         
         [Route("{id}")]
         [HttpGet]
         public async Task<ObjectResult> BuscarUsuarioPorId(int id)
         {
             return await _pgUsuarioService.BuscarUsuarioPorId(id);
+        }
+
+        [Route("avaliacao")]
+        [HttpGet]
+        public async Task<ObjectResult> BuscarUsuariosComAvaliacao()
+        {
+            return await _pgUsuarioService.BuscarUsuariosComAvaliacao();
         }
         [AllowAnonymous]
         [Route("senha")]
@@ -48,7 +56,7 @@ namespace Yuppie.WebApi.CeasaDigital.Controllers
         {
             return await _pgUsuarioService.RecuperarSenhaUsuario(Documento, Telefone);
         }
-        //[Authorize]
+         
         [Route("status")]
         [HttpPatch]
         public async Task<ObjectResult> AtualizarStatusUsuario([FromBody] UsuarioStatusFormulario formModel)
@@ -69,7 +77,7 @@ namespace Yuppie.WebApi.CeasaDigital.Controllers
             };
             return await _pgUsuarioService.CadastrarUsuario(usuario);
         }
-        //[Authorize]
+         
         [HttpPut]
         public async Task<ObjectResult> AtualizarUsuario([FromBody] UsuarioFormulario formModel)
         {

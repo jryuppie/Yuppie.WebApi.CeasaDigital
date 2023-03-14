@@ -23,6 +23,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using Yuppie.WebApi.CeasaDigital.Domain.Models.Endereco;
+using Yuppie.WebApi.CeasaDigital.Swagger;
 
 namespace Yuppie.WebApi.CeasaDigital
 {
@@ -69,27 +70,29 @@ namespace Yuppie.WebApi.CeasaDigital
            (options =>
            options.UseNpgsql(Configuration.GetConnectionString("DefaultConnection")));
             services.AddControllers();
-            //services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+            #endregion
+
+            #region JWT
+            //services.AddAuthentication(options =>
+            //{
+            //    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+            //    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            //})
             //.AddJwtBearer(options =>
             //{
+            //    //options.Authority = Configuration["Authentication:JwtBearer:Authority"];
+            //    //options.Audience = Configuration["Authentication:JwtBearer:Audience"];
             //    options.TokenValidationParameters = new TokenValidationParameters
             //    {
-            //        ValidateIssuer = true,
-            //        ValidateAudience = true,
-            //        ValidateLifetime = true,
             //        ValidateIssuerSigningKey = true,
-            //        ValidIssuer = "",
-            //        ValidAudience = "99527b18-29c2-4598-94a6-d460e606abf0",
-            //        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("8d1e2298-4da8-41d7-92ba-8b99a3152e19"))
+            //        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["Authentication:JwtBearer:TokenValidationParameters:IssuerSigningKey"])),
+            //        ValidateIssuer = true,
+            //        //ValidIssuer = Configuration["Authentication:JwtBearer:TokenValidationParameters:ValidIssuer"],
+            //        ValidateAudience = true,
+            //        //ValidAudience = Configuration["Authentication:JwtBearer:TokenValidationParameters:ValidAudience"],
+            //        ValidateLifetime = true
             //    };
             //});
-
-            //services.AddAuthentication("Bearer")
-            //    .AddJwtBearer("Bearer", options =>
-            //    {
-            //        options.Authority = "https://seu-servidor-identity-server.com";
-            //        options.Audience = "99527b18-29c2-4598-94a6-d460e606abf0";
-            //    });
             #endregion
 
             #region Mapper
@@ -103,7 +106,7 @@ namespace Yuppie.WebApi.CeasaDigital
                 mc.CreateMap<Yuppie.WebApi.Infra.Models.UsuarioModel.UsuarioModel, UsuarioModel>();
                 mc.CreateMap<UsuarioModel, Yuppie.WebApi.Infra.Models.UsuarioModel.UsuarioModel>();
                 mc.CreateMap<Yuppie.WebApi.Infra.Models.Endereco.EnderecoModel, EnderecoModel>();
-                mc.CreateMap<EnderecoModel,Yuppie.WebApi.Infra.Models.Endereco.EnderecoModel>();
+                mc.CreateMap<EnderecoModel, Yuppie.WebApi.Infra.Models.Endereco.EnderecoModel>();
             });
 
             IMapper mapper = mappingConfig.CreateMapper();
@@ -119,7 +122,8 @@ namespace Yuppie.WebApi.CeasaDigital
 
             services.AddSwaggerGen(c =>
             {
-                c.SwaggerDoc("v1", new OpenApiInfo { Title = "Ceasa Digital API", Version = "v1" });
+                c.SwaggerDoc("v1", new OpenApiInfo { Title = "Ceasa Digital API", Version = "v2" });
+                //c.OperationFilter<AuthHeaderOperationFilter>(); // Adiciona o filtro de autenticação JWT
             });
             #endregion
 
@@ -149,8 +153,7 @@ namespace Yuppie.WebApi.CeasaDigital
                 app.UseDeveloperExceptionPage();
             }
 
-            //app.UseHttpsRedirection();
-            
+            //app.UseHttpsRedirection();        
 
             app.UseRouting();
             app.UseCors(options => options.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod());
@@ -167,9 +170,7 @@ namespace Yuppie.WebApi.CeasaDigital
                 c.SwaggerEndpoint("/swagger/v1/swagger.json", "Ceasa Digital API");
             });
 
-            app.UseAuthentication();
-
-
+            //app.UseAuthentication();
         }
 
 

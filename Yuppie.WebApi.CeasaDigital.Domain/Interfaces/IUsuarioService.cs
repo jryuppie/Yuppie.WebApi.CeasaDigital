@@ -9,6 +9,7 @@ namespace Yuppie.WebApi.CeasaDigital.Domain.Interfaces
     {
         public Task<ObjectResult> BuscarUsuarioLogin(string user, string password);
         public Task<ObjectResult> BuscarUsuarios();
+        public Task<ObjectResult> BuscarUsuariosComAvaliacao();
         public Task<ObjectResult> BuscarUsuarioPorDocumento(string documento);
         public Task<ObjectResult> BuscarUsuarioPorId(int id);
         public Task<ObjectResult> CadastrarUsuario(UsuarioModel usuario);

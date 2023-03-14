@@ -10,6 +10,7 @@ namespace Yuppie.WebApi.CeasaDigital.Controllers
     [Route("api/[controller]")]
     [ApiController]
     [EnableCors]
+    [Authorize]
     public class NegociacaoController : Controller
     {
         private INegociacaoService _pgNegociacaoService;
@@ -17,7 +18,7 @@ namespace Yuppie.WebApi.CeasaDigital.Controllers
         {
             _pgNegociacaoService = pgNegociacaoService;
         }
-        //[Authorize]
+        [Authorize]
         [Route("venda/{id}")]
         [HttpGet]
         public async Task<ObjectResult> BuscarNegociacaoPorIdVenda(int id)
